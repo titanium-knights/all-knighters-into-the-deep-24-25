@@ -34,9 +34,9 @@ public class Claw {
         return clawOpener.getPosition()/servoAngleModifier;
     }
 
-    public void setPosition(double des){
-        double rawangle = des + zeroClawAngle;
-        clawRotator.setPosition(1 - rawangle/servoAngleModifier);
+    public void setPosition(double destinationAngle){
+        double rawAngle = destinationAngle + zeroClawAngle;
+        clawRotator.setPosition(1 - rawAngle/servoAngleModifier);
     }
 
     public void setZero(){

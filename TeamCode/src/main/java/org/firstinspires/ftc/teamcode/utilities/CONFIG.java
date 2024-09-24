@@ -12,4 +12,7 @@ public class CONFIG {
 
     //webcam
     public static String webcam = "Webcam 1";
+    public static String clawServo = "claw";
+
+    public static String clawSpin = "clawSpin";
 }
