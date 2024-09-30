@@ -22,8 +22,8 @@ public class SimpleMecanumDrive {
 
         fl.setDirection(DcMotorSimple.Direction.FORWARD);
         bl.setDirection(DcMotorSimple.Direction.REVERSE);
-        fr.setDirection(DcMotorSimple.Direction.REVERSE);
-        br.setDirection(DcMotorSimple.Direction.REVERSE);
+        fr.setDirection(DcMotorSimple.Direction.FORWARD);
+        br.setDirection(DcMotorSimple.Direction.FORWARD);
 
         directions.put(fl, new double[]{1, 1});
         directions.put(fr, new double[]{1, -1});
