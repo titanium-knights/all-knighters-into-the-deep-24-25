@@ -5,6 +5,7 @@ import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Moments;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.MatOfInt;
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
@@ -35,59 +36,99 @@ public class TestPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        // Convert input frame to HSV color space
-        Mat hsvFrame = new Mat();
-        Imgproc.cvtColor(input, hsvFrame, Imgproc.COLOR_RGB2HSV);
+        // Convert the input frame to grayscale for edge detection
+        Mat gray = new Mat();
+        Imgproc.cvtColor(input, gray, Imgproc.COLOR_RGB2GRAY);
 
-        // Apply Gaussian blur to reduce noise
-        Mat blurredFrame = new Mat();
-        Imgproc.GaussianBlur(hsvFrame, blurredFrame, new Size(5, 5), 0);
+        // Apply Canny edge detection
+        Mat edges = new Mat();
+        Imgproc.Canny(gray, edges, 100, 200);
 
-        // Threshold the image to isolate yellow regions
-        Mat mask = new Mat();
-        Core.inRange(blurredFrame, LOWER_YELLOW, UPPER_YELLOW, mask);
+        // Detect "yellowness" in the input frame
+        Mat hsv = new Mat();
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);  // Convert to HSV for easier color detection
 
-        // Find contours in the masked image
+        // Define a broad range of "yellow-like" colors
+        Scalar lowerYellow = new Scalar(15, 100, 50);  // Lower range for yellows and dark browns
+        Scalar upperYellow = new Scalar(45, 255, 255); // Upper range for yellows
+
+        // Create a mask for yellow-like colors
+        Mat yellowMask = new Mat();
+        Core.inRange(hsv, lowerYellow, upperYellow, yellowMask);
+
+        // Combine the edges with the yellow mask
+        Mat maskedEdges = new Mat();
+        Core.bitwise_and(edges, yellowMask, maskedEdges);
+
+        // Find contours from the masked edges
         List<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat();
-        Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(maskedEdges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        telemetry.addData("Number of contours found", contours.size());
-
-        // Loop through contours to process and draw each one
+        // Collect all points from all contours into one list
+        List<Point> allPoints = new ArrayList<>();
         for (MatOfPoint contour : contours) {
-            // Draw all contours in red color
-            Imgproc.drawContours(input, contours, -1, new Scalar(255, 0, 0), 2);
+            allPoints.addAll(contour.toList());
+        }
 
-            // Optionally check if the contour is rectangular-like (4 vertices)
-            MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
-            double epsilon = 0.02 * Imgproc.arcLength(contour2f, true);
-            MatOfPoint2f approx2f = new MatOfPoint2f();
-            Imgproc.approxPolyDP(contour2f, approx2f, epsilon, true);
+        // Remove outliers from the collected points
+        List<Point> filteredPoints = removeOutliers(allPoints, 2.0);  // You can adjust the threshold factor
 
-            MatOfPoint approx = new MatOfPoint(approx2f.toArray());
+        // Calculate the convex hull of the filtered points
+        MatOfInt hullIndices = new MatOfInt();
+        Imgproc.convexHull(new MatOfPoint(filteredPoints.toArray(new Point[0])), hullIndices);
 
-            // Check if the contour has 4 vertices (rectangle)
-            if (approx.toList().size() == 4) {
-                double area = Imgproc.contourArea(approx);
-                if (area > 500 && area < 5000) {  // Adjusted thresholds for your 320x240 image
-                    // Calculate the bounding box
-                    Rect boundingBox = Imgproc.boundingRect(approx);
-                    
-                    // Draw the bounding box around the detected prism
-                    Imgproc.rectangle(input, boundingBox.tl(), boundingBox.br(), new Scalar(0, 255, 0), 2);
+        // Create a list for the hull points
+        List<Point> hullPoints = new ArrayList<>();
+        for (int index : hullIndices.toArray()) {
+            hullPoints.add(filteredPoints.get(index));
+        }
 
-                    // Output the position of the prism to telemetry
-                    Moments moments = Imgproc.moments(approx);
-                    prismCenter.x = moments.m10 / moments.m00;
-                    prismCenter.y = moments.m01 / moments.m00;
-                    telemetry.addData("Prism detected at: ", "(" + prismCenter.x + ", " + prismCenter.y + ")");
-                }
+        // Draw the convex hull on the original image with a specific color (e.g., green)
+        MatOfPoint hull = new MatOfPoint();
+        hull.fromList(hullPoints);
+        Scalar hullColor = new Scalar(0, 255, 0); // Green color for hull
+        Imgproc.drawContours(input, List.of(hull), -1, hullColor, 2); // Draw the convex hull
+
+        telemetry.addLine("Convex hull of filtered edges drawn on original frame.");
+        
+        return input;  // Return the original frame with the convex hull drawn
+    }
+
+    /**
+     * Method to remove outlier points based on distance from the mean point.
+     * @param points The list of points to filter.
+     * @param thresholdFactor The number of standard deviations to use as a threshold.
+     * @return A filtered list of points without outliers.
+     */
+    private List<Point> removeOutliers(List<Point> points, double thresholdFactor) {
+        if (points.isEmpty()) return points;
+
+        // Calculate the mean point
+        double meanX = points.stream().mapToDouble(point -> point.x).average().orElse(0);
+        double meanY = points.stream().mapToDouble(point -> point.y).average().orElse(0);
+        Point meanPoint = new Point(meanX, meanY);
+
+        // Calculate the distances from the mean point
+        List<Double> distances = new ArrayList<>();
+        for (Point point : points) {
+            double distance = Math.sqrt(Math.pow(point.x - meanPoint.x, 2) + Math.pow(point.y - meanPoint.y, 2));
+            distances.add(distance);
+        }
+
+        // Calculate mean and standard deviation of distances
+        double meanDistance = distances.stream().mapToDouble(d -> d).average().orElse(0);
+        double stdDev = Math.sqrt(distances.stream().mapToDouble(d -> Math.pow(d - meanDistance, 2)).average().orElse(0));
+
+        // Filter points that are within the specified threshold factor of the standard deviation
+        List<Point> filteredPoints = new ArrayList<>();
+        for (int i = 0; i < points.size(); i++) {
+            if (distances.get(i) <= meanDistance + thresholdFactor * stdDev) {
+                filteredPoints.add(points.get(i));
             }
         }
 
-        telemetry.update();
-        return input;
+        return filteredPoints;
     }
 
     @Override
