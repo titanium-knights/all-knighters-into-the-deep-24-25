@@ -15,4 +15,8 @@ public class CONFIG {
     public static String clawServo = "claw";
 
     public static String clawSpin = "clawSpin";
+
+    public static String armMotor = "armMotor";
+
+    public static String slide = "slide";
 }
