@@ -17,7 +17,7 @@ public class Claw {
     }
 
     public void close() {
-        clawOpener.setPosition(1.0);
+        clawOpener.setPosition(0.9);
     }
 
     public double getPosition() {
