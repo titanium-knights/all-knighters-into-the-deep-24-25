@@ -82,3 +82,5 @@ lint/tmp/
 
 # user added
 **/.DS_Store
+**/eocvsim_workspace.json
+.vscode/
