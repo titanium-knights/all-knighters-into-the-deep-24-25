@@ -14,8 +14,8 @@ public class Teleop extends OpMode {
     private Claw claw;
     private Slides slides;
 
-    final float STICK_MARGIN = 0.5f; // in case of joystick drift, ignore very small values
-    final double normalPower = 1; // Set normal power constant to 1, no point in slowing the robot down
+    final float STICK_MARGIN = 0.5f;
+    final double normalPower = 1;
 
     @Override
     public void init() {
@@ -49,7 +49,7 @@ public class Teleop extends OpMode {
         if (Math.abs(y) <= STICK_MARGIN) y = .0f;
         if (Math.abs(turn) <= STICK_MARGIN) turn = .0f;
 
-        // Notation of a ? b : c means if a is true do b, else do c.
+
         double multiplier = normalPower;
         drive.move(x * multiplier, y * multiplier, turn * multiplier);
     }
