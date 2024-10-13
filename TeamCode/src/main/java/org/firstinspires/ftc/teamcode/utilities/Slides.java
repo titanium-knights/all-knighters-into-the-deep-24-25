@@ -29,7 +29,7 @@ public class Slides {
     int dropheight = 800;
 
     public Slides(HardwareMap hmap){
-        this.slideMotor = hmap.dcMotor.get(CONFIG.slide);
+        this.slideMotor = hmap.dcMotor.get(CONFIG.slidesMotor);
         this.state = this.pos = 0;
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
