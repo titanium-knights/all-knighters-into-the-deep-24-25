@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.utilities;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.utilities.Arm;
 
 public class Claw {
     Servo clawOpener;

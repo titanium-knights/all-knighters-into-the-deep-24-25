@@ -19,9 +19,10 @@ public class Teleop extends OpMode {
 
     @Override
     public void init() {
+        // initialize util classes for hardware
         drive = new SimpleMecanumDrive(hardwareMap);
-        claw = new Claw(hardwareMap); // Ensure claw is initialized
-        slides = new Slides(hardwareMap); // Ensure slides are initialized
+        claw = new Claw(hardwareMap);
+        slides = new Slides(hardwareMap);
     }
 
     @Override
@@ -44,11 +45,10 @@ public class Teleop extends OpMode {
     }
 
     public void move(float x, float y, float turn) {
-        // If the stick movement is negligible, set STICK_MARGIN to 0
+        // If the stick movement is negligible, ignore it
         if (Math.abs(x) <= STICK_MARGIN) x = .0f;
         if (Math.abs(y) <= STICK_MARGIN) y = .0f;
         if (Math.abs(turn) <= STICK_MARGIN) turn = .0f;
-
 
         double multiplier = normalPower;
         drive.move(x * multiplier, y * multiplier, turn * multiplier);
