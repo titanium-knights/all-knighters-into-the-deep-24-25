@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.utilities.Arm;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
@@ -13,6 +14,7 @@ public class Teleop extends OpMode {
     private SimpleMecanumDrive drive;
     private Claw claw;
     private Slides slides;
+    private Arm arm;
 
     final float STICK_MARGIN = 0.5f;
     final double normalPower = 1;
@@ -23,6 +25,7 @@ public class Teleop extends OpMode {
         drive = new SimpleMecanumDrive(hardwareMap);
         claw = new Claw(hardwareMap);
         slides = new Slides(hardwareMap);
+        arm = new Arm(hardwareMap);
     }
 
     @Override
@@ -41,6 +44,10 @@ public class Teleop extends OpMode {
             slides.high();
         } else if (gamepad1.y || gamepad2.y) {
             slides.low();
+        }
+
+        if (gamepad1.b) {
+            telemetry.addData("arm position", arm.getPosition());
         }
     }
 
