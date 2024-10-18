@@ -22,10 +22,10 @@ public class Slides {
 
     //Preset heights,
     // TO DO: CALIBRATE
-    int maxheight = 3481;
+    int maxheight = 3480;
 
     int midheight = 2424;
-    int lowheight = 1472;
+    int lowheight = 1272;
     int dropheight = 800;
 
     public Slides(HardwareMap hmap){
