@@ -16,4 +16,5 @@ public class CONFIG {
 
     public static String slidesMotor = "slidesMotor";
     public static String armMotor = "armMotor";
+    public static String forearm = "clawR"; // clawRotator
 }
