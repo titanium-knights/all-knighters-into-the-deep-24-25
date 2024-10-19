@@ -51,7 +51,7 @@ public class Arm {
      * @param dir: false = to back, true = towards init
      */
     public void setPower(boolean dir) {
-        armMotor.setPower(FULL_POWER * (dir ? 1 : -1));
+        armMotor.setPower(SLOW_POWER * (dir ? 1 : -1));
     }
 
     // Returns lift position in degrees, robot centric (init pos is 0)

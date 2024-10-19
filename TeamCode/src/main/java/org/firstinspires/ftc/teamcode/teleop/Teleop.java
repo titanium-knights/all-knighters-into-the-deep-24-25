@@ -53,8 +53,13 @@ public class Teleop extends OpMode {
             claw.goToFoldedPosition();
         }
 
+        // Arm controls
         if (gamepad1.b) {
             telemetry.addData("arm position", arm.getPosition());
+            arm.setDirectionTowardsInit();
+        } else if (gamepad1.x) {
+            telemetry.addData("arm position", arm.getPosition());
+            arm.setDirectionTowardsDrop();
         }
     }
 
