@@ -17,7 +17,7 @@ public class Teleop extends OpMode {
     private Arm arm;
 
     final float STICK_MARGIN = 0.5f;
-    final double normalPower = 1;
+    final double normalPower = 0.85;
 
     @Override
     public void init() {
