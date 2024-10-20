@@ -24,9 +24,11 @@ public class Arm {
     private static final double INIT_ANGLE = 0;
     private static final double DROP_ANGLE = 30;
     private static final double PICKUP_ANGLE = 210;
+    private static final double VERTICLE_ANGLE = 90;
+    private static final double MAX_ANGLE = VERTICLE_ANGLE + 120;
 
     public static double FULL_POWER = 1;
-    public static double SLOW_POWER = 0.8 * FULL_POWER;
+    public static double SLOW_POWER = 0.7 * FULL_POWER;
 
     public Arm(HardwareMap hmap) {
         this.armMotor = hmap.dcMotor.get(CONFIG.armMotor);
@@ -51,7 +53,29 @@ public class Arm {
      * @param dir: false = to back, true = towards init
      */
     public void setPower(boolean dir) {
-        armMotor.setPower(SLOW_POWER * (dir ? 1 : -1));
+        // armMotor.setPower(SLOW_POWER * (dir ? 1 : -1));
+        if (dir) {
+            if (getPosition() < VERTICLE_ANGLE) {
+                armMotor.setPower(FULL_POWER);
+            }
+            else if (getPosition() >= VERTICLE_ANGLE && getPosition() < (MAX_ANGLE)) {
+                armMotor.setPower(SLOW_POWER);
+            }
+            else {
+                armMotor.setPower(0);
+            }
+        }
+        else {
+            if (getPosition() > VERTICLE_ANGLE - 120) {
+                armMotor.setPower(-SLOW_POWER);
+            }
+            else if (getPosition() > VERTICLE_ANGLE) {
+                armMotor.setPower(-SLOW_POWER * 0.5);
+            }
+            else {
+                armMotor.setPower(-SLOW_POWER);
+            }
+        }
     }
 
     // Returns lift position in degrees, robot centric (init pos is 0)
