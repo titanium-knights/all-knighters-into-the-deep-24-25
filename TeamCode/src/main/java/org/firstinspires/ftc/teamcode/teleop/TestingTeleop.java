@@ -38,7 +38,7 @@ public class TestingTeleop extends OpMode {
         if (time > 2.35 && time < 4.78) {
             telemetry.addData("arm to pickup", arm.getPosition());
             arm.setDirectionAwayFromInit();
-            claw.goToDropPosition();
+            claw.goToPickUpPosition();
         }
         if (time > 4.78 && time < 6.23) {
             telemetry.addData("stop", arm.getPosition());

@@ -24,12 +24,12 @@ public class Arm {
     // position presets
     private static final double INIT_ANGLE = 0;
     private static final double DROP_ANGLE = 30;
-    private static final double PICKUP_ANGLE = 210;
+    private static final double PICKUP_ANGLE = 215;
     private static final double VERTICAL_ANGLE = 90;
-    private static final double MAX_ANGLE = VERTICAL_ANGLE + 120;
+    private static final double MAX_ANGLE = VERTICAL_ANGLE + 115;
 
-    public static double FULL_POWER = 1;
-    public static double SLOW_POWER = 0.7 * FULL_POWER;
+    public static double FULL_POWER = 1.0;
+    public static double SLOW_POWER = 0.5 * FULL_POWER;
 
     public Arm(HardwareMap hmap) {
         this.armMotor = hmap.dcMotor.get(CONFIG.armMotor);
@@ -59,7 +59,7 @@ public class Arm {
             if (getPosition() < VERTICAL_ANGLE) {
                 armMotor.setPower(FULL_POWER);
             }
-            else if (getPosition() >= VERTICAL_ANGLE && getPosition() < (MAX_ANGLE)) {
+            else if (getPosition() >= VERTICAL_ANGLE && getPosition() < (PICKUP_ANGLE)) {
                 armMotor.setPower(SLOW_POWER);
             }
             else {
@@ -67,14 +67,14 @@ public class Arm {
             }
         }
         else {
-            if (getPosition() > VERTICAL_ANGLE - 120) {
+            if (getPosition() > VERTICAL_ANGLE && getPosition() < PICKUP_ANGLE) {
                 armMotor.setPower(-SLOW_POWER);
             }
-            else if (getPosition() > VERTICAL_ANGLE) {
+            else if (getPosition() < VERTICAL_ANGLE) {
                 armMotor.setPower(-SLOW_POWER * 0.5);
             }
             else {
-                armMotor.setPower(-SLOW_POWER);
+                armMotor.setPower(0);
             }
         }
     }
@@ -94,6 +94,18 @@ public class Arm {
         armMotor.setPower(-0.3);
 
         return true;
+    }
+
+    public boolean toPickUpSamples(){
+        return runToPosition(225);
+    }
+
+    public boolean toFoldedPosition(){
+        return runToPosition(0);
+    }
+
+    public boolean inlineWithSlides() {
+        return runToPosition(90);
     }
 
     /**

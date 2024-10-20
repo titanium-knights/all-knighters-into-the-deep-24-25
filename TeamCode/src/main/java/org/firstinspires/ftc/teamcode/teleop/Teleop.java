@@ -7,7 +7,6 @@ import org.firstinspires.ftc.teamcode.utilities.Arm;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
-import org.opencv.core.Mat;
 
 @TeleOp(name="Driver Teleop", group="default")
 public class Teleop extends OpMode {
@@ -27,6 +26,8 @@ public class Teleop extends OpMode {
         claw = new Claw(hardwareMap);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
+
+        claw.goToFoldedPosition();
     }
 
     @Override
@@ -46,9 +47,11 @@ public class Teleop extends OpMode {
             slides.upHold();
         } else if (gamepad1.dpad_down) {
             slides.downHold();
+        } else {
+            slides.stop();
         }
 
-        // Arm controls
+        // Arm controls (manual)
         if (gamepad1.b) {
             telemetry.addData("arm position", arm.getPosition());
             arm.setDirectionTowardsInit();
@@ -56,11 +59,19 @@ public class Teleop extends OpMode {
         } else if (gamepad1.x) {
             telemetry.addData("arm position", arm.getPosition());
             arm.setDirectionAwayFromInit();
-            claw.goToDropPosition();
+            claw.goToPickUpPosition();
+        }
 
-        } else {
-            telemetry.addData("stop", arm.getPosition());
-            arm.stop();
+        // Arm controls (presets, to be tested)
+        if (gamepad1.left_trigger > 0.0f) {
+            arm.toPickUpSamples();
+            claw.goToPickUpPosition();
+        } else if (gamepad1.right_trigger > 0.0f) {
+            arm.toFoldedPosition();
+            claw.goToFoldedPosition();
+        } else if (gamepad1.y) {
+            arm.inlineWithSlides();
+            claw.goToDropPosition();
         }
     }
 
