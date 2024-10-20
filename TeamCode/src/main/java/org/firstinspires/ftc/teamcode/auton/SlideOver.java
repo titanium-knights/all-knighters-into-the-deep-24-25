@@ -26,15 +26,15 @@ public class SlideOver extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        drivetrain.move(POWER, -POWER, 0);
+        drivetrain.move(-POWER, POWER, 0);
         sleep(crossTime);
         telemetry.addLine("crossed robot now");
         telemetry.update();
-        drivetrain.move(POWER, POWER, 0);
+        drivetrain.move(-POWER, -POWER, 0);
         sleep(crossBackTime);
         telemetry.addLine("crossed back now");
         telemetry.update();
-        drivetrain.move(POWER, 0, 0);
+        drivetrain.move(-POWER, 0, 0);
         sleep(straightenTime);
         telemetry.addLine("parked now :pray:");
         telemetry.update();

@@ -23,7 +23,7 @@ public class TimeAuton extends LinearOpMode {
 
         waitForStart();
 
-        drivetrain.move(POWER, 0, 0);
+        drivetrain.move(-POWER, 0, 0);
         sleep(slideAmount);
     }
 }
