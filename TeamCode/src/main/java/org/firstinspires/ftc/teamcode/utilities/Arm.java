@@ -28,7 +28,7 @@ public class Arm {
     private static final double VERTICAL_ANGLE = 90;
     private static final double MAX_ANGLE = VERTICAL_ANGLE + 120;
 
-    public static double FULL_POWER = 0.8;
+    public static double FULL_POWER = 1;
     public static double SLOW_POWER = 0.7 * FULL_POWER;
 
     public Arm(HardwareMap hmap) {
