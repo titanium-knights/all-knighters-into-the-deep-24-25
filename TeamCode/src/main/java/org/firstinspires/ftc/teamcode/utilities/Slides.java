@@ -9,35 +9,35 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Slides {
-
-    // to go up
-    //Looking from front, Left (acc on the right in this view), must go clockwise
-    // Right (Acc on the left in this view), must go counter clockwise
     // Positive power is counter clockwise,
-
     //position at initial
     int pos;
-    //Current state of slide. 0 - idle, 1 - up, 2 - down
-    int state;
+
+    enum MotorState {
+        IDLE,
+        UP,
+        DOWN
+    }
+
+    MotorState state;
 
     //Preset heights,
     // TO DO: CALIBRATE
-    int maxheight = 3480;
-
-    int midheight = 2424;
-    int lowheight = 1272;
-    int dropheight = 800;
+    int maxHeight = 3480;
+    int midHeight = 2424;
+    int lowHeight = 1272;
+    int dropHeight = 800;
 
     public Slides(HardwareMap hmap){
         this.slideMotor = hmap.dcMotor.get(CONFIG.slidesMotor);
-        this.state = this.pos = 0;
+        this.state = MotorState.IDLE;
+        this.pos = 0;
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         slideMotor.setZeroPowerBehavior(BRAKE);
     }
+
     DcMotor slideMotor;
 
     public int getEncoder(){
@@ -47,12 +47,13 @@ public class Slides {
     public int getTarget(){
         return slideMotor.getTargetPosition();
     }
+
     public DcMotor.RunMode getMode(){
         return slideMotor.getMode();
     }
 
     public void setPower(double power){
-        slideMotor.setPower(-0.95*power); // constant removed
+        slideMotor.setPower(-power);
     }
 
     public void stop(){
@@ -61,7 +62,7 @@ public class Slides {
 
         pos = getEncoder();
 
-        state = 0;
+        state = MotorState.IDLE;
     }
 
     public boolean isBusy() {return slideMotor.isBusy();}
@@ -74,7 +75,7 @@ public class Slides {
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         pos = 0;
-        state = 0;
+        state = MotorState.IDLE;
 
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -85,7 +86,7 @@ public class Slides {
 
     }
     public void todrop(){
-        setTarget(dropheight);
+        setTarget(dropHeight);
         runToPosition();
     }
 
@@ -102,18 +103,18 @@ public class Slides {
     }
 
     public void low(){
-        setTarget(lowheight);
+        setTarget(lowHeight);
         runToPosition();
         pos = getEncoder();
     }
 
     public void middle(){
-        setTarget(midheight);
+        setTarget(midHeight);
         runToPosition();
         pos = getEncoder();
     }
     public void high(){
-        setTarget(maxheight);
+        setTarget(maxHeight);
         runToPosition();
         pos = getEncoder();
     }
@@ -121,19 +122,19 @@ public class Slides {
     public void upHold(){
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pos = getEncoder();
-        if (pos >= maxheight){
+        if (pos >= maxHeight){
             setPower(0);
             return;
         }
-        if (state == 1 && pos >= midheight + 1500){
+        if (state == MotorState.UP && pos >= midHeight + 1500){
             setPower(1);
             pos = getEncoder();
             return;
         }
-        if (state == 1){
+        if (state == MotorState.UP){
             return;
         }
-        state = 1;
+        state = MotorState.UP;
         setPower(1);
     }
 
@@ -141,16 +142,16 @@ public class Slides {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pos = getEncoder();
 
-        if (state == 2 && pos <= 1800) {
+        if (state == MotorState.DOWN && pos <= 1800) {
             setPower(-0.4);
             pos = getEncoder();
             return;
         }
 
-        if (state == 2) {
+        if (state == MotorState.DOWN) {
             return;
         }
-        state = 2;
+        state = MotorState.DOWN;
         setPower(-0.6);
 
     }

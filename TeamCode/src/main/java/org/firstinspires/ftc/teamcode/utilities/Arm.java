@@ -2,16 +2,17 @@ package org.firstinspires.ftc.teamcode.utilities;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+@Config
 public class Arm {
     DcMotor armMotor;
     public boolean slowMode = false;
     
-    // encoder ticks per 360 degrees for 312 rpm motor
-    public static double ENCODER_TICKS = 537.7;
-
+    // encoder ticks per 360 degrees for 117 rpm motor
+    public static double ENCODER_TICKS = 1425.1;
 
     // the below is archaic and very mostly likely wrong pls ignore it
     /* ENCODER TICKS EXPLAINED:
@@ -24,10 +25,10 @@ public class Arm {
     private static final double INIT_ANGLE = 0;
     private static final double DROP_ANGLE = 30;
     private static final double PICKUP_ANGLE = 210;
-    private static final double VERTICLE_ANGLE = 90;
-    private static final double MAX_ANGLE = VERTICLE_ANGLE + 120;
+    private static final double VERTICAL_ANGLE = 90;
+    private static final double MAX_ANGLE = VERTICAL_ANGLE + 120;
 
-    public static double FULL_POWER = 1;
+    public static double FULL_POWER = 0.8;
     public static double SLOW_POWER = 0.7 * FULL_POWER;
 
     public Arm(HardwareMap hmap) {
@@ -55,10 +56,10 @@ public class Arm {
     public void setPower(boolean dir) {
         // armMotor.setPower(SLOW_POWER * (dir ? 1 : -1));
         if (dir) {
-            if (getPosition() < VERTICLE_ANGLE) {
+            if (getPosition() < VERTICAL_ANGLE) {
                 armMotor.setPower(FULL_POWER);
             }
-            else if (getPosition() >= VERTICLE_ANGLE && getPosition() < (MAX_ANGLE)) {
+            else if (getPosition() >= VERTICAL_ANGLE && getPosition() < (MAX_ANGLE)) {
                 armMotor.setPower(SLOW_POWER);
             }
             else {
@@ -66,10 +67,10 @@ public class Arm {
             }
         }
         else {
-            if (getPosition() > VERTICLE_ANGLE - 120) {
+            if (getPosition() > VERTICAL_ANGLE - 120) {
                 armMotor.setPower(-SLOW_POWER);
             }
-            else if (getPosition() > VERTICLE_ANGLE) {
+            else if (getPosition() > VERTICAL_ANGLE) {
                 armMotor.setPower(-SLOW_POWER * 0.5);
             }
             else {
@@ -107,4 +108,22 @@ public class Arm {
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         setPower(true);
     }
+
+    // function to slowly increase / decrease power.
+    /**public void integratePower(
+            DcMotor motor,
+            double minPower,
+            double maxPower,
+            double startingAngle,
+            double endAngle,
+            int iterations
+    ) {
+        double increment = (endAngle - startingAngle) / iterations;
+        double breakpoint = startingAngle + increment;
+        int breakPointsPassed = 0;
+
+
+
+    }
+    */
 }
