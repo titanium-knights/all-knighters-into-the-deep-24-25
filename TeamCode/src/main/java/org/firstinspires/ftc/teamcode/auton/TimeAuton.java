@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 
-@Autonomous(name="TimeAuton", group="Auton")
+@Config
+@Autonomous(name="SlidetoRight", group="Auton")
 public class TimeAuton extends LinearOpMode {
+    public static int slideAmount = 1000;
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Initialized: ", "Hopefully");
@@ -19,7 +23,7 @@ public class TimeAuton extends LinearOpMode {
 
         waitForStart();
 
-        drivetrain.move(0, -POWER, 0);
-        sleep(1000);
+        drivetrain.move(POWER, 0, 0);
+        sleep(slideAmount);
     }
 }

@@ -28,8 +28,8 @@ public class Arm {
     private static final double VERTICAL_ANGLE = 90;
     private static final double MAX_ANGLE = VERTICAL_ANGLE + 115;
 
-    public static double FULL_POWER = 1.0;
-    public static double SLOW_POWER = 0.5 * FULL_POWER;
+    public static double FULL_POWER = 0.7;
+    public static double SLOW_POWER = 1.0;
 
     public Arm(HardwareMap hmap) {
         this.armMotor = hmap.dcMotor.get(CONFIG.armMotor);
