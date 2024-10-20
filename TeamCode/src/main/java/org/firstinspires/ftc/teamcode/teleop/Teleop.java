@@ -39,9 +39,9 @@ public class Teleop extends OpMode {
             telemetry.addData("open", claw.getPosition());
         } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
             claw.close();
-            telemetry.addData("close", claw.getPosition());
+            telemetry.addData("close" +
+                    "++, claw.getPosition());
         }
-
         // Slides controls
         if (gamepad1.y || gamepad2.y) {
             slides.high();
