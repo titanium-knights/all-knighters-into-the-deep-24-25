@@ -16,13 +16,6 @@ public class Arm {
     // encoder ticks per 360 degrees for 117 rpm motor
     public static double ENCODER_TICKS = 1425.1;
 
-    // the below is archaic and very mostly likely wrong pls ignore it
-    /* ENCODER TICKS EXPLAINED:
-    28 rotations of worm gear : 1 rotation of the gear
-    since the motor directly turns the worm gear, that means that now, the gear that is connected to the lift will turn slower
-    in other words, it will turn 28 times slower
-    that means in one motor rotation, there will be 537.6/28 encoder ticks */
-
     // position presets
     private static final double INIT_ANGLE = 0;
     private static final double DROP_ANGLE = 54;
@@ -41,20 +34,20 @@ public class Arm {
         armMotor.setZeroPowerBehavior(BRAKE);
     }
 
-    // completely stop lift
+    // completely stop arm
     public void stop() {
         armMotor.setPower(0);
     }
 
-    // purpose: make sure you don't interrupt a preset
+    // to ensure presets aren't interrupted
     public boolean isBusy() {
         return armMotor.isBusy();
     }
 
-    // overload the other setPower to default slowMode to false
-
     /**
      * @param dir: false = to back, true = towards init
+     * this function theoretically lowers the power closer to the vertical position
+     * **needs testing**
      */
     public void setPower(boolean dir) {
         // armMotor.setPower(SLOW_POWER * (dir ? 1 : -1));
@@ -82,23 +75,23 @@ public class Arm {
         }
     }
 
-    // Returns lift position in degrees, robot centric (init pos is 0)
+    // Returns arm position in degrees, (init pos is 0)
     public double getPosition() {
         return -armMotor.getCurrentPosition() / ENCODER_TICKS * 360;
     }
 
     public boolean runToPosition(double angle) {
         // converts angle into encoder ticks and then runs to position
-        // with input validation
         armMotor.setTargetPosition((int) (ENCODER_TICKS *-angle/360));
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // with run to position always positive power (setPower will be the one determining direction)
-        // run to position is always in presets or else it'll be jittery
-        armMotor.setPower(-0.3);
 
+        // with run to position always positive argument (setPower will be the one determining direction)
+        // run to position is always in presets or else it'll be jittery
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(-0.3);
         return true;
     }
 
+    //TODO: refactor direct calls in teleop into the methods below
     public boolean toPickUpSamples(){
         return runToPosition(225);
     }
@@ -113,6 +106,8 @@ public class Arm {
 
     /**
      * Directions for manual control
+     * these do not work
+     * TODO! fix these
      */
     public void setDirectionTowardsInit() {
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -123,22 +118,4 @@ public class Arm {
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         setPower(true);
     }
-
-    // function to slowly increase / decrease power.
-    /**public void integratePower(
-            DcMotor motor,
-            double minPower,
-            double maxPower,
-            double startingAngle,
-            double endAngle,
-            int iterations
-    ) {
-        double increment = (endAngle - startingAngle) / iterations;
-        double breakpoint = startingAngle + increment;
-        int breakPointsPassed = 0;
-
-
-
-    }
-    */
 }
