@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -8,6 +9,7 @@ import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 
+@Config
 @TeleOp(name="Driver Teleop", group="default")
 public class Teleop extends OpMode {
 
@@ -15,6 +17,8 @@ public class Teleop extends OpMode {
     private Claw claw;
     private Slides slides;
     private Arm arm;
+    public static int ANGLE_TEST = 60;
+    public static int ANGLE_TEST_TWO = 60;
 
     final float STICK_MARGIN = 0.5f;
     final double normalPower = 0.85;
@@ -47,19 +51,22 @@ public class Teleop extends OpMode {
             slides.upHold();
         } else if (gamepad1.dpad_down) {
             slides.downHold();
-        } else {
-            slides.stop();
         }
+//        else {
+//            slides.stop();
+//        }
 
         // Arm controls (manual)
         if (gamepad1.b) {
-            telemetry.addData("arm position", arm.getPosition());
-            arm.setDirectionTowardsInit();
+            arm.runToPosition(240);
             claw.goToFoldedPosition();
-        } else if (gamepad1.x) {
             telemetry.addData("arm position", arm.getPosition());
-            arm.setDirectionAwayFromInit();
+            telemetry.update();
+        } else if (gamepad1.x) {
+            arm.runToPosition(80);
             claw.goToPickUpPosition();
+            telemetry.addData("arm position", arm.getPosition());
+            telemetry.update();
         }
 
         // Arm controls (presets, to be tested)
@@ -70,7 +77,9 @@ public class Teleop extends OpMode {
             arm.toFoldedPosition();
             claw.goToFoldedPosition();
         } else if (gamepad1.y) {
-            arm.inlineWithSlides();
+            telemetry.addData("arm position", arm.getPosition());
+            telemetry.update();
+            arm.runToPosition(15);
             claw.goToDropPosition();
         }
     }

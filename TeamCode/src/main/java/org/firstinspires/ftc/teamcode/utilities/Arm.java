@@ -4,13 +4,15 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
 public class Arm {
     DcMotor armMotor;
     public boolean slowMode = false;
-    
+
+    //TODO update to 537.7 for 312 rpm motor
     // encoder ticks per 360 degrees for 117 rpm motor
     public static double ENCODER_TICKS = 1425.1;
 
@@ -23,16 +25,17 @@ public class Arm {
 
     // position presets
     private static final double INIT_ANGLE = 0;
-    private static final double DROP_ANGLE = 30;
-    private static final double PICKUP_ANGLE = 215;
+    private static final double DROP_ANGLE = 54;
+    private static final double PICKUP_ANGLE = 160;
     private static final double VERTICAL_ANGLE = 90;
-    private static final double MAX_ANGLE = VERTICAL_ANGLE + 115;
+    private static final double MAX_ANGLE = PICKUP_ANGLE;//VERTICAL_ANGLE + 115;
 
     public static double FULL_POWER = 0.7;
     public static double SLOW_POWER = 1.0;
 
     public Arm(HardwareMap hmap) {
         this.armMotor = hmap.dcMotor.get(CONFIG.armMotor);
+        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setZeroPowerBehavior(BRAKE);
