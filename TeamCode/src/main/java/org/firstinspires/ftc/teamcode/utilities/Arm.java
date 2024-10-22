@@ -12,9 +12,9 @@ public class Arm {
     DcMotor armMotor;
     public boolean slowMode = false;
 
-    //TODO update to 537.7 for 312 rpm motor
-    // encoder ticks per 360 degrees for 117 rpm motor
-    public static double ENCODER_TICKS = 1425.1;
+    // 1425.1 for 117 rpm motor
+    // encoder ticks per 360 degrees for 312 rpm motor
+    public static double ENCODER_TICKS = 537.7;//1425.1;
 
     // position presets
     private static final double INIT_ANGLE = 0;
