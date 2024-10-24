@@ -91,17 +91,16 @@ public class Arm {
         return true;
     }
 
-    //TODO: refactor direct calls in teleop into the methods below
     public boolean toPickUpSamples(){
-        return runToPosition(225);
+        return runToPosition(80);
     }
 
     public boolean toFoldedPosition(){
-        return runToPosition(0);
+        return runToPosition(240);
     }
 
     public boolean inlineWithSlides() {
-        return runToPosition(90);
+        return runToPosition(15);
     }
 
     /**

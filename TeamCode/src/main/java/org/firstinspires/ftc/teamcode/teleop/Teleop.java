@@ -56,31 +56,31 @@ public class Teleop extends OpMode {
 //            slides.stop();
 //        }
 
-        // Arm controls (manual)
+        // Arm controls (presets)
         if (gamepad1.b) {
-            arm.runToPosition(240);
+            arm.toFoldedPosition();
             claw.goToFoldedPosition();
             telemetry.addData("arm position", arm.getPosition());
             telemetry.update();
         } else if (gamepad1.x) {
-            arm.runToPosition(80);
+            arm.toPickUpSamples();
             claw.goToPickUpPosition();
             telemetry.addData("arm position", arm.getPosition());
             telemetry.update();
-        }
-
-        // Arm controls (presets, to be tested)
-        if (gamepad1.left_trigger > 0.0f) {
-            arm.toPickUpSamples();
-            claw.goToPickUpPosition();
-        } else if (gamepad1.right_trigger > 0.0f) {
-            arm.toFoldedPosition();
-            claw.goToFoldedPosition();
         } else if (gamepad1.y) {
             telemetry.addData("arm position", arm.getPosition());
             telemetry.update();
-            arm.runToPosition(15);
+            arm.inlineWithSlides();
             claw.goToDropPosition();
+        }
+
+        // Arm controls (manual, does not work)
+        if (gamepad1.left_trigger > 0.0f) {
+            arm.setDirectionAwayFromInit();
+            claw.goToPickUpPosition();
+        } else if (gamepad1.right_trigger > 0.0f) {
+            arm.setDirectionTowardsInit();
+            claw.goToFoldedPosition();
         }
     }
 
