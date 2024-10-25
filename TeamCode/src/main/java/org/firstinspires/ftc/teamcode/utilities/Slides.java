@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
-
 //NEGATIVE IS UP
 import static java.lang.Thread.sleep;
 
@@ -35,7 +33,7 @@ public class Slides {
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slideMotor.setZeroPowerBehavior(BRAKE);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     DcMotor slideMotor;

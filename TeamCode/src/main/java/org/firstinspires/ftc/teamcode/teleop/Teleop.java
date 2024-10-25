@@ -51,10 +51,9 @@ public class Teleop extends OpMode {
             slides.upHold();
         } else if (gamepad1.dpad_down) {
             slides.downHold();
+        } else {
+            slides.stop();
         }
-//        else {
-//            slides.stop();
-//        }
 
         // Arm controls (presets)
         if (gamepad1.b) {
