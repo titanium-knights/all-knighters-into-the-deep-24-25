@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 @Config
 public class Arm {
-    DcMotor armMotor;
+    public DcMotor armMotor;
     public boolean slowMode = false;
 
     // 1425.1 for 117 rpm motor
@@ -28,7 +28,6 @@ public class Arm {
 
     public Arm(HardwareMap hmap) {
         this.armMotor = hmap.dcMotor.get(CONFIG.armMotor);
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setZeroPowerBehavior(BRAKE);
@@ -87,7 +86,7 @@ public class Arm {
         // with run to position always positive argument (setPower will be the one determining direction)
         // run to position is always in presets or else it'll be jittery
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(-0.3);
+        armMotor.setPower(-1.0);
         return true;
     }
 

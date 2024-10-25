@@ -18,7 +18,7 @@ public class Teleop extends OpMode {
     private Slides slides;
     private Arm arm;
     public static int ANGLE_TEST = 60;
-    public static int ANGLE_TEST_TWO = 60;
+    public static int ANGLE_TEST_TWO = -1500;
 
     final float STICK_MARGIN = 0.5f;
     final double normalPower = 0.85;
@@ -46,6 +46,7 @@ public class Teleop extends OpMode {
             claw.close();
             telemetry.addData("close", claw.getPosition());
         }
+
         // Slides controls
         if (gamepad1.dpad_up) {
             slides.upHold();
@@ -57,20 +58,16 @@ public class Teleop extends OpMode {
 
         // Arm controls (presets)
         if (gamepad1.b) {
-            arm.toFoldedPosition();
-            claw.goToFoldedPosition();
-            telemetry.addData("arm position", arm.getPosition());
-            telemetry.update();
+//            arm.toFoldedPosition();
+//            claw.goToFoldedPosition();
+            arm.runToPosition(ANGLE_TEST_TWO);
         } else if (gamepad1.x) {
             arm.toPickUpSamples();
             claw.goToPickUpPosition();
-            telemetry.addData("arm position", arm.getPosition());
-            telemetry.update();
         } else if (gamepad1.y) {
-            telemetry.addData("arm position", arm.getPosition());
-            telemetry.update();
-            arm.inlineWithSlides();
-            claw.goToDropPosition();
+            arm.runToPosition(ANGLE_TEST);
+//            arm.inlineWithSlides();
+//            claw.goToDropPosition();
         }
 
         // Arm controls (manual, does not work)
@@ -81,6 +78,9 @@ public class Teleop extends OpMode {
             arm.setDirectionTowardsInit();
             claw.goToFoldedPosition();
         }
+
+        telemetry.addData("arm position", arm.getPosition());
+        telemetry.update();
     }
 
     public void move(float x, float y, float turn) {
