@@ -10,7 +10,7 @@ public class Claw {
     Servo forearm;
     double servoAngleModifier = (double) 360 / 300;
 
-    public static double PICKUP_POSITION = .66;
+    public static double PICKUP_POSITION = .33;
     public static double FOLDED_POSITION = 0;
     public static double DROP_POSITION = 0.8;
 

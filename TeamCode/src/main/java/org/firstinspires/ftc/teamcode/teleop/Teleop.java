@@ -39,10 +39,10 @@ public class Teleop extends OpMode {
         move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         // Claw controls
-        if (gamepad1.left_bumper || gamepad2.left_bumper) {
+        if (gamepad1.left_bumper) {
             claw.open();
             telemetry.addData("open", claw.getPosition());
-        } else if (gamepad1.right_bumper || gamepad2.right_bumper) {
+        } else if (gamepad1.right_bumper) {
             claw.close();
             telemetry.addData("close", claw.getPosition());
         }
@@ -50,33 +50,25 @@ public class Teleop extends OpMode {
         // Slides controls
         if (gamepad1.dpad_up) {
             slides.upHold();
+            telemetry.addData("up", slides.getEncoder());
         } else if (gamepad1.dpad_down) {
             slides.downHold();
+            telemetry.addData("down", slides.getEncoder());
         } else {
             slides.stop();
+            telemetry.addData("stop", slides.getEncoder());
         }
 
         // Arm controls (presets)
         if (gamepad1.b) {
-//            arm.toFoldedPosition();
-//            claw.goToFoldedPosition();
-            arm.runToPosition(ANGLE_TEST_TWO);
+            arm.toFoldedPosition();
+            claw.goToFoldedPosition();
         } else if (gamepad1.x) {
             arm.toPickUpSamples();
             claw.goToPickUpPosition();
         } else if (gamepad1.y) {
-            arm.runToPosition(ANGLE_TEST);
-//            arm.inlineWithSlides();
-//            claw.goToDropPosition();
-        }
-
-        // Arm controls (manual, does not work)
-        if (gamepad1.left_trigger > 0.0f) {
-            arm.setDirectionAwayFromInit();
-            claw.goToPickUpPosition();
-        } else if (gamepad1.right_trigger > 0.0f) {
-            arm.setDirectionTowardsInit();
-            claw.goToFoldedPosition();
+            arm.inlineWithSlides();
+            claw.goToDropPosition();
         }
 
         telemetry.addData("arm position", arm.getPosition());

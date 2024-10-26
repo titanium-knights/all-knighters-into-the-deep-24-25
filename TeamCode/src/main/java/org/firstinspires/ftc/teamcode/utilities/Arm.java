@@ -14,7 +14,7 @@ public class Arm {
 
     // 1425.1 for 117 rpm motor
     // encoder ticks per 360 degrees for 312 rpm motor
-    public static double ENCODER_TICKS = 537.7;//1425.1;
+    public static double ENCODER_TICKS = 537.7*28;//28 is to account for the worm gear ratio
 
     // position presets
     private static final double INIT_ANGLE = 0;
@@ -31,6 +31,7 @@ public class Arm {
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setZeroPowerBehavior(BRAKE);
+        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     // completely stop arm
@@ -76,30 +77,30 @@ public class Arm {
 
     // Returns arm position in degrees, (init pos is 0)
     public double getPosition() {
-        return -armMotor.getCurrentPosition() / ENCODER_TICKS * 360;
+        return armMotor.getCurrentPosition() / ENCODER_TICKS * 360;
     }
 
     public boolean runToPosition(double angle) {
         // converts angle into encoder ticks and then runs to position
-        armMotor.setTargetPosition((int) (ENCODER_TICKS *-angle/360));
+        armMotor.setTargetPosition((int) (ENCODER_TICKS *angle/360));
 
         // with run to position always positive argument (setPower will be the one determining direction)
         // run to position is always in presets or else it'll be jittery
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotor.setPower(-1.0);
+        armMotor.setPower(1.0);
         return true;
     }
 
     public boolean toPickUpSamples(){
-        return runToPosition(80);
+        return runToPosition(218);
     }
 
     public boolean toFoldedPosition(){
-        return runToPosition(240);
+        return runToPosition(0);
     }
 
     public boolean inlineWithSlides() {
-        return runToPosition(15);
+        return runToPosition(80);
     }
 
     /**
