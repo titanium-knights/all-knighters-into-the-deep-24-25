@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-//NEGATIVE IS UP
-import static java.lang.Thread.sleep;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Slides {
+    // apparently: NEGATIVE IS UP
     // Positive power is counter clockwise,
-    //position at initial
+    // position at initial
     int pos;
 
     enum MotorState {
@@ -23,7 +21,7 @@ public class Slides {
     int maxHeight = 2180;
     int midHeight = 1000;
 
-    public Slides(HardwareMap hmap){
+    public Slides(HardwareMap hmap) {
         this.slideMotor = hmap.dcMotor.get(CONFIG.slidesMotor);
         this.state = MotorState.IDLE;
         this.pos = 0;
@@ -35,17 +33,17 @@ public class Slides {
 
     DcMotor slideMotor;
 
-    public int getEncoder(){
+    public int getEncoder() {
         return -slideMotor.getCurrentPosition();
     }
 
-    public DcMotor.RunMode getMode(){
+    public DcMotor.RunMode getMode() {
         return slideMotor.getMode();
     }
-    public void runToPosition(){
+
+    public void runToPosition() {
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(0.9);
-
     }
 
     public void setPower(double power){
@@ -54,18 +52,22 @@ public class Slides {
 
     public void stop(){
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         setPower(0);
         pos = getEncoder();
         state = MotorState.IDLE;
     }
+
     public void setTarget(int target){
         slideMotor.setTargetPosition(-target);
     }
+
     public void runToPosition(int encoderPos){
         slideMotor.setTargetPosition(encoderPos);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         setPower(-0.9);
     }
+
     public void upHold(){
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pos = getEncoder();
@@ -78,7 +80,7 @@ public class Slides {
             pos = getEncoder();
             return;
         }
-        if (state == MotorState.UP){
+        if (state == MotorState.UP) {
             return;
         }
         state = MotorState.UP;
