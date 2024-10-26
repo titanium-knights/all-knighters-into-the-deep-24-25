@@ -58,49 +58,47 @@ public class Slides {
         state = MotorState.IDLE;
     }
 
-    public void setTarget(int target){
-        slideMotor.setTargetPosition(-target);
-    }
-
-    public void runToPosition(int encoderPos){
-        slideMotor.setTargetPosition(encoderPos);
+    public void runToPosition(int encoderPos) {
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setPower(-0.9);
+        setPower(-1.0);
+        slideMotor.setTargetPosition(encoderPos);
     }
 
-    public void upHold(){
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        pos = getEncoder();
-        if (pos >= maxHeight){
-            setPower(0);
-            return;
-        }
-        if (state == MotorState.UP && pos >= midHeight + 15){
-            setPower(1);
-            pos = getEncoder();
-            return;
-        }
-        if (state == MotorState.UP) {
-            return;
-        }
-        state = MotorState.UP;
-        setPower(1);
+    public void upHold() {
+        runToPosition(maxHeight);
+//        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pos = getEncoder();
+//        if (pos >= maxHeight){
+//            setPower(0);
+//            return;
+//        }
+//        if (state == MotorState.UP && pos >= midHeight + 15){
+//            setPower(1);
+//            pos = getEncoder();
+//            return;
+//        }
+//        if (state == MotorState.UP) {
+//            return;
+//        }
+//        state = MotorState.UP;
+//        setPower(1);
     }
 
     public void downHold() {
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        pos = getEncoder();
-
-        if (state == MotorState.DOWN && pos <= 1800) {
-            setPower(-0.4);
-            pos = getEncoder();
-            return;
-        }
-
-        if (state == MotorState.DOWN) {
-            return;
-        }
-        state = MotorState.DOWN;
-        setPower(-0.6);
+        runToPosition(10);
+//        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        pos = getEncoder();
+//
+//        if (state == MotorState.DOWN && pos <= 1800) {
+//            setPower(-0.4);
+//            pos = getEncoder();
+//            return;
+//        }
+//
+//        if (state == MotorState.DOWN) {
+//            return;
+//        }
+//        state = MotorState.DOWN;
+//        setPower(-0.6);
     }
 }
