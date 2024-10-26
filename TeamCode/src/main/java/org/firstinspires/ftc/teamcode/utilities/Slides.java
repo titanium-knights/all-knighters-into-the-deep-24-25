@@ -37,6 +37,10 @@ public class Slides {
         return -slideMotor.getCurrentPosition();
     }
 
+    public DcMotor.ZeroPowerBehavior getZeroPowerBehavior() {
+        return slideMotor.getZeroPowerBehavior();
+    }
+
     public DcMotor.RunMode getMode() {
         return slideMotor.getMode();
     }
@@ -56,7 +60,6 @@ public class Slides {
         setPower(0);
         pos = getEncoder();
         state = MotorState.IDLE;
-        telemetry.addData("Zero Power Behavior", slideMotor.getZeroPowerBehavior());
     }
 
     public void runToPosition(int encoderPos) {

@@ -72,6 +72,7 @@ public class Teleop extends OpMode {
         }
 
         telemetry.addData("arm position", arm.getPosition());
+        telemetry.addData("Zero Power Behavior", slides.getZeroPowerBehavior());
         telemetry.update();
     }
 
