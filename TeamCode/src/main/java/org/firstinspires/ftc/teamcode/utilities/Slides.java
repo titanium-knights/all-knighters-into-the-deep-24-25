@@ -28,7 +28,6 @@ public class Slides {
     public Slides(HardwareMap hmap) {
         this.slideMotor = hmap.dcMotor.get(CONFIG.slidesMotor);
         this.state = MotorState.IDLE;
-        this.pos = 0;
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -38,7 +37,7 @@ public class Slides {
     DcMotor slideMotor;
 
     public int getEncoder() {
-        return -slideMotor.getCurrentPosition();
+        return slideMotor.getCurrentPosition();
     }
 
     public DcMotor.ZeroPowerBehavior getZeroPowerBehavior() {
@@ -49,26 +48,9 @@ public class Slides {
         return slideMotor.getMode();
     }
 
-    public void runToPosition() {
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setPower(0.9);
-    }
-
-    public void setPower(double power){
-        slideMotor.setPower(-0.95*power);
-    }
-
-    public void stop(){
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        setPower(0);
-        pos = getEncoder();
-        state = MotorState.IDLE;
-    }
-
     public void runToPosition(int encoderPos) {
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setPower(-1.0);
+        slideMotor.setPower(1.0);
         slideMotor.setTargetPosition(encoderPos);
     }
 
@@ -77,22 +59,6 @@ public class Slides {
             currentSlideState = "UP";
             runToPosition(maxHeight);
         }
-//        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        pos = getEncoder();
-//        if (pos >= maxHeight){
-//            setPower(0);
-//            return;
-//        }
-//        if (state == MotorState.UP && pos >= midHeight + 15){
-//            setPower(1);
-//            pos = getEncoder();
-//            return;
-//        }
-//        if (state == MotorState.UP) {
-//            return;
-//        }
-//        state = MotorState.UP;
-//        setPower(1);
     }
 
     public void changeToDownState() {
@@ -100,19 +66,5 @@ public class Slides {
             currentSlideState = "DOWN";
             runToPosition(minHeight);
         }
-//        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//        pos = getEncoder();
-//
-//        if (state == MotorState.DOWN && pos <= 1800) {
-//            setPower(-0.4);
-//            pos = getEncoder();
-//            return;
-//        }
-//
-//        if (state == MotorState.DOWN) {
-//            return;
-//        }
-//        state = MotorState.DOWN;
-//        setPower(-0.6);
     }
 }
