@@ -32,6 +32,7 @@ public class Teleop extends OpMode {
         arm = new Arm(hardwareMap);
 
         claw.goToFoldedPosition();
+        slides.stop();
     }
 
     @Override
@@ -70,6 +71,7 @@ public class Teleop extends OpMode {
 
         telemetry.addData("arm position", arm.getPosition());
         telemetry.addData("Zero Power Behavior", slides.getZeroPowerBehavior());
+        telemetry.addData("slides pos", slides.getEncoder());
         telemetry.update();
     }
 
