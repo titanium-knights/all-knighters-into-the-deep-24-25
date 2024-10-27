@@ -17,7 +17,7 @@ public class Arm {
     public static double ENCODER_TICKS = 537.7*28;//28 is to account for the worm gear ratio
 
     // position presets
-    private static final double INIT_ANGLE = 0;
+    private static final double INIT_ANGLE = 15;
     private static final double DROP_ANGLE = 54;
     private static final double PICKUP_ANGLE = 160;
     private static final double VERTICAL_ANGLE = 90;
@@ -99,8 +99,8 @@ public class Arm {
         return runToPosition(45);
     }
 
-    public boolean toFoldedPosition(){
-        return runToPosition(0);
+    public boolean toDropSpecimen(){
+        return runToPosition(15);
     }
 
     public boolean inlineWithSlides() {

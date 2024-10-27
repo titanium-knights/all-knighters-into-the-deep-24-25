@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import android.widget.Button;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,6 +15,14 @@ import org.firstinspires.ftc.teamcode.utilities.Slides;
 @TeleOp(name="Driver Teleop", group="default")
 public class Teleop extends OpMode {
 
+    enum ButtonPressState {
+       PRESSED_GOOD,
+       DEPRESSED,
+       UNPRESSED,
+    }
+
+    private ButtonPressState yButtonState = ButtonPressState.UNPRESSED;
+
     private SimpleMecanumDrive drive;
     private Claw claw;
     private Slides slides;
@@ -24,6 +34,7 @@ public class Teleop extends OpMode {
 
     final int slidesEncoderSlowModeBreakpoint = 1500;
 
+    boolean slowMode = false;
     int ticks = 0;
     @Override
     public void init() {
@@ -34,6 +45,7 @@ public class Teleop extends OpMode {
         arm = new Arm(hardwareMap);
 
         claw.goToFoldedPosition();
+        claw.close();
         slides.stop();
     }
 
@@ -66,17 +78,25 @@ public class Teleop extends OpMode {
         } else {
             slides.stop();
         }
-        
+
         // Arm controls (presets)
+        if (!gamepad1.y) {
+            yButtonState = ButtonPressState.UNPRESSED;
+        }
+
         if (gamepad1.b) {
-            arm.toFoldedPosition();
+            arm.toDropSpecimen();
             claw.goToFoldedPosition();
         } else if (gamepad1.x) {
             arm.toPickUpSamples();
             claw.goToPickUpPosition();
         } else if (gamepad1.y) {
-            arm.inlineWithSlides();
-            claw.goToDropPosition();
+            if (yButtonState == ButtonPressState.UNPRESSED) {
+                yButtonState = ButtonPressState.PRESSED_GOOD;
+                slowMode = !slowMode;
+            } else if (yButtonState == ButtonPressState.PRESSED_GOOD) {
+                yButtonState = ButtonPressState.DEPRESSED;
+            }
         } else if (gamepad1.a) {
             arm.toDropSamples();
             claw.goToPickUpPosition();
@@ -100,7 +120,7 @@ public class Teleop extends OpMode {
 //        }
 
         double multiplier;
-        if (slides.getEncoder() > slidesEncoderSlowModeBreakpoint) {
+        if (slides.getEncoder() > slidesEncoderSlowModeBreakpoint || slowMode) {
             multiplier = slowPower;
         } else {
             multiplier = normalPower;
