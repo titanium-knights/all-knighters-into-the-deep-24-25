@@ -22,9 +22,8 @@ public class Slides {
     int midHeight = 1000;
     int minHeight = 10;
 
-    // slide states
-    int[] slideStates = new int[]{minHeight, maxHeight};
-    int currentSlideState = 0;
+    // slide state
+    String currentSlideState = "DOWN";
 
     public Slides(HardwareMap hmap) {
         this.slideMotor = hmap.dcMotor.get(CONFIG.slidesMotor);
@@ -74,8 +73,8 @@ public class Slides {
     }
 
     public void changeToUpState() {
-        if (currentSlideState != 1) {
-            currentSlideState = 1;
+        if (currentSlideState != "UP") {
+            currentSlideState = "UP";
             runToPosition(maxHeight);
         }
 //        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -97,9 +96,9 @@ public class Slides {
     }
 
     public void changeToDownState() {
-        if (currentSlideState != 0) {
-            currentSlideState = 0;
-            runToPosition(slideStates[currentSlideState]);
+        if (currentSlideState != "DOWN") {
+            currentSlideState = "DOWN";
+            runToPosition(minHeight);
         }
 //        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        pos = getEncoder();
