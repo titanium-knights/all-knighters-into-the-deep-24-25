@@ -92,7 +92,11 @@ public class Arm {
     }
 
     public boolean toPickUpSamples(){
-        return runToPosition(218);
+        return runToPosition(225);
+    }
+
+    public boolean toDropSamples() {
+        return runToPosition(45);
     }
 
     public boolean toFoldedPosition(){
@@ -100,7 +104,7 @@ public class Arm {
     }
 
     public boolean inlineWithSlides() {
-        return runToPosition(80);
+        return runToPosition(90);
     }
 
     /**

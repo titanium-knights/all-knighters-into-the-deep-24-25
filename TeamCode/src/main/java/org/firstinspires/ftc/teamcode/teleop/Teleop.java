@@ -17,12 +17,14 @@ public class Teleop extends OpMode {
     private Claw claw;
     private Slides slides;
     private Arm arm;
-    public static int ANGLE_TEST = 60;
-    public static int ANGLE_TEST_TWO = -1500;
 
     final float STICK_MARGIN = 0.5f;
     final double normalPower = 0.85;
+    final double slowPower = 0.25;
 
+    final int slidesEncoderSlowModeBreakpoint = 1500;
+
+    int ticks = 0;
     @Override
     public void init() {
         // initialize util classes for hardware
@@ -48,6 +50,12 @@ public class Teleop extends OpMode {
             telemetry.addData("close", claw.getPosition());
         }
 
+        if (gamepad1.left_trigger > .1) {
+            claw.goToPickUpPosition();
+        } else if (gamepad1.right_trigger > .1) {
+            claw.goToFoldedPosition();
+        }
+
         // Slides controls
         if (gamepad1.dpad_up) {
             slides.changeToUpState();
@@ -69,10 +77,12 @@ public class Teleop extends OpMode {
         } else if (gamepad1.y) {
             arm.inlineWithSlides();
             claw.goToDropPosition();
+        } else if (gamepad1.a) {
+            arm.toDropSamples();
+            claw.goToPickUpPosition();
         }
 
         telemetry.addData("arm position", arm.getPosition());
-        telemetry.addData("Zero Power Behavior", slides.getZeroPowerBehavior());
         telemetry.addData("slides pos", slides.getEncoder());
         telemetry.update();
     }
@@ -83,7 +93,19 @@ public class Teleop extends OpMode {
         if (Math.abs(y) <= STICK_MARGIN) y = .0f;
         if (Math.abs(turn) <= STICK_MARGIN) turn = .0f;
 
-        double multiplier = normalPower;
+//        if (x != .0f || y != .0f) {
+//            ticks = Math.max(ticks + 1, 1000)
+//        } else {
+//            ticks = 0;
+//        }
+
+        double multiplier;
+        if (slides.getEncoder() > slidesEncoderSlowModeBreakpoint) {
+            multiplier = slowPower;
+        } else {
+            multiplier = normalPower;
+        }
+
         drive.move(x * multiplier, y * multiplier, turn * multiplier);
     }
 }
