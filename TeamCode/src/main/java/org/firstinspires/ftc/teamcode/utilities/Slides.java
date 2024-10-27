@@ -59,15 +59,6 @@ public class Slides {
         slideMotor.setPower(1.0);
     }
 
-    public void stop() {
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideMotor.setPower(1.0);
-        slideMotor.setTargetPosition(getEncoder());
-        pos = getEncoder();
-        state = MotorState.IDLE;
-    }
-
     public void changeToUpState() {
         if (!currentSlideState.equals("UP")) {
             currentSlideState = "UP";

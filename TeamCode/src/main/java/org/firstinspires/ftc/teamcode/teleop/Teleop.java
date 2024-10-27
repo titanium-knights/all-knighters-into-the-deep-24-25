@@ -54,11 +54,8 @@ public class Teleop extends OpMode {
         } else if (gamepad1.dpad_down) {
             slides.changeToDownState();
             telemetry.addData("down", slides.getEncoder());
-        } // else {
-        //     slides.stop();
-        //     telemetry.addData("stop", slides.getEncoder());
-        // }
-
+        }
+        
         // Arm controls (presets)
         if (gamepad1.b) {
             arm.toFoldedPosition();
