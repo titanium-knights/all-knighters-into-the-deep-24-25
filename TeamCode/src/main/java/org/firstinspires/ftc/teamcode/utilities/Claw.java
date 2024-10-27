@@ -13,7 +13,7 @@ public class Claw {
     public static double PICKUP_POSITION = .33;
     public static double FOLDED_POSITION = 0;
     public static double DROP_POSITION = 0.8;
-    public static double DROP_POSITION2 = .36;
+    public static double FOLDED_POSITION2 = .1;
 
     public Claw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.clawServo);
@@ -34,6 +34,10 @@ public class Claw {
 
     public void goToFoldedPosition() {
         forearm.setPosition(FOLDED_POSITION);
+    }
+
+    public void goToFoldedPosition2() {
+        forearm.setPosition(FOLDED_POSITION2);
     }
 
     public void goToDropPosition() { forearm.setPosition(DROP_POSITION);}

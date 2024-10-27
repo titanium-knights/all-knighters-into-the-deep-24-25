@@ -24,6 +24,9 @@ public class TimeAuton extends LinearOpMode {
         ElapsedTime runtime = new ElapsedTime();
         SimpleMecanumDrive drivetrain = new SimpleMecanumDrive(hardwareMap);
 
+        claw.close();
+        sleep(1000);
+
         waitForStart();
 
         // CONTROLS

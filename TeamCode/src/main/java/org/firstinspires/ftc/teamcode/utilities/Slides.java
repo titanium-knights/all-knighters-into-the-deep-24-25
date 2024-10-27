@@ -20,7 +20,7 @@ public class Slides {
 
 
     //Preset heights,
-    int maxHeight = 1900;
+    int maxHeight = 1000000;
     int minHeight = 0;
 
     public Slides(HardwareMap hmap) {

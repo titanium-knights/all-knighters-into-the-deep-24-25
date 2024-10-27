@@ -25,7 +25,7 @@ public class Score extends LinearOpMode {
         telemetry.addData("Initialized: ", "Hopefully");
         telemetry.update();
 
-        final double POWER = 0.85;
+        final double POWER = 0.4;
         ElapsedTime runtime = new ElapsedTime();
         SimpleMecanumDrive drivetrain = new SimpleMecanumDrive(hardwareMap);
 
@@ -39,33 +39,55 @@ public class Score extends LinearOpMode {
         runtime.reset();
 
         drivetrain.move(0, POWER, 0);
-        sleep(800);
+
+        sleep(10);
         telemetry.addLine("move robot forward");
         telemetry.update();
+        drivetrain.move(0, 0, 0);
 
         arm.toDropSpecimen();
         claw.goToFoldedPosition();
-        sleep(200);
+        sleep(400);
         telemetry.addLine("lift arm and claw rotator");
         telemetry.update();
 
         slides.changeToUpState();
-        sleep(400);
+        sleep(300);
+        telemetry.addLine("move slides up");
+        telemetry.update();
+
+        slides.stop();
+        sleep(2000);
         telemetry.addLine("move slides up");
         telemetry.update();
 
         drivetrain.move(0, POWER, 0);
-        sleep(100);
+        sleep(10);
         telemetry.addLine("move robot forward");
         telemetry.update();
 
+        drivetrain.move(0, 0, 0);
+
         slides.changeToDownState();
-        sleep(300);
+        sleep(50);
         telemetry.addLine("move slides down");
         telemetry.update();
 
         claw.open();
         telemetry.addLine("release claw");
+        telemetry.update();
+
+        drivetrain.move(0, -POWER, 0);
+        sleep(10);
+        telemetry.addLine("move robot backwards");
+        telemetry.update();
+
+        drivetrain.move(0, 0, 0);
+
+        arm.goToFoldedPosition();
+        claw.goToFoldedPosition();
+        sleep(400);
+        telemetry.addLine("revert to init position");
         telemetry.update();
 
         telemetry.addData("Status", "Run Time: " + runtime);

@@ -30,9 +30,11 @@ public class Teleop extends OpMode {
 
     final float STICK_MARGIN = 0.5f;
     final double normalPower = 0.85;
-    final double slowPower = 0.25;
+    final double slowPower = 0.20;
 
-    final int slidesEncoderSlowModeBreakpoint = 1500;
+    final int tickMax = 12000;
+
+    final int slidesEncoderSlowModeBreakpoint = 800;
 
     boolean slowMode = false;
     int ticks = 0;
@@ -65,7 +67,7 @@ public class Teleop extends OpMode {
         if (gamepad1.left_trigger > .1) {
             claw.goToPickUpPosition();
         } else if (gamepad1.right_trigger > .1) {
-            claw.goToFoldedPosition();
+            claw.goToFoldedPosition2();
         }
 
         // Slides controls
@@ -84,19 +86,21 @@ public class Teleop extends OpMode {
             yButtonState = ButtonPressState.UNPRESSED;
         }
 
-        if (gamepad1.b) {
-            arm.toDropSpecimen();
-            claw.goToFoldedPosition();
-        } else if (gamepad1.x) {
-            arm.toPickUpSamples();
-            claw.goToPickUpPosition();
-        } else if (gamepad1.y) {
+        if (gamepad1.y) {
             if (yButtonState == ButtonPressState.UNPRESSED) {
                 yButtonState = ButtonPressState.PRESSED_GOOD;
                 slowMode = !slowMode;
             } else if (yButtonState == ButtonPressState.PRESSED_GOOD) {
                 yButtonState = ButtonPressState.DEPRESSED;
             }
+        }
+
+        if (gamepad1.b) {
+            arm.toDropSpecimen();
+            claw.goToFoldedPosition();
+        } else if (gamepad1.x) {
+            arm.toPickUpSamples();
+            claw.goToPickUpPosition();
         } else if (gamepad1.a) {
             arm.toDropSamples();
             claw.goToPickUpPosition();
@@ -113,11 +117,13 @@ public class Teleop extends OpMode {
         if (Math.abs(y) <= STICK_MARGIN) y = .0f;
         if (Math.abs(turn) <= STICK_MARGIN) turn = .0f;
 
-//        if (x != .0f || y != .0f) {
-//            ticks = Math.max(ticks + 1, 1000)
-//        } else {
-//            ticks = 0;
-//        }
+        if (x != .0f || y != .0f || turn != .0f) {
+            ticks = Math.max(ticks + 1, tickMax);
+        } else {
+            ticks = 0;
+        }
+
+        double tickMultiplier = (ticks * ticks * 1.0) / tickMax / tickMax;
 
         double multiplier;
         if (slides.getEncoder() > slidesEncoderSlowModeBreakpoint || slowMode) {
@@ -126,6 +132,6 @@ public class Teleop extends OpMode {
             multiplier = normalPower;
         }
 
-        drive.move(x * multiplier, y * multiplier, turn * multiplier);
+        drive.move(x * multiplier * tickMultiplier, y * multiplier * tickMultiplier, turn * multiplier * tickMultiplier);
     }
 }

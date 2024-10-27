@@ -32,6 +32,7 @@ public class SlideOver extends LinearOpMode {
 
         claw = new Claw(hardwareMap);
         claw.close();
+        sleep(1000);
 
         drivetrain.move(-POWER, POWER, 0);
         sleep(crossTime);
