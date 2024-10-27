@@ -60,16 +60,37 @@ public class Slides {
     }
 
     public void changeToUpState() {
-        if (!currentSlideState.equals("UP")) {
-            currentSlideState = "UP";
-            runToPosition(midHeight);
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pos = getEncoder();
+        if (pos >= maxHeight){
+            slideMotor.setPower(0.0);
+            return;
         }
+        if (state == MotorState.UP && pos >= midHeight + 1500){
+            slideMotor.setPower(1.0);
+            return;
+        }
+        if (state == MotorState.UP){
+            return;
+        }
+        state = MotorState.UP;
+        slideMotor.setPower(1.0);
     }
 
     public void changeToDownState() {
-        if (!currentSlideState.equals("DOWN")) {
-            currentSlideState = "DOWN";
-            runToPosition(minHeight);
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        pos = getEncoder();
+
+        if (state == MotorState.DOWN && pos <= 1800) {
+            slideMotor.setPower(-0.4);
+            pos = getEncoder();
+            return;
         }
+
+        if (state == MotorState.DOWN) {
+            return;
+        }
+        state = MotorState.DOWN;
+        slideMotor.setPower(-0.6);
     }
 }
