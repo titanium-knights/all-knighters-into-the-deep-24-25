@@ -49,15 +49,15 @@ public class Teleop extends OpMode {
 
         // Slides controls
         if (gamepad1.dpad_up) {
-            slides.upHold();
+            slides.changeToUpState();
             telemetry.addData("up", slides.getEncoder());
         } else if (gamepad1.dpad_down) {
-            slides.downHold();
+            slides.changeToDownState();
             telemetry.addData("down", slides.getEncoder());
-        } else {
-            slides.stop();
-            telemetry.addData("stop", slides.getEncoder());
-        }
+        } // else {
+        //     slides.stop();
+        //     telemetry.addData("stop", slides.getEncoder());
+        // }
 
         // Arm controls (presets)
         if (gamepad1.b) {

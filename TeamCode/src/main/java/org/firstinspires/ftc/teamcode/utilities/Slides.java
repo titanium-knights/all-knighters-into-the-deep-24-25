@@ -20,6 +20,11 @@ public class Slides {
     //Preset heights,
     int maxHeight = 2180;
     int midHeight = 1000;
+    int minHeight = 10;
+
+    // slide states
+    int[] slideStates = new int[]{minHeight, maxHeight};
+    int currentSlideState = 0;
 
     public Slides(HardwareMap hmap) {
         this.slideMotor = hmap.dcMotor.get(CONFIG.slidesMotor);
@@ -68,8 +73,11 @@ public class Slides {
         slideMotor.setTargetPosition(encoderPos);
     }
 
-    public void upHold() {
-        runToPosition(maxHeight);
+    public void changeToUpState() {
+        if (currentSlideState != 1) {
+            currentSlideState = 1;
+            runToPosition(maxHeight);
+        }
 //        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        pos = getEncoder();
 //        if (pos >= maxHeight){
@@ -88,8 +96,11 @@ public class Slides {
 //        setPower(1);
     }
 
-    public void downHold() {
-        runToPosition(10);
+    public void changeToDownState() {
+        if (currentSlideState != 0) {
+            currentSlideState = 0;
+            runToPosition(slideStates[currentSlideState]);
+        }
 //        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 //        pos = getEncoder();
 //
