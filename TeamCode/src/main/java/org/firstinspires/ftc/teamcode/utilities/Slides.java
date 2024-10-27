@@ -73,7 +73,7 @@ public class Slides {
     }
 
     public void changeToUpState() {
-        if (currentSlideState != "UP") {
+        if (!currentSlideState.equals("UP")) {
             currentSlideState = "UP";
             runToPosition(maxHeight);
         }
@@ -96,7 +96,7 @@ public class Slides {
     }
 
     public void changeToDownState() {
-        if (currentSlideState != "DOWN") {
+        if (!currentSlideState.equals("DOWN")) {
             currentSlideState = "DOWN";
             runToPosition(minHeight);
         }
