@@ -18,7 +18,7 @@ public class Slides {
     MotorState state;
 
     //Preset heights,
-    int maxHeight = 2180;
+    int maxHeight = 1900;
     int midHeight = 1000;
     int minHeight = 10;
 
@@ -49,48 +49,31 @@ public class Slides {
         return slideMotor.getMode();
     }
 
-    public void runToPosition(int encoder) {
-        // converts angle into encoder ticks and then runs to position
-        slideMotor.setTargetPosition(encoder);
-
-        // with run to position always positive argument (setPower will be the one determining direction)
-        // run to position is always in presets or else it'll be jittery
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        slideMotor.setPower(1.0);
+    public void stop() {
+        slideMotor.setPower(-0.3);
+        // I set it to -0.3 bc its too heavy to hold up at only 0
+        // also in this case negative = going up, pos = going down, hence the - for the 0.3
     }
 
     public void changeToUpState() {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pos = getEncoder();
-        if (pos >= maxHeight){
+        if (pos >= maxHeight){ // if its over the max height, stop running motor
             slideMotor.setPower(0.0);
             return;
         }
-        if (state == MotorState.UP && pos >= midHeight + 1500){
-            slideMotor.setPower(1.0);
-            return;
-        }
-        if (state == MotorState.UP){
-            return;
-        }
         state = MotorState.UP;
-        slideMotor.setPower(1.0);
+        slideMotor.setPower(-1.0);
     }
 
     public void changeToDownState() {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         pos = getEncoder();
-
-        if (state == MotorState.DOWN && pos <= 1800) {
-            slideMotor.setPower(-0.4);
-            pos = getEncoder();
-            return;
-        }
-
-        if (state == MotorState.DOWN) {
+        if (pos < 0) { // if its at the bottom, turn off power
+            slideMotor.setPower(0.0);
             return;
         }
         state = MotorState.DOWN;
-        slideMotor.setPower(-0.6);
+        slideMotor.setPower(0.3);
     }
 }
