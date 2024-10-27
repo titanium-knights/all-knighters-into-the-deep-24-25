@@ -28,6 +28,7 @@ public class Slides {
     public Slides(HardwareMap hmap) {
         this.slideMotor = hmap.dcMotor.get(CONFIG.slidesMotor);
         this.state = MotorState.IDLE;
+        this.pos = 0;
 
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -37,7 +38,7 @@ public class Slides {
     DcMotor slideMotor;
 
     public int getEncoder() {
-        return slideMotor.getCurrentPosition();
+        return -slideMotor.getCurrentPosition();
     }
 
     public DcMotor.ZeroPowerBehavior getZeroPowerBehavior() {
@@ -48,16 +49,29 @@ public class Slides {
         return slideMotor.getMode();
     }
 
-    public void runToPosition(int encoderPos) {
+    public void runToPosition(int encoder) {
+        // converts angle into encoder ticks and then runs to position
+        slideMotor.setTargetPosition(encoder);
+
+        // with run to position always positive argument (setPower will be the one determining direction)
+        // run to position is always in presets or else it'll be jittery
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         slideMotor.setPower(1.0);
-        slideMotor.setTargetPosition(encoderPos);
+    }
+
+    public void stop() {
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        slideMotor.setPower(1.0);
+        slideMotor.setTargetPosition(getEncoder());
+        pos = getEncoder();
+        state = MotorState.IDLE;
     }
 
     public void changeToUpState() {
         if (!currentSlideState.equals("UP")) {
             currentSlideState = "UP";
-            runToPosition(maxHeight);
+            runToPosition(midHeight);
         }
     }
 
