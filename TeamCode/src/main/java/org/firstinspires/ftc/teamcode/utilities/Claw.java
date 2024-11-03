@@ -12,8 +12,8 @@ public class Claw {
 
     public static double PICKUP_POSITION = .33;
     public static double FOLDED_POSITION = 0;
-    public static double DROP_POSITION = 0.8;
-    public static double FOLDED_POSITION2 = .1;
+    public static double DROP_POSITION = 0.1;
+    public static double SPECIMEN_POSITION = 0.28;
 
     public Claw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.clawServo);
@@ -28,19 +28,17 @@ public class Claw {
         clawOpener.setPosition(1.0);
     }
 
-    public void goToPickUpPosition() {
+    public void toPickUpPosition() {
         forearm.setPosition(PICKUP_POSITION);
     }
 
-    public void goToFoldedPosition() {
+    public void toFoldedPosition() {
         forearm.setPosition(FOLDED_POSITION);
     }
 
-    public void goToFoldedPosition2() {
-        forearm.setPosition(FOLDED_POSITION2);
-    }
+    public void toDropPosition() { forearm.setPosition(DROP_POSITION);}
 
-    public void goToDropPosition() { forearm.setPosition(DROP_POSITION);}
+    public void toSpecimenPosition() {forearm.setPosition(SPECIMEN_POSITION);}
 
     public double getPosition() {
         return clawOpener.getPosition() / servoAngleModifier;

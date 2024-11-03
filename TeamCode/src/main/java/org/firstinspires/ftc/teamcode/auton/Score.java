@@ -45,13 +45,13 @@ public class Score extends LinearOpMode {
         telemetry.update();
         drivetrain.move(0, 0, 0);
 
-        arm.toDropSpecimen();
-        claw.goToFoldedPosition();
+//        arm.runToPosition();
+        claw.toFoldedPosition();
         sleep(400);
         telemetry.addLine("lift arm and claw rotator");
         telemetry.update();
 
-        slides.changeToUpState();
+//        slides.changeToUpState(-.7);
         sleep(300);
         telemetry.addLine("move slides up");
         telemetry.update();
@@ -68,7 +68,7 @@ public class Score extends LinearOpMode {
 
         drivetrain.move(0, 0, 0);
 
-        slides.changeToDownState();
+//        slides.changeToDownState(.3);
         sleep(50);
         telemetry.addLine("move slides down");
         telemetry.update();
@@ -84,8 +84,8 @@ public class Score extends LinearOpMode {
 
         drivetrain.move(0, 0, 0);
 
-        arm.goToFoldedPosition();
-        claw.goToFoldedPosition();
+//        arm.toFoldedPosition();
+        claw.toFoldedPosition();
         sleep(400);
         telemetry.addLine("revert to init position");
         telemetry.update();
