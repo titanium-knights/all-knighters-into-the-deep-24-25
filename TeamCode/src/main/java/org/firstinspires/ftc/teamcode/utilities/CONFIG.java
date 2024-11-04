@@ -17,4 +17,9 @@ public class CONFIG {
     public static String slidesMotor = "slidesMotor";
     public static String armMotor = "armMotor";
     public static String forearm = "clawR"; // clawRotator
+
+    // comment out the below if you aren't using specimen sweatshop factory
+    public static String servoThatKeepsTheHookInPlace = "sTKTHIP";
+    public static String servoThatAppliesForceToHook = "sTAFT";
+
 }
