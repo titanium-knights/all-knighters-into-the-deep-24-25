@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.teamcode.utilities.Claw;
 
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 
@@ -14,6 +15,8 @@ public class SlideOver extends LinearOpMode {
     public static int crossBackTime = 1000;
     public static int straightenTime = 1000;
 
+    private Claw claw;
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Initialized: ", "Hopefully");
@@ -23,8 +26,13 @@ public class SlideOver extends LinearOpMode {
         ElapsedTime runtime = new ElapsedTime();
         SimpleMecanumDrive drivetrain = new SimpleMecanumDrive(hardwareMap);
 
+
         waitForStart();
         runtime.reset();
+
+        claw = new Claw(hardwareMap);
+        claw.close();
+        sleep(1000);
 
         drivetrain.move(-POWER, POWER, 0);
         sleep(crossTime);
