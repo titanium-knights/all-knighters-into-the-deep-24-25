@@ -62,7 +62,7 @@ public class Teleop extends OpMode {
             claw.close();
         }
 
-        // Manual Slide controls commment
+        // Manual Slide controls
         if (gamepad1.dpad_up && teleopState != TeleopState.MANUAL_SLIDE_UP) {
             teleopState = TeleopState.MANUAL_SLIDE_UP;
         } else if (gamepad1.dpad_down && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
