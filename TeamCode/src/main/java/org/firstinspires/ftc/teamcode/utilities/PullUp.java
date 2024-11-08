@@ -53,24 +53,24 @@ public class PullUp {
         return Math.abs(leftMotor.getCurrentPosition() - targetEncoderValue) <= BUFFER && Math.abs(rightMotor.getCurrentPosition() - targetEncoderValue) <= BUFFER;
     }
 
-    public void runToPosition(PullUpState state) {
-        if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
-            stop();
-        } else {
-            updatePower(state.getEncoderValue());
-        }
-    }
+//    public void runToPosition(PullUpState state) {
+//        if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
+//            stop();
+//        } else {
+//            updatePower(state.getEncoderValue());
+//        }
+//    }
 
-    // exists for PID (pointless right now because we use a worm gear)
-    public void updatePower(int targetEncoderValue) {
-        int pos = armMotor.getCurrentPosition();
-        double distanceAway = targetEncoderValue - pos;
-        double multiplier = 1;
-        if (distanceAway > 0) {
-            armMotor.setPower(FULL_POWER * multiplier);
-        } else {
-            armMotor.setPower(-1 * FULL_POWER * multiplier);
-        }
-    }
+//    // exists for PID (pointless right now because we use a worm gear)
+//    public void updatePower(int targetEncoderValue) {
+//        int pos = armMotor.getCurrentPosition();
+//        double distanceAway = targetEncoderValue - pos;
+//        double multiplier = 1;
+//        if (distanceAway > 0) {
+//            armMotor.setPower(FULL_POWER * multiplier);
+//        } else {
+//            armMotor.setPower(-1 * FULL_POWER * multiplier);
+//        }
+//    }
 
 }
