@@ -10,9 +10,10 @@ public class Claw {
     Servo forearm;
     double servoAngleModifier = (double) 360 / 300;
 
+    // 0.0 is init, .55 is close to parallel
     public static double PICKUP_POSITION = .33;
     public static double FOLDED_POSITION = 0;
-    public static double DROP_POSITION = 0.1;
+    public static double DROP_POSITION = 0.3;
     public static double SPECIMEN_POSITION = 0.28;
 
     public Claw(HardwareMap hmap) {
@@ -34,6 +35,18 @@ public class Claw {
 
     public void toFoldedPosition() {
         forearm.setPosition(FOLDED_POSITION);
+    }
+
+    public void holdUp() {
+        forearm.setPosition(0);
+    }
+
+    public void holdDown() {
+        forearm.setPosition(1);
+    }
+
+    public double getForearmPosition() {
+        return forearm.getPosition();
     }
 
     public void toDropPosition() { forearm.setPosition(DROP_POSITION);}
