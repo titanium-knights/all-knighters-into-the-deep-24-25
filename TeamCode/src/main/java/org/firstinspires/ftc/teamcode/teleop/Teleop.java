@@ -155,7 +155,6 @@ public class Teleop extends OpMode {
             slides.slideToPosition(SlideState.BOTTOM);
             arm.runToPosition(ArmState.PICKUP);
             claw.holdUp();
-            claw.open();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
             arm.runToPosition(ArmState.DROP);

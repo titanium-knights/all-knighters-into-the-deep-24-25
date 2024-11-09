@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.utilities.ArmState;
 @Autonomous(name="Score", group="Auton")
 public class Score extends LinearOpMode {
     public static int crossTime = 1000;
-    public static int crossBackTime = 1000;
+    public static int armTime = 2150;
     public static int straightenTime = 1000;
 
     private Claw claw;
@@ -37,34 +37,44 @@ public class Score extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
-
+        sleep(3000);
         sleep(10);
         telemetry.addLine("move arm and forearm into position");
         telemetry.update();
 
-        arm.setPower(1);
+        drivetrain.move(0,-.55,0);
+        sleep(250);
+        drivetrain.move(0,0,0);
+
         claw.toSpecimenPosition();
-        sleep(2050);
-        arm.setPower(0);
+        claw.close();
+        arm.runToPosition(ArmState.SPECIMEN);
+        sleep(2000);
 
         telemetry.addLine("Run into the bar");
         telemetry.update();
         drivetrain.move(0, -.55, 0);
-        sleep(730);
+        sleep(780);
+        drivetrain.move(0,0,0);
+        sleep(2000);
         claw.open();
-        drivetrain.move(0, 0, 0);
+        claw.toDropPositionAuton();
         sleep(1000);
         drivetrain.move(0, .55, 0);
-        sleep(730);
+//        sleep(730);
         drivetrain.move(0, 0, 0);
 
         arm.setPower(-1);
-        claw.toFoldedPosition();
+//        claw.toFoldedPosition();
         claw.close();
         sleep(2650);
         arm.setPower(0);
 
         sleep(1000);
+//        arm.setPower(1);
+//        sleep(2650);
+        arm.runToPosition(ArmState.INIT);
+        arm.setPower(0);
 
 //        slides.changeToUpState(-.7);
 //        sleep(300);
