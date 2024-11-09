@@ -18,7 +18,7 @@ public class Slides {
     // Preset power values for both directions (based on weight)
     // Negative is up, positive is down
     double slideUpPower = -1.0;
-    double slideDownPower = 0;
+    double slideDownPower = 0.01;
     double idlePower = -.3;
 
     // i don't want to do this but i have to
@@ -78,7 +78,7 @@ public class Slides {
             slideMotor.setPower(-.8);
             hasBeenCalibrated = false;
         } else if (state == SlideState.MANUALDOWN) {
-            slideMotor.setPower(0);
+            slideMotor.setPower(0.1);
         } else if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
             stop();
         } else if (!hasBeenCalibrated && slidesStoppedMoving() && state == SlideState.BOTTOM && slideMotor.getCurrentPosition() > -150) {
@@ -86,6 +86,7 @@ public class Slides {
             slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             hasBeenCalibrated = true;
+            stop();
         } else {
             updateSliderPower(state.getEncoderValue());
             hasBeenCalibrated = false;

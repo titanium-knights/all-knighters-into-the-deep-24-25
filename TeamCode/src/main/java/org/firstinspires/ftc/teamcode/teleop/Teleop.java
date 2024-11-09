@@ -37,11 +37,11 @@ public class Teleop extends OpMode {
 
     final float STICK_MARGIN = 0.5f;
     final double normalPower = .85;
-    final double slowPower = 0.10;
+    final double slowPower = 0.30;
 
     final int tickMax = 20;
 
-    final int slidesEncoderSlowModeBreakpoint = 800;
+    final int slidesEncoderSlowModeBreakpoint = -800;
 
     boolean slowMode = false;
     int ticks = 0;
@@ -86,6 +86,8 @@ public class Teleop extends OpMode {
             pullUp.goUp();
         } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
             pullUp.goDown();
+        } else {
+            pullUp.stop();
         }
 
         // Init Position (Start)
@@ -152,7 +154,8 @@ public class Teleop extends OpMode {
         } else if (state == TeleopState.PICKUP) {
             slides.slideToPosition(SlideState.BOTTOM);
             arm.runToPosition(ArmState.PICKUP);
-            claw.toPickUpPosition();
+            claw.holdUp();
+            claw.open();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
             arm.runToPosition(ArmState.DROP);
@@ -193,6 +196,6 @@ public class Teleop extends OpMode {
             multiplier = normalPower;
         }
 
-        drive.move(x * multiplier * tickMultiplier, y * multiplier * tickMultiplier, turn * multiplier * tickMultiplier);
+        drive.move(x * multiplier, y * multiplier, turn * multiplier);
     }
 }
