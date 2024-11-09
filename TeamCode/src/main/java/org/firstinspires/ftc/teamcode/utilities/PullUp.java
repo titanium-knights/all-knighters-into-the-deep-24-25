@@ -40,6 +40,15 @@ public class PullUp {
         rightMotor.setPower(0);
     }
 
+    public void goUp() {
+        leftMotor.setPower(0.5);
+        rightMotor.setPower(0.5);
+    }
+    public void goDown() {
+        leftMotor.setPower(-0.5);
+        rightMotor.setPower(-0.5);
+    }
+
     // Returns arm position in degrees, (init pos is 0)
     public double getLeftEncoderValue() {
         return leftMotor.getCurrentPosition();
