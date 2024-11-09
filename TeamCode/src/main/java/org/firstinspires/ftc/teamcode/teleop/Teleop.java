@@ -162,7 +162,7 @@ public class Teleop extends OpMode {
         if (x != .0f || y != .0f || turn != .0f) {
             ticks = Math.max(ticks + 1, tickMax);
         } else {
-            ticks = 0;
+            ticks = 10;
         }
 
         double tickMultiplier = (ticks * ticks * 1.0) / tickMax / tickMax;
