@@ -39,7 +39,7 @@ public class Teleop extends OpMode {
     final double normalPower = .85;
     final double slowPower = 0.30;
 
-    final int tickMax = 20;
+    final int tickMax = 24;
 
     final int slidesEncoderSlowModeBreakpoint = -800;
 
@@ -184,7 +184,7 @@ public class Teleop extends OpMode {
         if (x != .0f || y != .0f || turn != .0f) {
             ticks = Math.max(ticks + 1, tickMax);
         } else {
-            ticks = 10;
+            ticks = 12;
         }
 
         double tickMultiplier = (ticks * ticks * 1.0) / tickMax / tickMax;
