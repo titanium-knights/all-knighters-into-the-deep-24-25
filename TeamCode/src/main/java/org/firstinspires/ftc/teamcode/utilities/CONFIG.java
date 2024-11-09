@@ -20,8 +20,8 @@ public class CONFIG {
     public static String forearm = "clawR"; // clawRotator
 
     // pull up (left is with the robot facing forward away from you)
-    public static String leftPullUp = "leftPullUp";
-    public static String rightPullUp = "rightPullUp";
+    public static String leftPullUp = "cl";
+    public static String rightPullUp = "cr";
 
     // comment out the below if you aren't using specimen sweatshop factory
     public static String servoThatKeepsTheHookInPlace = "sTKTHIP";

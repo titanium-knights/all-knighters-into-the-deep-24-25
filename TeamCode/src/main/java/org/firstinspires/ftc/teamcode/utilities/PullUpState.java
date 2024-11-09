@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
 public enum PullUpState {
-    TOP(2000),
-    BOTTOM(0);
-
+    REACH_UP(2000),
+    PULL_DOWN(0);
     private final int encoderValue;
 
     PullUpState(int encoderValue) {

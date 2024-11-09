@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.ArmState;
+import org.firstinspires.ftc.teamcode.utilities.PullUp;
+import org.firstinspires.ftc.teamcode.utilities.PullUpState;
 
 @Config
 @TeleOp(name="Driver Teleop", group="default")
@@ -30,14 +32,16 @@ public class Teleop extends OpMode {
     private Claw claw;
     private Slides slides;
     private Arm arm;
+    private PullUp pullUp;
+
 
     final float STICK_MARGIN = 0.5f;
     final double normalPower = .85;
-    final double slowPower = 0.10;
+    final double slowPower = 0.30;
 
     final int tickMax = 20;
 
-    final int slidesEncoderSlowModeBreakpoint = 800;
+    final int slidesEncoderSlowModeBreakpoint = -800;
 
     boolean slowMode = false;
     int ticks = 0;
@@ -49,6 +53,7 @@ public class Teleop extends OpMode {
         claw = new Claw(hardwareMap);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
+        pullUp = new PullUp(hardwareMap);
     }
 
     @Override
@@ -63,10 +68,26 @@ public class Teleop extends OpMode {
         }
 
         // Manual Slide controls
-        if (gamepad1.dpad_up && teleopState != TeleopState.MANUAL_SLIDE_UP) {
-            teleopState = TeleopState.MANUAL_SLIDE_UP;
-        } else if (gamepad1.dpad_down && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
-            teleopState = TeleopState.MANUAL_SLIDE_DOWN;
+//        if (gamepad1.dpad_up && teleopState != TeleopState.MANUAL_SLIDE_UP) {
+//            teleopState = TeleopState.MANUAL_SLIDE_UP;
+//        } else if (gamepad1.dpad_down && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
+//            teleopState = TeleopState.MANUAL_SLIDE_DOWN;
+//        }
+
+//        // Hanging / Climb (dpad_up, dpad_down)
+//        if (gamepad1.dpad_up && teleopState != TeleopState.REACH_UP) {
+//            teleopState = TeleopState.REACH_UP;
+//        } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
+//            teleopState = TeleopState.PULL_DOWN;
+//        }
+
+        // Manual Hanging / Climb (dpad_up, dpad_down)
+        if (gamepad1.dpad_up && teleopState != TeleopState.REACH_UP) {
+            pullUp.goUp();
+        } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
+            pullUp.goDown();
+        } else {
+            pullUp.stop();
         }
 
         // Init Position (Start)
@@ -133,7 +154,8 @@ public class Teleop extends OpMode {
         } else if (state == TeleopState.PICKUP) {
             slides.slideToPosition(SlideState.BOTTOM);
             arm.runToPosition(ArmState.PICKUP);
-            claw.toPickUpPosition();
+            claw.holdUp();
+            claw.open();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
             arm.runToPosition(ArmState.DROP);
@@ -174,6 +196,6 @@ public class Teleop extends OpMode {
             multiplier = normalPower;
         }
 
-        drive.move(x * multiplier * tickMultiplier, y * multiplier * tickMultiplier, turn * multiplier * tickMultiplier);
+        drive.move(x * multiplier, y * multiplier, turn * multiplier);
     }
 }

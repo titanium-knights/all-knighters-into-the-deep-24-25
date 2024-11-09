@@ -43,8 +43,8 @@ public class Score extends LinearOpMode {
         telemetry.update();
 
         arm.setPower(1);
-        claw.holdUp();
-        sleep(2650);
+        claw.toSpecimenPosition();
+        sleep(2050);
         arm.setPower(0);
 
         telemetry.addLine("Run into the bar");
@@ -64,7 +64,7 @@ public class Score extends LinearOpMode {
         sleep(2650);
         arm.setPower(0);
 
-        sleep(10000);
+        sleep(1000);
 
 //        slides.changeToUpState(-.7);
 //        sleep(300);
