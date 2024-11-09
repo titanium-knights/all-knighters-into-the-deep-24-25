@@ -12,13 +12,16 @@ public class Claw {
 
     // 0.0 is init, .55 is close to parallel
     public static double PICKUP_POSITION = .33;
-    public static double FOLDED_POSITION = 0;
+    public static double FOLDED_POSITION = 1;
     public static double DROP_POSITION = 0.3;
-    public static double SPECIMEN_POSITION = 0.28;
+    public static double SPECIMEN_POSITION = 0.23;
 
     public Claw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.clawServo);
         this.forearm = hmap.servo.get(CONFIG.forearm);
+
+        toFoldedPosition();
+        close();
     }
 
     public void open() {
@@ -38,11 +41,11 @@ public class Claw {
     }
 
     public void holdUp() {
-        forearm.setPosition(0);
+        forearm.setPosition(.2);
     }
 
     public void holdDown() {
-        forearm.setPosition(1);
+        forearm.setPosition(.33);
     }
 
     public double getForearmPosition() {

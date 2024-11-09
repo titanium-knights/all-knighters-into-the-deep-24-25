@@ -1,10 +1,10 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
 public enum ArmState {
-    INIT(0),
+    INIT(40),
     PICKUP(10200),
     DROP(2000),
-    SPECIMEN(5500);
+    SPECIMEN(6300);
 
     private final int encoderValue;
 

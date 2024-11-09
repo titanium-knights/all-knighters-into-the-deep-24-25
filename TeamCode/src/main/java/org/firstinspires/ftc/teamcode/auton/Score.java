@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
+import org.firstinspires.ftc.teamcode.utilities.ArmState;
 
 @Config
 @Autonomous(name="Score", group="Auton")
@@ -22,10 +23,9 @@ public class Score extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        telemetry.addData("Initialized: ", "Hopefully");
+        telemetry.addData("Initialized: ", "");
         telemetry.update();
 
-        final double POWER = 0.4;
         ElapsedTime runtime = new ElapsedTime();
         SimpleMecanumDrive drivetrain = new SimpleMecanumDrive(hardwareMap);
 
@@ -38,59 +38,74 @@ public class Score extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        drivetrain.move(0, POWER, 0);
-
         sleep(10);
-        telemetry.addLine("move robot forward");
+        telemetry.addLine("move arm and forearm into position");
         telemetry.update();
+
+        arm.setPower(1);
+        claw.holdUp();
+        sleep(2650);
+        arm.setPower(0);
+
+        telemetry.addLine("Run into the bar");
+        telemetry.update();
+        drivetrain.move(0, -.55, 0);
+        sleep(730);
+        claw.open();
+        drivetrain.move(0, 0, 0);
+        sleep(1000);
+        drivetrain.move(0, .55, 0);
+        sleep(730);
         drivetrain.move(0, 0, 0);
 
-//        arm.runToPosition();
+        arm.setPower(-1);
         claw.toFoldedPosition();
-        sleep(400);
-        telemetry.addLine("lift arm and claw rotator");
-        telemetry.update();
+        claw.close();
+        sleep(2650);
+        arm.setPower(0);
+
+        sleep(10000);
 
 //        slides.changeToUpState(-.7);
-        sleep(300);
-        telemetry.addLine("move slides up");
-        telemetry.update();
+//        sleep(300);
+//        telemetry.addLine("move slides up");
+//        telemetry.update();
 
-        slides.stop();
-        sleep(2000);
-        telemetry.addLine("move slides up");
-        telemetry.update();
+//        slides.stop();
+//        sleep(2000);
+//        telemetry.addLine("move slides up");
+//        telemetry.update();
+//
+//        drivetrain.move(0, POWER, 0);
+//        sleep(10);
+//        telemetry.addLine("move robot forward");
+//        telemetry.update();
+//
+//        drivetrain.move(0, 0, 0);
 
-        drivetrain.move(0, POWER, 0);
-        sleep(10);
-        telemetry.addLine("move robot forward");
-        telemetry.update();
+////        slides.changeToDownState(.3);
+//        sleep(50);
+//        telemetry.addLine("move slides down");
+//        telemetry.update();
+//
+//        claw.open();
+//        telemetry.addLine("release claw");
+//        telemetry.update();
 
-        drivetrain.move(0, 0, 0);
+//        drivetrain.move(0, -POWER, 0);
+//        sleep(10);
+//        telemetry.addLine("move robot backwards");
+//        telemetry.update();
+//
+//        drivetrain.move(0, 0, 0);
 
-//        slides.changeToDownState(.3);
-        sleep(50);
-        telemetry.addLine("move slides down");
-        telemetry.update();
-
-        claw.open();
-        telemetry.addLine("release claw");
-        telemetry.update();
-
-        drivetrain.move(0, -POWER, 0);
-        sleep(10);
-        telemetry.addLine("move robot backwards");
-        telemetry.update();
-
-        drivetrain.move(0, 0, 0);
-
-//        arm.toFoldedPosition();
-        claw.toFoldedPosition();
-        sleep(400);
-        telemetry.addLine("revert to init position");
-        telemetry.update();
-
-        telemetry.addData("Status", "Run Time: " + runtime);
-        telemetry.update();
+////        arm.toFoldedPosition();
+//        claw.toFoldedPosition();
+//        sleep(400);
+//        telemetry.addLine("revert to init position");
+//        telemetry.update();
+//
+//        telemetry.addData("Status", "Run Time: " + runtime);
+//        telemetry.update();
     }
 }

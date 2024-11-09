@@ -32,10 +32,10 @@ public class Teleop extends OpMode {
     private Arm arm;
 
     final float STICK_MARGIN = 0.5f;
-    final double normalPower = 0.85;
-    final double slowPower = 0.20;
+    final double normalPower = .85;
+    final double slowPower = 0.10;
 
-    final int tickMax = 12000;
+    final int tickMax = 20;
 
     final int slidesEncoderSlowModeBreakpoint = 800;
 
@@ -118,6 +118,7 @@ public class Teleop extends OpMode {
         telemetry.addData("slides pos", slides.getEncoder());
         telemetry.addData("claw pos", claw.getPosition());
         telemetry.addData("forearm pos", claw.getForearmPosition());
+        telemetry.addData("slow mode", slowMode);
 
         telemetry.addData("slides change", slides.getChangeInEncoderValues());
         telemetry.addData("is calibrated", slides.isCalibrated());
@@ -138,7 +139,7 @@ public class Teleop extends OpMode {
             arm.runToPosition(ArmState.DROP);
             claw.toDropPosition();
         } else if (state == TeleopState.SPECIMEN) {
-            slides.slideToPosition(SlideState.MEDIUM);
+            slides.slideToPosition(SlideState.BOTTOM);
             arm.runToPosition(ArmState.SPECIMEN);
             claw.toSpecimenPosition();
         } else if (state == TeleopState.MANUAL_SLIDE_UP) {
@@ -147,7 +148,7 @@ public class Teleop extends OpMode {
             slides.slideToPosition(SlideState.MANUALDOWN);
         } else if (state == TeleopState.MANUAL_FOREARM_UP) {
             claw.holdUp();
-        } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {
+        } else if (state == TeleopState.MANUAL_FOREARM_DOWN) {
             claw.holdDown();
         }
     }

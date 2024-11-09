@@ -49,7 +49,11 @@ public class Slides {
     // used in initialization and l as in between movements
     public void stop() {
         // this is the power required to be stationary
-        slideMotor.setPower(idlePower);
+        if (hasBeenCalibrated) {
+            slideMotor.setPower(0);
+        } else {
+            slideMotor.setPower(idlePower);
+        }
     }
 
     private boolean encoderValueWithinBufferOfTarget(int targetEncoderValue) {
