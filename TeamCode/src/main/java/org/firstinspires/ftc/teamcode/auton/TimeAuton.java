@@ -17,6 +17,7 @@ public class TimeAuton extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         telemetry.addData("Initialized: ", "Hopefully");
         telemetry.update();
 
@@ -24,8 +25,8 @@ public class TimeAuton extends LinearOpMode {
         ElapsedTime runtime = new ElapsedTime();
         SimpleMecanumDrive drivetrain = new SimpleMecanumDrive(hardwareMap);
 
-        claw.close();
-        sleep(1000);
+//        claw.close();
+//        sleep(1000);
 
         waitForStart();
 
@@ -35,31 +36,31 @@ public class TimeAuton extends LinearOpMode {
         // drivetrain.move(0, POWER, 0); // move forward
         // drivetrain.move(0, -POWER, 0); // move backward
         // idk how claw, arm, and slides work yet lmao
-
-        // Leftmost block
-        drivetrain.move(0, POWER, 0); // f1
-        drivetrain.move(-POWER, 0, 0); // r1
-        drivetrain.move(0, POWER, 0); // f1
-        drivetrain.move(-POWER, 0, 0); // r1
-        drivetrain.move(0, -POWER, 0); // b1
-        drivetrain.move(POWER, 0, 0); // l1
-        // Middle block
-        drivetrain.move(0, POWER, 0); // f2
-        drivetrain.move(-POWER, 0, 0); // r2
-        drivetrain.move(0, POWER, 0); // f2
-        drivetrain.move(-POWER, 0, 0); // r2
-        drivetrain.move(0, -POWER, 0); // b2
-        drivetrain.move(POWER, 0, 0); // l2
-        // Rightmost block
-        drivetrain.move(0, POWER, 0); // f3
-        drivetrain.move(-POWER, 0, 0); // r3
-        drivetrain.move(0, POWER, 0); // f3
-        drivetrain.move(-POWER, 0, 0); // r3
-        drivetrain.move(0, -POWER, 0); // b3
-        drivetrain.move(POWER, 0, 0); // l3
-        // Parking
-        drivetrain.move(0, POWER, 0); // f
-        drivetrain.move(-POWER, 0, 0); // r
-        drivetrain.move(0, -POWER, 0); // b
+//
+//        // Leftmost block
+//        drivetrain.move(0, POWER, 0); // f1
+//        drivetrain.move(-POWER, 0, 0); // r1
+//        drivetrain.move(0, POWER, 0); // f1
+//        drivetrain.move(-POWER, 0, 0); // r1
+//        drivetrain.move(0, -POWER, 0); // b1
+//        drivetrain.move(POWER, 0, 0); // l1
+//        // Middle block
+//        drivetrain.move(0, POWER, 0); // f2
+//        drivetrain.move(-POWER, 0, 0); // r2
+//        drivetrain.move(0, POWER, 0); // f2
+//        drivetrain.move(-POWER, 0, 0); // r2
+//        drivetrain.move(0, -POWER, 0); // b2
+//        drivetrain.move(POWER, 0, 0); // l2
+//        // Rightmost block
+//        drivetrain.move(0, POWER, 0); // f3
+//        drivetrain.move(-POWER, 0, 0); // r3
+//        drivetrain.move(0, POWER, 0); // f3
+//        drivetrain.move(-POWER, 0, 0); // r3
+//        drivetrain.move(0, -POWER, 0); // b3
+//        drivetrain.move(POWER, 0, 0); // l3
+//        // Parking
+//        drivetrain.move(0, POWER, 0); // f
+//        drivetrain.move(-POWER, 0, 0); // r
+//        drivetrain.move(0, -POWER, 0); // b
     }
 }

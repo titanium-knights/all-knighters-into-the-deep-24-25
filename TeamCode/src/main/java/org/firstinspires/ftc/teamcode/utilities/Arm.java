@@ -62,4 +62,9 @@ public class Arm {
         }
     }
 
+    // only use for auton!!!
+    public void setPower(double power) {
+        armMotor.setPower(power);
+    }
+
 }
