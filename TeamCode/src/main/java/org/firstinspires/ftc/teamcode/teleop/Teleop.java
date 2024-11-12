@@ -124,18 +124,10 @@ public class Teleop extends OpMode {
             }
         }
 
-        if (gamepad1.right_trigger > .1) {
-            teleopState = TeleopState.MANUAL_FOREARM_UP;
-        }
-
-        if (gamepad1.left_trigger > .1) {
-            teleopState = TeleopState.MANUAL_FOREARM_DOWN;
-        }
-
         // move to necessary positions
         goToPosition(teleopState);
 
-        telemetry.addData("arm pos", arm.getEncoderValue());
+        telemetry.addData("arm pos", arm.getPosition());
         telemetry.addData("slides pos", slides.getEncoder());
         telemetry.addData("claw pos", claw.getPosition());
         telemetry.addData("forearm pos", claw.getForearmPosition());
@@ -149,28 +141,24 @@ public class Teleop extends OpMode {
     private void goToPosition(TeleopState state) {
         if (state == TeleopState.INIT) {
             slides.slideToPosition(SlideState.BOTTOM);
-            arm.runToPosition(ArmState.INIT);
+            arm.toInitPos();
             claw.toFoldedPosition();
         } else if (state == TeleopState.PICKUP) {
             slides.slideToPosition(SlideState.BOTTOM);
-            arm.runToPosition(ArmState.PICKUP);
+            arm.toPickUp();
             claw.holdUp();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
-            arm.runToPosition(ArmState.DROP);
+            arm.toScoreBucketPos();
             claw.toDropPosition();
         } else if (state == TeleopState.SPECIMEN) {
             slides.slideToPosition(SlideState.BOTTOM);
-            arm.runToPosition(ArmState.SPECIMEN);
+            arm.toScoreSpecimenPos();
             claw.toSpecimenPosition();
         } else if (state == TeleopState.MANUAL_SLIDE_UP) {
             slides.slideToPosition(SlideState.MANUALUP);
         } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {
             slides.slideToPosition(SlideState.MANUALDOWN);
-        } else if (state == TeleopState.MANUAL_FOREARM_UP) {
-            claw.holdUp();
-        } else if (state == TeleopState.MANUAL_FOREARM_DOWN) {
-            claw.holdDown();
         }
     }
 
