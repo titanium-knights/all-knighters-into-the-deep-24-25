@@ -13,6 +13,7 @@ public class Arm {
     public void toPickUp() {
         arm.setPosition(0.0);
     }
+  
     public void toInitPos() { arm.setPosition(1.0); }
     public void toScoreBucketPos() { arm.setPosition(0.5); }
     public void toScoreSpecimenPos() { arm.setPosition(0.4); }
