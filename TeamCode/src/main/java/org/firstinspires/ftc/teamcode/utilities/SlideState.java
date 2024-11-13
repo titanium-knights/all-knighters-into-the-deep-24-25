@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.utilities;
 public enum SlideState {
     MANUALUP(0),
     MANUALDOWN(0),
-    TOP(-2000),
+    TOP(-2200),
     MEDIUM(-900),
     BOTTOM(0);
 
