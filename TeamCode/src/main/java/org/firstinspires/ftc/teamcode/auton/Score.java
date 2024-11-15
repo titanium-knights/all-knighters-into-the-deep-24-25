@@ -46,9 +46,10 @@ public class Score extends LinearOpMode {
         sleep(250);
         drivetrain.move(0,0,0);
 
-        claw.toSpecimenPosition();
+       // claw.toSpecimenPosition();
         claw.close();
-        arm.runToPosition(ArmState.SPECIMEN);
+        //arm.runToPosition(ArmState.SPECIMEN);
+        arm.toScoreSpecimenPos();
         sleep(2000);
 
         telemetry.addLine("Run into the bar");
@@ -58,23 +59,24 @@ public class Score extends LinearOpMode {
         drivetrain.move(0,0,0);
         sleep(2000);
         claw.open();
-        claw.toDropPositionAuton();
+       // claw.toDropPositionAuton();
         sleep(1000);
         drivetrain.move(0, .55, 0);
 //        sleep(730);
         drivetrain.move(0, 0, 0);
 
-        arm.setPower(-1);
+       // arm.setPower(-1);
+        arm.toInitPos();
 //        claw.toFoldedPosition();
         claw.close();
         sleep(2650);
-        arm.setPower(0);
+        //arm.setPower(0);
 
         sleep(1000);
 //        arm.setPower(1);
 //        sleep(2650);
-        arm.runToPosition(ArmState.INIT);
-        arm.setPower(0);
+        //arm.runToPosition(ArmState.INIT);
+        //arm.setPower(0);
 
 //        slides.changeToUpState(-.7);
 //        sleep(300);

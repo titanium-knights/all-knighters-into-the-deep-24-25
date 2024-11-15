@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm {
     Servo arm;
+    private static final double BUFFER = 20; // buffer for position of arm
     public Arm(HardwareMap hmap) {
         this.arm = hmap.servo.get(CONFIG.armServo);
     }
