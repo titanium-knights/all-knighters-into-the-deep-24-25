@@ -58,6 +58,7 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
+        TeleopState prevState = teleopState;
         move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         // Manual Claw controls
@@ -65,6 +66,11 @@ public class Teleop extends OpMode {
             claw.open();
         } else if (gamepad1.right_bumper) {
             claw.close();
+        }
+        if (gamepad1.left_trigger > 0.1f) {
+            arm.toGrab();
+        } else if (gamepad1.right_trigger > 0.1f) {
+            arm.toPickUp();
         }
 
         // Manual Slide controls
@@ -124,8 +130,9 @@ public class Teleop extends OpMode {
             }
         }
 
-        // move to necessary positions
-        goToPosition(teleopState);
+        // move to necessary position
+        if (prevState != teleopState)
+            goToPosition(teleopState);
 
         telemetry.addData("arm pos", arm.getPosition());
         telemetry.addData("slides pos", slides.getEncoder());

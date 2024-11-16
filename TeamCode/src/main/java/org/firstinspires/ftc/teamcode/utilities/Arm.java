@@ -12,9 +12,10 @@ public class Arm {
         this.arm = hmap.servo.get(CONFIG.armServo);
     }
     public void toPickUp() {
-        arm.setPosition(0.0);
+        arm.setPosition(0.5);
     }
-    public void toInitPos() { arm.setPosition(1.0); }
+    public void toGrab() { arm.setPosition(0.65);}
+    public void toInitPos() { arm.setPosition(0.1); }
     public void toScoreBucketPos() { arm.setPosition(0.5); }
     public void toScoreSpecimenPos() { arm.setPosition(0.4); }
     public double getPosition() { return arm.getPosition();}
