@@ -23,11 +23,7 @@ public class CONFIG {
     // pull up (left is with the robot facing forward away from you)
     public static String leftPullUp = "cl";
     public static String rightPullUp = "cr";
-
-    // pull up (left is with the robot facing forward away from you)
-    public static String leftPullUp = "cl";
-    public static String rightPullUp = "cr";
-
+    
     // comment out the below if you aren't using specimen sweatshop factory
     public static String servoThatKeepsTheHookInPlace = "sTKTHIP";
     public static String servoThatAppliesForceToHook = "sTAFT";
