@@ -43,4 +43,8 @@ public class Claw {
     public double getPosition() {
         return clawOpener.getPosition() / servoAngleModifier;
     }
+
+    public void manualUp() { forearm.setPosition(forearm.getPosition()+1);}
+
+    public void manualDown() { forearm.setPosition(forearm.getPosition()-1);}
 }

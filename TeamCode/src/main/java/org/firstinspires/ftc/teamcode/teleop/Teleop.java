@@ -24,7 +24,9 @@ public class Teleop extends OpMode {
     }
 
     private ButtonPressState yButtonState = ButtonPressState.UNPRESSED;
+    private ButtonPressState backButtonState = ButtonPressState.UNPRESSED;
     private TeleopState teleopState = TeleopState.INIT;
+    private ArmState armState = ArmState.INIT;
 
     private SimpleMecanumDrive drive;
     private Claw claw;
@@ -40,6 +42,7 @@ public class Teleop extends OpMode {
     final int slidesEncoderSlowModeBreakpoint = 800;
 
     boolean slowMode = false;
+    boolean manualMode = false;
     int ticks = 0;
 
     @Override
@@ -69,18 +72,54 @@ public class Teleop extends OpMode {
             teleopState = TeleopState.MANUAL_SLIDE_DOWN;
         }
 
+        // Manual arm + claw toggle
+        if (!gamepad1.back) {
+            backButtonState = ButtonPressState.UNPRESSED;
+        }
+
+        if (gamepad1.back) {
+            if (backButtonState == ButtonPressState.UNPRESSED) {
+                backButtonState = ButtonPressState.PRESSED_GOOD;
+                manualMode = !manualMode;
+            } else if (backButtonState == ButtonPressState.PRESSED_GOOD) {
+                backButtonState = ButtonPressState.DEPRESSED;
+            }
+        }
+
+        // Manual claw rotator up
+        if (manualMode && gamepad1.dpad_left) {
+            claw.manualUp();
+        }
+
+        // Manual claw rotator down
+        if (manualMode && gamepad1.dpad_right) {
+            claw.manualDown();
+        }
+
+        // Manual arm up
+        if (manualMode && gamepad1.b) {
+            // arm moves up
+            return;
+        }
+
+        // Manual arm down
+        if (manualMode && gamepad1.a) {
+            // arm moves down
+            return;
+        }
+
         // Init Position (Start)
         if (gamepad1.start && teleopState != TeleopState.INIT) {
             teleopState = TeleopState.INIT;
         }
 
         // Pickup Position (A)
-        if (gamepad1.a && teleopState != TeleopState.PICKUP) {
+        if (gamepad1.a && teleopState != TeleopState.PICKUP && !manualMode) {
             teleopState = TeleopState.PICKUP;
         }
 
         // Drop Position (B)
-        if (gamepad1.b && teleopState != TeleopState.DROP) {
+        if (gamepad1.b && teleopState != TeleopState.DROP && !manualMode) {
             teleopState = TeleopState.DROP;
         }
 
