@@ -10,14 +10,18 @@ public class Claw {
     Servo forearm;
     double servoAngleModifier = (double) 360 / 300;
 
-    public static double PICKUP_POSITION = .33;
-    public static double FOLDED_POSITION = 0;
-    public static double DROP_POSITION = 0.1;
-    public static double SPECIMEN_POSITION = 0.28;
+    // 0.0 is init, .55 is close to parallel
+    public static double PICKUP_POSITION = 1;
+    public static double FOLDED_POSITION = 0.1;
+    public static double DROP_POSITION = 0.75;
+    public static double SPECIMEN_POSITION = 0.79;
 
     public Claw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.clawServo);
-        this.forearm = hmap.servo.get(CONFIG.forearm);
+        //this.forearm = hmap.servo.get(CONFIG.forearm);
+
+        //toFoldedPosition();
+        close();
     }
 
     public void open() {
@@ -28,17 +32,31 @@ public class Claw {
         clawOpener.setPosition(1.0);
     }
 
-    public void toPickUpPosition() {
-        forearm.setPosition(PICKUP_POSITION);
-    }
+//    public void toPickUpPosition() {
+//        forearm.setPosition(PICKUP_POSITION);
+//    }
+//
+//    public void toFoldedPosition() {
+//        forearm.setPosition(FOLDED_POSITION);
+//    }
+//
+//    public void holdUp() {
+//        forearm.setPosition(0.8);
+//    }
 
-    public void toFoldedPosition() {
-        forearm.setPosition(FOLDED_POSITION);
-    }
-
-    public void toDropPosition() { forearm.setPosition(DROP_POSITION);}
-
-    public void toSpecimenPosition() {forearm.setPosition(SPECIMEN_POSITION);}
+//    public void holdDown() {
+//        forearm.setPosition(1);
+//    }
+//
+//    public double getForearmPosition() {
+//        return forearm.getPosition();
+//    }
+//
+//    public void toDropPosition() { forearm.setPosition(DROP_POSITION);}
+//
+//    public void toDropPositionAuton() { forearm.setPosition(DROP_POSITION);}
+//
+//    public void toSpecimenPosition() {forearm.setPosition(SPECIMEN_POSITION);}
 
     public double getPosition() {
         return clawOpener.getPosition() / servoAngleModifier;
