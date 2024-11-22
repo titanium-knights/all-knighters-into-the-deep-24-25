@@ -133,6 +133,14 @@ public class Teleop extends OpMode {
         // move to necessary position
         if (prevState != teleopState)
             goToPosition(teleopState);
+      
+        if (gamepad1.right_trigger > .1) {
+            teleopState = TeleopState.MANUAL_FOREARM_UP;
+        }
+
+        if (gamepad1.left_trigger > .1) {
+            teleopState = TeleopState.MANUAL_FOREARM_DOWN;
+        }
 
         telemetry.addData("arm pos", arm.getPosition());
         telemetry.addData("slides pos", slides.getEncoder());
@@ -166,6 +174,10 @@ public class Teleop extends OpMode {
             slides.slideToPosition(SlideState.MANUALUP);
         } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {
             slides.slideToPosition(SlideState.MANUALDOWN);
+        } else if (state == TeleopState.MANUAL_FOREARM_UP) {
+            claw.holdUp();
+        } else if (state == TeleopState.MANUAL_FOREARM_DOWN) {
+            claw.holdDown();
         }
     }
 
