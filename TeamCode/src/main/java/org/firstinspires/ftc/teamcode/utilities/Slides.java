@@ -18,8 +18,8 @@ public class Slides {
     // Preset power values for both directions (based on weight)
     // Negative is up, positive is down
     double slideUpPower = -1.0;
-    double slideDownPower = 0.01;
-    double idlePower = -.3;
+    double slideDownPower = 1.0;
+    double idlePower = 0;
 
     // i don't want to do this but i have to
     boolean hasBeenCalibrated = true;

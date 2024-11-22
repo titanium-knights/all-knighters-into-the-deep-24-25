@@ -17,12 +17,13 @@ public class CONFIG {
     // for scoring:
     public static String slidesMotor = "slidesMotor";
     public static String armMotor = "armMotor";
-    public static String forearm = "clawR"; // clawRotator
+    // public static String forearm = "clawR"; // clawRotator
+    public static String armServo = "armServo";
 
     // pull up (left is with the robot facing forward away from you)
     public static String leftPullUp = "cl";
     public static String rightPullUp = "cr";
-
+    
     // comment out the below if you aren't using specimen sweatshop factory
     public static String servoThatKeepsTheHookInPlace = "sTKTHIP";
     public static String servoThatAppliesForceToHook = "sTAFT";
