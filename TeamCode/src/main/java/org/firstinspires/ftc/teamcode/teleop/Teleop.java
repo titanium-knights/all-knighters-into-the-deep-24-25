@@ -11,9 +11,7 @@ import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
-import org.firstinspires.ftc.teamcode.utilities.ArmState;
 import org.firstinspires.ftc.teamcode.utilities.PullUp;
-import org.firstinspires.ftc.teamcode.utilities.PullUpState;
 
 @Config
 @TeleOp(name="Driver Teleop", group="default")
@@ -67,11 +65,6 @@ public class Teleop extends OpMode {
         } else if (gamepad1.right_bumper) {
             claw.close();
         }
-        if (gamepad1.left_trigger > 0.1f) {
-            arm.toGrab();
-        } else if (gamepad1.right_trigger > 0.1f) {
-            arm.toPickUp();
-        }
 
         // Manual Slide controls
 //        if (gamepad1.dpad_up && teleopState != TeleopState.MANUAL_SLIDE_UP) {
@@ -86,15 +79,6 @@ public class Teleop extends OpMode {
 //        } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
 //            teleopState = TeleopState.PULL_DOWN;
 //        }
-
-        // Manual Hanging / Climb (dpad_up, dpad_down)
-        if (gamepad1.dpad_up && teleopState != TeleopState.REACH_UP) {
-            pullUp.goUp();
-        } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
-            pullUp.goDown();
-        } else {
-            pullUp.stop();
-        }
 
         // Init Position (Start)
         if (gamepad1.start && teleopState != TeleopState.INIT) {
@@ -130,17 +114,7 @@ public class Teleop extends OpMode {
             }
         }
 
-        // move to necessary position
-        if (prevState != teleopState)
-            goToPosition(teleopState);
-      
-        if (gamepad1.right_trigger > .1) {
-            teleopState = TeleopState.MANUAL_FOREARM_UP;
-        }
-
-        if (gamepad1.left_trigger > .1) {
-            teleopState = TeleopState.MANUAL_FOREARM_DOWN;
-        }
+        goToPosition(teleopState);
 
         telemetry.addData("arm pos", arm.getPosition());
         telemetry.addData("slides pos", slides.getEncoder());
@@ -148,37 +122,26 @@ public class Teleop extends OpMode {
         //telemetry.addData("forearm pos", claw.getForearmPosition());
         telemetry.addData("slow mode", slowMode);
 
-        telemetry.addData("slides change", slides.getChangeInEncoderValues());
-        telemetry.addData("is calibrated", slides.isCalibrated());
         telemetry.update();
     }
 
     private void goToPosition(TeleopState state) {
         if (state == TeleopState.INIT) {
-            //slides.slideToPosition(SlideState.BOTTOM);
+            slides.slideToPosition(SlideState.BOTTOM);
             arm.toInitPos();
-            //claw.toFoldedPosition();
         } else if (state == TeleopState.PICKUP) {
-            //slides.slideToPosition(SlideState.BOTTOM);
+            slides.slideToPosition(SlideState.BOTTOM);
             arm.toPickUp();
-            //claw.holdUp();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
             arm.toScoreBucketPos();
-           // claw.toDropPosition();
         } else if (state == TeleopState.SPECIMEN) {
             slides.slideToPosition(SlideState.BOTTOM);
             arm.toScoreSpecimenPos();
-           // claw.toSpecimenPosition();
         } else if (state == TeleopState.MANUAL_SLIDE_UP) {
             slides.slideToPosition(SlideState.MANUALUP);
         } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {
-            slides.slideToPosition(SlideState.MANUALDOWN);
-        } else if (state == TeleopState.MANUAL_FOREARM_UP) {
-            claw.holdUp();
-        } else if (state == TeleopState.MANUAL_FOREARM_DOWN) {
-            claw.holdDown();
-        }
+            slides.slideToPosition(SlideState.MANUALDOWN);}
     }
 
     public void move(float x, float y, float turn) {
