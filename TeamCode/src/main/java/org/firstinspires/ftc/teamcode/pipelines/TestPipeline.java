@@ -14,6 +14,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvPipeline;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.opencv.core.*;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvPipeline;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class TestPipeline extends OpenCvPipeline {
 
     private final Telemetry telemetry;
@@ -22,9 +36,6 @@ public class TestPipeline extends OpenCvPipeline {
     public static final Scalar LOWER_YELLOW = new Scalar(20, 100, 100);
     public static final Scalar UPPER_YELLOW = new Scalar(30, 255, 255);
 
-    // Variables to store detected prism position
-    public volatile Point prismCenter = new Point(-1, -1); // Initialize as invalid
-
     // Constructor
     public TestPipeline(Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -32,104 +43,62 @@ public class TestPipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-        // Convert the input frame to grayscale for edge detection
-        Mat gray = new Mat();
-        Imgproc.cvtColor(input, gray, Imgproc.COLOR_RGB2GRAY);
-
-        // Apply Canny edge detection
-        Mat edges = new Mat();
-        Imgproc.Canny(gray, edges, 100, 200);
-
-        // Detect "yellowness" in the input frame
+        // Convert input frame to HSV for color-based filtering
         Mat hsv = new Mat();
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);  // Convert to HSV for easier color detection
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV);
 
-        // Define a broad range of "yellow-like" colors
-        Scalar lowerYellow = new Scalar(15, 100, 50);  // Lower range for yellows and dark browns
-        Scalar upperYellow = new Scalar(45, 255, 255); // Upper range for yellows
-
-        // Create a mask for yellow-like colors
+        // Create a mask for yellow colors
         Mat yellowMask = new Mat();
-        Core.inRange(hsv, lowerYellow, upperYellow, yellowMask);
+        Core.inRange(hsv, LOWER_YELLOW, UPPER_YELLOW, yellowMask);
 
-        // Combine the edges with the yellow mask
-        Mat maskedEdges = new Mat();
-        Core.bitwise_and(edges, yellowMask, maskedEdges);
+        // Apply morphological transformations to clean up the mask
+        Mat morphKernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(5, 5));
+        Imgproc.morphologyEx(yellowMask, yellowMask, Imgproc.MORPH_CLOSE, morphKernel);
+        Imgproc.morphologyEx(yellowMask, yellowMask, Imgproc.MORPH_OPEN, morphKernel);
+
+        // Detect edges on the masked region
+        Mat edges = new Mat();
+        Imgproc.Canny(yellowMask, edges, 50, 150);
 
         // Find contours from the masked edges
         List<MatOfPoint> contours = new ArrayList<>();
         Mat hierarchy = new Mat();
-        Imgproc.findContours(maskedEdges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+        Imgproc.findContours(edges, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
-        // Collect all points from all contours into one list
-        List<Point> allPoints = new ArrayList<>();
+        // Filter contours to find a hexagon or square shape
+        Mat output = input.clone();
         for (MatOfPoint contour : contours) {
-            allPoints.addAll(contour.toList());
-        }
+            MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
 
-        // Remove outliers from the collected points
-        List<Point> filteredPoints = removeOutliers(allPoints, 2.0);  // You can adjust the threshold factor
+            // Approximate contour to reduce points and smooth it out
+            MatOfPoint2f approxCurve = new MatOfPoint2f();
+            Imgproc.approxPolyDP(contour2f, approxCurve, Imgproc.arcLength(contour2f, true) * 0.04, true);
 
-        // Calculate the convex hull of the filtered points
-        MatOfInt hullIndices = new MatOfInt();
-        Imgproc.convexHull(new MatOfPoint(filteredPoints.toArray(new Point[0])), hullIndices);
+            int vertices = (int) approxCurve.total();
+            if (vertices == 6 || vertices == 4) {  // Looking for hexagons or squares
+                // Convert back to MatOfPoint for drawing
+                MatOfPoint approxCurveInt = new MatOfPoint(approxCurve.toArray());
 
-        // Create a list for the hull points
-        List<Point> hullPoints = new ArrayList<>();
-        for (int index : hullIndices.toArray()) {
-            hullPoints.add(filteredPoints.get(index));
-        }
+                // Check if the contour has the correct aspect ratio and area to filter out noise
+                Rect boundingRect = Imgproc.boundingRect(approxCurveInt);
+                double aspectRatio = (double) boundingRect.width / boundingRect.height;
 
-        // Draw the convex hull on the original image with a specific color (e.g., green)
-        MatOfPoint hull = new MatOfPoint();
-        hull.fromList(hullPoints);
-        Scalar hullColor = new Scalar(0, 255, 0); // Green color for hull
-        Imgproc.drawContours(input, Collections.singletonList(hull), -1, hullColor, 2); // Draw the convex hullList.of(hull), -1, hullColor, 2); // Draw the convex hull
+                // If the shape has an aspect ratio close to 1, it's likely a square or hexagon
+                if (vertices == 6 || (vertices == 4 && Math.abs(aspectRatio - 1) < 0.2)) {
+                    Scalar color = new Scalar(0, 255, 0);  // Green color for detected shapes
+                    Imgproc.drawContours(output, Collections.singletonList(approxCurveInt), -1, color, 2);
 
-        telemetry.addLine("Convex hull of filtered edges drawn on original frame.");
-        
-        return input;  // Return the original frame with the convex hull drawn
-    }
-
-    /**
-     * Method to remove outlier points based on distance from the mean point.
-     * @param points The list of points to filter.
-     * @param thresholdFactor The number of standard deviations to use as a threshold.
-     * @return A filtered list of points without outliers.
-     */
-    private List<Point> removeOutliers(List<Point> points, double thresholdFactor) {
-        if (points.isEmpty()) return points;
-
-        // Calculate the mean point
-        double meanX = points.stream().mapToDouble(point -> point.x).average().orElse(0);
-        double meanY = points.stream().mapToDouble(point -> point.y).average().orElse(0);
-        Point meanPoint = new Point(meanX, meanY);
-
-        // Calculate the distances from the mean point
-        List<Double> distances = new ArrayList<>();
-        for (Point point : points) {
-            double distance = Math.sqrt(Math.pow(point.x - meanPoint.x, 2) + Math.pow(point.y - meanPoint.y, 2));
-            distances.add(distance);
-        }
-
-        // Calculate mean and standard deviation of distances
-        double meanDistance = distances.stream().mapToDouble(d -> d).average().orElse(0);
-        double stdDev = Math.sqrt(distances.stream().mapToDouble(d -> Math.pow(d - meanDistance, 2)).average().orElse(0));
-
-        // Filter points that are within the specified threshold factor of the standard deviation
-        List<Point> filteredPoints = new ArrayList<>();
-        for (int i = 0; i < points.size(); i++) {
-            if (distances.get(i) <= meanDistance + thresholdFactor * stdDev) {
-                filteredPoints.add(points.get(i));
+                    telemetry.addLine("Detected a hexagon or square shape.");
+                }
             }
         }
 
-        return filteredPoints;
+        telemetry.update();
+        return output;  // Return the frame with detected shapes highlighted
     }
 
     @Override
     public void init(Mat input) {
-        // No specific initialization needed here, but could be added if necessary
         telemetry.addLine("Pipeline initialized");
         telemetry.update();
     }
