@@ -58,6 +58,7 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
+        TeleopState prevState = teleopState;
         move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         // Manual Claw controls
@@ -65,6 +66,11 @@ public class Teleop extends OpMode {
             claw.open();
         } else if (gamepad1.right_bumper) {
             claw.close();
+        }
+        if (gamepad1.left_trigger > 0.1f) {
+            arm.toGrab();
+        } else if (gamepad1.right_trigger > 0.1f) {
+            arm.toPickUp();
         }
 
         // Manual Slide controls
@@ -124,6 +130,10 @@ public class Teleop extends OpMode {
             }
         }
 
+        // move to necessary position
+        if (prevState != teleopState)
+            goToPosition(teleopState);
+      
         if (gamepad1.right_trigger > .1) {
             teleopState = TeleopState.MANUAL_FOREARM_UP;
         }
@@ -132,13 +142,10 @@ public class Teleop extends OpMode {
             teleopState = TeleopState.MANUAL_FOREARM_DOWN;
         }
 
-        // move to necessary positions
-        goToPosition(teleopState);
-
         telemetry.addData("arm pos", arm.getPosition());
         telemetry.addData("slides pos", slides.getEncoder());
         telemetry.addData("claw pos", claw.getPosition());
-        telemetry.addData("forearm pos", claw.getForearmPosition());
+        //telemetry.addData("forearm pos", claw.getForearmPosition());
         telemetry.addData("slow mode", slowMode);
 
         telemetry.addData("slides change", slides.getChangeInEncoderValues());
@@ -148,21 +155,21 @@ public class Teleop extends OpMode {
 
     private void goToPosition(TeleopState state) {
         if (state == TeleopState.INIT) {
-            slides.slideToPosition(SlideState.BOTTOM);
+            //slides.slideToPosition(SlideState.BOTTOM);
             arm.toInitPos();
-            claw.toFoldedPosition();
+            //claw.toFoldedPosition();
         } else if (state == TeleopState.PICKUP) {
-            slides.slideToPosition(SlideState.BOTTOM);
+            //slides.slideToPosition(SlideState.BOTTOM);
             arm.toPickUp();
-            claw.holdUp();
+            //claw.holdUp();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
             arm.toScoreBucketPos();
-            claw.toDropPosition();
+           // claw.toDropPosition();
         } else if (state == TeleopState.SPECIMEN) {
             slides.slideToPosition(SlideState.BOTTOM);
             arm.toScoreSpecimenPos();
-            claw.toSpecimenPosition();
+           // claw.toSpecimenPosition();
         } else if (state == TeleopState.MANUAL_SLIDE_UP) {
             slides.slideToPosition(SlideState.MANUALUP);
         } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {
