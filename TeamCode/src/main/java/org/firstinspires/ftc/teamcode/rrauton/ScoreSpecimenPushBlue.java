@@ -26,7 +26,7 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d begPose = new Pose2d(-60, -12, Math.PI);
+        Pose2d begPose = new Pose2d(-60, -12, 0);
 
         telemetry.addData("Initialized: ", "");
         telemetry.update();

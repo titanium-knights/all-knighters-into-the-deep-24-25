@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
+import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
 
@@ -49,6 +50,10 @@ public class Score extends LinearOpMode {
         claw.close();
         //arm.runToPosition(ArmState.SPECIMEN);
         arm.toScoreSpecimenPos();
+        boolean slidesAtPosition = false;
+        while (!slidesAtPosition) {
+            slidesAtPosition = slides.slideToPosition(SlideState.MEDIUM);
+        }
         sleep(2000);
 
         telemetry.addLine("Run into the bar");
@@ -57,21 +62,28 @@ public class Score extends LinearOpMode {
         sleep(780);
         drivetrain.move(0,0,0);
         sleep(2000);
-        claw.open();
+
+        slidesAtPosition = false;
+        while (!slidesAtPosition) {
+            slidesAtPosition = slides.slideToPosition(SlideState.MEDIUMSCORE);
+        }
        // claw.toDropPositionAuton();
         sleep(1000);
+        claw.open();
         drivetrain.move(0, .55, 0);
 //        sleep(730);
         drivetrain.move(0, 0, 0);
 
        // arm.setPower(-1);
-        arm.toInitPos();
-//        claw.toFoldedPosition();
-        claw.close();
-        sleep(2650);
-        //arm.setPower(0);
 
+        slidesAtPosition = false;
+        while (!slidesAtPosition) {
+            slidesAtPosition = slides.slideToPosition(SlideState.BOTTOM);
+        }
         sleep(1000);
+//        claw.toFoldedPosition();
+
+
 //        arm.setPower(1);
 //        sleep(2650);
         //arm.runToPosition(ArmState.INIT);

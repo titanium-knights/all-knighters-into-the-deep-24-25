@@ -54,15 +54,19 @@ public class Slides {
     }
 
     // exists to switch between target encoder values
-    public void slideToPosition(SlideState state) {
+    public boolean slideToPosition(SlideState state) {
         if (state == SlideState.MANUALUP) {
             slideMotor.setPower(-.8);
+            return false;
         } else if (state == SlideState.MANUALDOWN) {
             slideMotor.setPower(0.1);
+            return false;
         } else if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
             stop();
+            return true;
         } else {
             updateSliderPower(state.getEncoderValue());
+            return false;
         }
     }
 

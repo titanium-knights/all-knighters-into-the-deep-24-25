@@ -15,7 +15,6 @@ public class Claw {
 
     public Claw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.clawServo);
-        close();
     }
 
     public void open() {
