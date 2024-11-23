@@ -51,6 +51,7 @@ public class PushBlue extends LinearOpMode {
                         .lineToX(-60);
 
         waitForStart();
+        sleep(5000); // adjust if needed.
 
         if (isStopRequested()) return;
         Action trajectoryAction = tab.build();

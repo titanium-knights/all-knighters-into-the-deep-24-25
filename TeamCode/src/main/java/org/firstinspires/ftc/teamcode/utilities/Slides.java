@@ -66,9 +66,9 @@ public class Slides {
         }
     }
 
-    public class SlideUpAction implements Action {
+    public class SlideAction implements Action {
         SlideState slideState;
-        public SlideUpAction(SlideState slideState) {
+        public SlideAction(SlideState slideState) {
             this.slideState = slideState;
         }
 
@@ -77,6 +77,10 @@ public class Slides {
             slideToPosition(slideState);
             return false;
         }
+    }
+
+    public Action getSlideAction(SlideState slideState) {
+        return new SlideAction(slideState);
     }
 
     // exists for PID
