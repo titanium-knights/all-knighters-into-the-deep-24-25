@@ -65,7 +65,7 @@ public class Slides {
             slideMotor.setPower(-.8);
             return false;
         } else if (state == SlideState.MANUALDOWN) {
-            slideMotor.setPower(0.1);
+            slideMotor.setPower(0.3);
             return false;
         } else if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
             stop();
