@@ -26,7 +26,7 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Pose2d begPose = new Pose2d(-60, 12, -Math.PI / 2.0);
+        Pose2d begPose = new Pose2d(-60, 12, 0);
 
         telemetry.addData("Initialized: ", "");
         telemetry.update();
@@ -60,12 +60,12 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
         // move the arm
         // move the slides
         // move forward
-        TrajectoryActionBuilder specimenTab2 = drivetrain.actionBuilder(new Pose2d(-36, 0, -Math.PI / 2.0))
+        TrajectoryActionBuilder specimenTab2 = drivetrain.actionBuilder(new Pose2d(-36, 0, 0))
                         .lineToX(-30);
         // move the slides down
         // open the claw
         // move back to initial position
-        TrajectoryActionBuilder specimenTab3 = drivetrain.actionBuilder(new Pose2d(-30, 0, -Math.PI / 2.0))
+        TrajectoryActionBuilder specimenTab3 = drivetrain.actionBuilder(new Pose2d(-30, 0, 0))
                         .lineToX(-60)
                         .lineToY(12);
 
