@@ -74,9 +74,21 @@ public class Teleop extends OpMode {
             teleopState = TeleopState.BEFORE_PICKUP;
         }
 
+        if (gamepad1.dpad_right && teleopState != TeleopState.SPECIMEN_PICKUP) {
+            teleopState = TeleopState.SPECIMEN_PICKUP;
+        }
+
         // Picking Up Position (Dpad Down)
         if (gamepad1.dpad_down && teleopState != TeleopState.PICKING_UP) {
             teleopState = TeleopState.PICKING_UP;
+        }
+
+        if (gamepad1.right_trigger > 0.1 && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
+            teleopState = TeleopState.MANUAL_SLIDE_DOWN;
+        }
+
+        if (gamepad1.left_trigger > 0.1 && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
+            slides.resetSlideEncoder();
         }
 
         // Drop Position (B)
@@ -139,7 +151,11 @@ public class Teleop extends OpMode {
         } else if (state == TeleopState.MANUAL_SLIDE_UP) {
             slides.slideToPosition(SlideState.MANUALUP);
         } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {
-            slides.slideToPosition(SlideState.MANUALDOWN);}
+            slides.slideToPosition(SlideState.MANUALDOWN);
+        } else if (state == TeleopState.SPECIMEN_PICKUP) {
+            slides.slideToPosition(SlideState.BOTTOM);
+            arm.pickingUpSpecimen();
+        }
     }
 
     public void move(float x, float y, float turn) {
