@@ -45,26 +45,27 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
                         .lineToX(-36)
                         .setTangent(Math.toRadians(90))
                         .lineToY(-36)
-                .setTangent(Math.toRadians(90))
+                .setTangent(Math.toRadians(0))
                         .lineToX(-12)
                 .setTangent(Math.toRadians(90))
                         .lineToY(-48)
-                .setTangent(Math.toRadians(90))
+                .setTangent(Math.toRadians(0))
                         .lineToX(-60)
                         .lineToX(-12)
                 .setTangent(Math.toRadians(90))
                         .lineToY(-60)
-                .setTangent(Math.toRadians(90))
+                .setTangent(Math.toRadians(0))
                         .lineToX(-60)
                         .lineToX(-12)
                 .setTangent(Math.toRadians(90))
                         .lineToY(-66)
-                .setTangent(Math.toRadians(90))
+                .setTangent(Math.toRadians(0))
                         .lineToX(-60);
 
         TrajectoryActionBuilder specimenTab1 = drivetrain.actionBuilder(begPose)
-                        .lineToY(0)
                 .setTangent(Math.toRadians(90))
+                        .lineToY(0)
+                .setTangent(0)
                         .lineToX(-36);
         // move the arm
         // move the slides
