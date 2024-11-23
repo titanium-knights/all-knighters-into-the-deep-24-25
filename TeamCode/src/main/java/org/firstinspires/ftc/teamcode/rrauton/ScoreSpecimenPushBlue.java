@@ -43,19 +43,28 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
 
         TrajectoryActionBuilder tab = drivetrain.actionBuilder(begPose)
                         .lineToX(-36)
+                        .setTangent(Math.toRadians(90))
                         .lineToY(-36)
+                .setTangent(Math.toRadians(90))
                         .lineToX(-12)
+                .setTangent(Math.toRadians(90))
                         .lineToY(-48)
+                .setTangent(Math.toRadians(90))
                         .lineToX(-60)
                         .lineToX(-12)
+                .setTangent(Math.toRadians(90))
                         .lineToY(-60)
+                .setTangent(Math.toRadians(90))
                         .lineToX(-60)
                         .lineToX(-12)
+                .setTangent(Math.toRadians(90))
                         .lineToY(-66)
+                .setTangent(Math.toRadians(90))
                         .lineToX(-60);
 
         TrajectoryActionBuilder specimenTab1 = drivetrain.actionBuilder(begPose)
                         .lineToY(0)
+                .setTangent(Math.toRadians(90))
                         .lineToX(-36);
         // move the arm
         // move the slides
@@ -67,6 +76,7 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
         // move back to initial position
         TrajectoryActionBuilder specimenTab3 = drivetrain.actionBuilder(new Pose2d(-30, 0, 0))
                         .lineToX(-60)
+                .setTangent(Math.toRadians(90))
                         .lineToY(12);
 
         waitForStart();
