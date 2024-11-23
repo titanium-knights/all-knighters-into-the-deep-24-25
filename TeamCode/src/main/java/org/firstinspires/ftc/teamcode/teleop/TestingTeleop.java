@@ -6,7 +6,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.utilities.Arm;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
@@ -25,20 +24,18 @@ public class TestingTeleop extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addData("slides position", slides.getEncoder());
-        telemetry.update();
 
-        if (gamepad1.left_bumper) {
-            SpecimenSweatshopFactory.applyForce();
-        } else if (gamepad1.right_bumper) {
-            SpecimenSweatshopFactory.notApplyingForce();
-        }
-
-        if (gamepad1.y) {
-            SpecimenSweatshopFactory.holdingHookInPlace();
-        } else if (gamepad1.x) {
-            SpecimenSweatshopFactory.notHoldingHookInPlace();
-        }
+//        if (gamepad1.left_bumper) {
+//            SpecimenSweatshopFactory.applyForce();
+//        } else if (gamepad1.right_bumper) {
+//            SpecimenSweatshopFactory.notApplyingForce();
+//        }
+//
+//        if (gamepad1.y) {
+//            SpecimenSweatshopFactory.holdingHookInPlace();
+//        } else if (gamepad1.x) {
+//            SpecimenSweatshopFactory.notHoldingHookInPlace();
+//        }
 
 
     }
