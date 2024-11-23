@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -60,6 +64,19 @@ public class Slides {
             stop();
         } else {
             updateSliderPower(state.getEncoderValue());
+        }
+    }
+
+    public class SlideUpAction implements Action {
+        SlideState slideState;
+        public SlideUpAction(SlideState slideState) {
+            this.slideState = slideState;
+        }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            slideToPosition(slideState);
+            return false;
         }
     }
 

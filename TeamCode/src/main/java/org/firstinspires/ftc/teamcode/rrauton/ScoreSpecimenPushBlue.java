@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.utilities.Slides;
 
 // start at A2, ykwim
 @Config
-@Autonomous(name = "PushBlue", group = "Autonomous")
+@Autonomous(name = "ScoreSpecimenPushBlue", group = "Autonomous")
 public class ScoreSpecimenPushBlue extends LinearOpMode {
     private Claw claw;
     private Slides slides;
