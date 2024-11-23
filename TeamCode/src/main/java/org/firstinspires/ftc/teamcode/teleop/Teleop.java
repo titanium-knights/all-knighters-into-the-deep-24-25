@@ -73,20 +73,6 @@ public class Teleop extends OpMode {
             arm.toPickUp();
         }
 
-        // Manual Slide controls
-//        if (gamepad1.dpad_up && teleopState != TeleopState.MANUAL_SLIDE_UP) {
-//            teleopState = TeleopState.MANUAL_SLIDE_UP;
-//        } else if (gamepad1.dpad_down && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
-//            teleopState = TeleopState.MANUAL_SLIDE_DOWN;
-//        }
-
-//        // Hanging / Climb (dpad_up, dpad_down)
-//        if (gamepad1.dpad_up && teleopState != TeleopState.REACH_UP) {
-//            teleopState = TeleopState.REACH_UP;
-//        } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
-//            teleopState = TeleopState.PULL_DOWN;
-//        }
-
         // Manual Hanging / Climb (dpad_up, dpad_down)
         if (gamepad1.dpad_up && teleopState != TeleopState.REACH_UP) {
             pullUp.goUp();
@@ -174,10 +160,6 @@ public class Teleop extends OpMode {
             slides.slideToPosition(SlideState.MANUALUP);
         } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {
             slides.slideToPosition(SlideState.MANUALDOWN);
-        } else if (state == TeleopState.MANUAL_FOREARM_UP) {
-            claw.holdUp();
-        } else if (state == TeleopState.MANUAL_FOREARM_DOWN) {
-            claw.holdDown();
         }
     }
 
