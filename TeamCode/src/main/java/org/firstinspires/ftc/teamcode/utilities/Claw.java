@@ -19,7 +19,7 @@ public class Claw {
     }
 
     public void open() {
-        clawOpener.setPosition(0.85);
+        clawOpener.setPosition(1);
     }
 
     public class OpenClaw implements Action {
@@ -35,7 +35,7 @@ public class Claw {
     }
 
     public void close() {
-        clawOpener.setPosition(1.0);
+        clawOpener.setPosition(0.65);
     }
 
     public class CloseClaw implements Action {

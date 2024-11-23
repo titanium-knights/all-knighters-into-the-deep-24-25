@@ -64,7 +64,6 @@ public class Teleop extends OpMode {
             claw.close();
         }
 
-
         // Init Position (Start)
         if (gamepad1.start && teleopState != TeleopState.INIT) {
             teleopState = TeleopState.INIT;
@@ -88,6 +87,10 @@ public class Teleop extends OpMode {
         // Specimen Position (X)
         if (gamepad1.x && teleopState != TeleopState.SPECIMEN) {
             teleopState = TeleopState.SPECIMEN;
+        }
+
+        if (gamepad1.dpad_up && teleopState != TeleopState.SPECIMENSCORE) {
+            teleopState = TeleopState.SPECIMENSCORE;
         }
 
         // Slow Mode Toggle (Y)
@@ -129,8 +132,10 @@ public class Teleop extends OpMode {
             slides.slideToPosition(SlideState.TOP);
             arm.toScoreBucketPos();
         } else if (state == TeleopState.SPECIMEN) {
-            slides.slideToPosition(SlideState.BOTTOM);
+            slides.slideToPosition(SlideState.MEDIUM);
             arm.toScoreSpecimenPos();
+        } else if (state == TeleopState.SPECIMENSCORE) {
+            slides.slideToPosition(SlideState.MEDIUMSCORE);
         } else if (state == TeleopState.MANUAL_SLIDE_UP) {
             slides.slideToPosition(SlideState.MANUALUP);
         } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {

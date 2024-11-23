@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.rr.MecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
+import org.firstinspires.ftc.teamcode.utilities.SlideState;
 
 // start at A2, ykwim
 @Config
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.utilities.Slides;
 public class ScoreSpecimenPushBlue extends LinearOpMode {
     private Claw claw;
     private Slides slides;
+    private SlideState slideState;
     private Arm arm;
 
     @Override
@@ -35,6 +37,8 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
         arm = new Arm(hardwareMap);
 
         Actions.runBlocking(claw.closeAction());
+        Actions.runBlocking(arm.toScoreSpecimenPosAction());
+       // Actions.runBlocking(slideState.SlideUpAction(MEDIUM));
 
         TrajectoryActionBuilder tab = drivetrain.actionBuilder(begPose)
                         .lineToX(-36)

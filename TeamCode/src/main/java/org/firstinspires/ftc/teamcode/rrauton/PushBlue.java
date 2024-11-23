@@ -49,6 +49,7 @@ public class PushBlue extends LinearOpMode {
                         .lineToX(-12)
                         .lineToY(-66)
                         .lineToX(-60);
+
         waitForStart();
 
         if (isStopRequested()) return;
