@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
-import org.firstinspires.ftc.teamcode.utilities.ArmState;
 
 @Config
 @Autonomous(name="Score", group="Auton")

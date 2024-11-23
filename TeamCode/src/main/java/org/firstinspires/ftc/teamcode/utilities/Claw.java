@@ -15,11 +15,11 @@ public class Claw {
     }
 
     public void open() {
-        clawOpener.setPosition(0);
+        clawOpener.setPosition(1);
     }
 
     public void close() {
-        clawOpener.setPosition(0.3);
+        clawOpener.setPosition(0.6);
     }
 
     public double getPosition() {

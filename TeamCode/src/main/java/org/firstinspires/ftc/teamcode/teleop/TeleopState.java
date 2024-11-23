@@ -6,7 +6,8 @@ public enum TeleopState {
     MANUAL_SLIDE_DOWN,
     MANUAL_FOREARM_UP,
     MANUAL_FOREARM_DOWN,
-    PICKUP,
+    BEFORE_PICKUP,
+    PICKING_UP,
     DROP,
     SPECIMEN;
 }

@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.widget.Button;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -66,28 +64,20 @@ public class Teleop extends OpMode {
             claw.close();
         }
 
-        // Manual Slide controls
-//        if (gamepad1.dpad_up && teleopState != TeleopState.MANUAL_SLIDE_UP) {
-//            teleopState = TeleopState.MANUAL_SLIDE_UP;
-//        } else if (gamepad1.dpad_down && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
-//            teleopState = TeleopState.MANUAL_SLIDE_DOWN;
-//        }
-
-//        // Hanging / Climb (dpad_up, dpad_down)
-//        if (gamepad1.dpad_up && teleopState != TeleopState.REACH_UP) {
-//            teleopState = TeleopState.REACH_UP;
-//        } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
-//            teleopState = TeleopState.PULL_DOWN;
-//        }
 
         // Init Position (Start)
         if (gamepad1.start && teleopState != TeleopState.INIT) {
             teleopState = TeleopState.INIT;
         }
 
-        // Pickup Position (A)
-        if (gamepad1.a && teleopState != TeleopState.PICKUP) {
-            teleopState = TeleopState.PICKUP;
+        // Before Picking Up Position (A)
+        if (gamepad1.a && teleopState != TeleopState.BEFORE_PICKUP) {
+            teleopState = TeleopState.BEFORE_PICKUP;
+        }
+
+        // Picking Up Position (Dpad Down)
+        if (gamepad1.dpad_down && teleopState != TeleopState.PICKING_UP) {
+            teleopState = TeleopState.PICKING_UP;
         }
 
         // Drop Position (B)
@@ -129,9 +119,12 @@ public class Teleop extends OpMode {
         if (state == TeleopState.INIT) {
             slides.slideToPosition(SlideState.BOTTOM);
             arm.toInitPos();
-        } else if (state == TeleopState.PICKUP) {
+        } else if (state == TeleopState.BEFORE_PICKUP) {
             slides.slideToPosition(SlideState.BOTTOM);
-            arm.toPickUp();
+            arm.beforePickUp();
+        } else if (state == TeleopState.PICKING_UP){
+            slides.slideToPosition(SlideState.BOTTOM);
+            arm.pickingUp();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
             arm.toScoreBucketPos();
