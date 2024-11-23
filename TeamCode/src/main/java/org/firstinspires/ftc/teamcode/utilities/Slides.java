@@ -53,6 +53,12 @@ public class Slides {
         return Math.abs(slideMotor.getCurrentPosition() - targetEncoderValue) <= BUFFER;
     }
 
+    public void resetSlideEncoder() {
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.pos = 0;
+    }
+
     // exists to switch between target encoder values
     public boolean slideToPosition(SlideState state) {
         if (state == SlideState.MANUALUP) {
