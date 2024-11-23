@@ -38,7 +38,7 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
         arm = new Arm(hardwareMap);
 
         Actions.runBlocking(claw.closeAction());
-        Actions.runBlocking(arm.toScoreSpecimenPosAction());
+        Actions.runBlocking(arm.toInitPosAction());
        // Actions.runBlocking(slideState.SlideUpAction(MEDIUM));
 
         TrajectoryActionBuilder tab = drivetrain.actionBuilder(begPose)

@@ -28,5 +28,16 @@ public class Arm {
             return false;
         }
     }
+
+    public class toInitPosAction implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            toInitPos();
+            return false;
+        }
+    }
+
+    public Action toInitPosAction() { return new toInitPosAction(); }
+
     public Action toScoreSpecimenPosAction() { return new toScoreSpecimenPosAction(); }
 }
