@@ -9,6 +9,7 @@ public enum TeleopState {
     BEFORE_PICKUP,
     PICKING_UP,
     DROP,
+    SPECIMEN_PICKUP,
     SPECIMEN,
     SPECIMENSCORE;
 }
