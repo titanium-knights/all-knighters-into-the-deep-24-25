@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -24,9 +28,26 @@ public class Claw {
         clawOpener.setPosition(0.85);
     }
 
+    public class OpenClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            open();
+            return false;
+        }
+    }
+
     public void close() {
         clawOpener.setPosition(1.0);
     }
+
+    public class CloseClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            close();
+            return false;
+        }
+    }
+    public Action closeAction() { return new CloseClaw(); }
 
     public void toPickUpPosition() {
         forearm.setPosition(PICKUP_POSITION);
