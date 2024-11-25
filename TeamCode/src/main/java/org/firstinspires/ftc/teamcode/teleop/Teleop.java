@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.widget.Button;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,9 +9,7 @@ import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
-import org.firstinspires.ftc.teamcode.utilities.ArmState;
 import org.firstinspires.ftc.teamcode.utilities.PullUp;
-import org.firstinspires.ftc.teamcode.utilities.PullUpState;
 
 @Config
 @TeleOp(name="Driver Teleop", group="default")
@@ -26,9 +22,7 @@ public class Teleop extends OpMode {
     }
 
     private ButtonPressState yButtonState = ButtonPressState.UNPRESSED;
-    private ButtonPressState backButtonState = ButtonPressState.UNPRESSED;
     private TeleopState teleopState = TeleopState.INIT;
-    private ArmState armState = ArmState.INIT;
 
     private SimpleMecanumDrive drive;
     private Claw claw;
@@ -46,7 +40,6 @@ public class Teleop extends OpMode {
     final int slidesEncoderSlowModeBreakpoint = -800;
 
     boolean slowMode = false;
-    boolean manualMode = false;
     int ticks = 0;
 
     @Override
@@ -70,89 +63,46 @@ public class Teleop extends OpMode {
         } else if (gamepad1.right_bumper) {
             claw.close();
         }
-        if (gamepad1.left_trigger > 0.1f) {
-            arm.toGrab();
-        } else if (gamepad1.right_trigger > 0.1f) {
-            arm.toPickUp();
-        }
-
-        // Manual Slide controls
-//        if (gamepad1.dpad_up && teleopState != TeleopState.MANUAL_SLIDE_UP) {
-//            teleopState = TeleopState.MANUAL_SLIDE_UP;
-//        } else if (gamepad1.dpad_down && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
-//            teleopState = TeleopState.MANUAL_SLIDE_DOWN;
-//        }
-
-//        // Hanging / Climb (dpad_up, dpad_down)
-//        if (gamepad1.dpad_up && teleopState != TeleopState.REACH_UP) {
-//            teleopState = TeleopState.REACH_UP;
-//        } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
-//            teleopState = TeleopState.PULL_DOWN;
-//        }
-
-        // Manual Hanging / Climb (dpad_up, dpad_down)
-        if (gamepad1.dpad_up && teleopState != TeleopState.REACH_UP) {
-            pullUp.goUp();
-        } else if (gamepad1.dpad_down && teleopState != TeleopState.PULL_DOWN) {
-            pullUp.goDown();
-        } else {
-            pullUp.stop();
-        }
-
-        // Manual arm + claw toggle
-        if (!gamepad1.back) {
-            backButtonState = ButtonPressState.UNPRESSED;
-        }
-
-        if (gamepad1.back) {
-            if (backButtonState == ButtonPressState.UNPRESSED) {
-                backButtonState = ButtonPressState.PRESSED_GOOD;
-                manualMode = !manualMode;
-            } else if (backButtonState == ButtonPressState.PRESSED_GOOD) {
-                backButtonState = ButtonPressState.DEPRESSED;
-            }
-        }
-
-        // Manual claw rotator up
-        if (manualMode && gamepad1.dpad_left) {
-            claw.manualUp();
-        }
-
-        // Manual claw rotator down
-        if (manualMode && gamepad1.dpad_right) {
-            claw.manualDown();
-        }
-
-        // Manual arm up
-        if (manualMode && gamepad1.b) {
-            // arm moves up
-            return;
-        }
-
-        // Manual arm down
-        if (manualMode && gamepad1.a) {
-            // arm moves down
-            return;
-        }
 
         // Init Position (Start)
         if (gamepad1.start && teleopState != TeleopState.INIT) {
             teleopState = TeleopState.INIT;
         }
 
-        // Pickup Position (A)
-        if (gamepad1.a && teleopState != TeleopState.PICKUP && !manualMode) {
-            teleopState = TeleopState.PICKUP;
+        // Before Picking Up Position (A)
+        if (gamepad1.a && teleopState != TeleopState.BEFORE_PICKUP) {
+            teleopState = TeleopState.BEFORE_PICKUP;
+        }
+
+        if (gamepad1.dpad_right && teleopState != TeleopState.SPECIMEN_PICKUP) {
+            teleopState = TeleopState.SPECIMEN_PICKUP;
+        }
+
+        // Picking Up Position (Dpad Down)
+        if (gamepad1.dpad_down && teleopState != TeleopState.PICKING_UP) {
+            teleopState = TeleopState.PICKING_UP;
+        }
+
+        if (gamepad1.right_trigger > 0.1 && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
+            teleopState = TeleopState.MANUAL_SLIDE_DOWN;
+        }
+
+        if (gamepad1.left_trigger > 0.1 && teleopState != TeleopState.MANUAL_SLIDE_DOWN) {
+            slides.resetSlideEncoder();
         }
 
         // Drop Position (B)
-        if (gamepad1.b && teleopState != TeleopState.DROP && !manualMode) {
+        if (gamepad1.b && teleopState != TeleopState.DROP) {
             teleopState = TeleopState.DROP;
         }
 
         // Specimen Position (X)
         if (gamepad1.x && teleopState != TeleopState.SPECIMEN) {
             teleopState = TeleopState.SPECIMEN;
+        }
+
+        if (gamepad1.dpad_up && teleopState != TeleopState.SPECIMENSCORE) {
+            teleopState = TeleopState.SPECIMENSCORE;
         }
 
         // Slow Mode Toggle (Y)
@@ -169,17 +119,7 @@ public class Teleop extends OpMode {
             }
         }
 
-        // move to necessary position
-        if (prevState != teleopState)
-            goToPosition(teleopState);
-      
-        if (gamepad1.right_trigger > .1) {
-            teleopState = TeleopState.MANUAL_FOREARM_UP;
-        }
-
-        if (gamepad1.left_trigger > .1) {
-            teleopState = TeleopState.MANUAL_FOREARM_DOWN;
-        }
+        goToPosition(teleopState);
 
         telemetry.addData("arm pos", arm.getPosition());
         telemetry.addData("slides pos", slides.getEncoder());
@@ -187,36 +127,34 @@ public class Teleop extends OpMode {
         //telemetry.addData("forearm pos", claw.getForearmPosition());
         telemetry.addData("slow mode", slowMode);
 
-        telemetry.addData("slides change", slides.getChangeInEncoderValues());
-        telemetry.addData("is calibrated", slides.isCalibrated());
         telemetry.update();
     }
 
     private void goToPosition(TeleopState state) {
         if (state == TeleopState.INIT) {
-            //slides.slideToPosition(SlideState.BOTTOM);
+            slides.slideToPosition(SlideState.BOTTOM);
             arm.toInitPos();
-            //claw.toFoldedPosition();
-        } else if (state == TeleopState.PICKUP) {
-            //slides.slideToPosition(SlideState.BOTTOM);
-            arm.toPickUp();
-            //claw.holdUp();
+        } else if (state == TeleopState.BEFORE_PICKUP) {
+            slides.slideToPosition(SlideState.BOTTOM);
+            arm.beforePickUp();
+        } else if (state == TeleopState.PICKING_UP){
+            slides.slideToPosition(SlideState.BOTTOM);
+            arm.pickingUp();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
             arm.toScoreBucketPos();
-           // claw.toDropPosition();
         } else if (state == TeleopState.SPECIMEN) {
-            slides.slideToPosition(SlideState.BOTTOM);
+            slides.slideToPosition(SlideState.MEDIUM);
             arm.toScoreSpecimenPos();
-           // claw.toSpecimenPosition();
+        } else if (state == TeleopState.SPECIMENSCORE) {
+            slides.slideToPosition(SlideState.MEDIUMSCORE);
         } else if (state == TeleopState.MANUAL_SLIDE_UP) {
             slides.slideToPosition(SlideState.MANUALUP);
         } else if (state == TeleopState.MANUAL_SLIDE_DOWN) {
             slides.slideToPosition(SlideState.MANUALDOWN);
-        } else if (state == TeleopState.MANUAL_FOREARM_UP) {
-            claw.holdUp();
-        } else if (state == TeleopState.MANUAL_FOREARM_DOWN) {
-            claw.holdDown();
+        } else if (state == TeleopState.SPECIMEN_PICKUP) {
+            slides.slideToPosition(SlideState.BOTTOM);
+            arm.pickingUpSpecimen();
         }
     }
 
