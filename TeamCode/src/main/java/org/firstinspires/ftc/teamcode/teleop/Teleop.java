@@ -21,8 +21,8 @@ public class Teleop extends OpMode {
        UNPRESSED,
     }
 
-    private ButtonPressState smButtonState = ButtonPressState.UNPRESSED; // Slow mode button state
-    private ButtonPressState ssButtonState = ButtonPressState.UNPRESSED; // Sample/Specimen button state
+    private ButtonPressState slowModeButtonState = ButtonPressState.UNPRESSED; // Slow mode button state
+    private ButtonPressState sampleSpecimenButtonState = ButtonPressState.UNPRESSED; // Sample/Specimen button state
     private TeleopState teleopState = TeleopState.INIT;
 
     private SimpleMecanumDrive drive;
@@ -41,7 +41,7 @@ public class Teleop extends OpMode {
     final int slidesEncoderSlowModeBreakpoint = -800;
 
     boolean slowMode = false;
-    boolean speciMode = false;
+    boolean specimenMode = false;
     int ticks = 0;
 
     @Override
@@ -77,12 +77,12 @@ public class Teleop extends OpMode {
         }
 
         // Specimen Pick Up Position (A)
-        if (gamepad1.a && teleopState != TeleopState.SPECIMEN_PICKUP && speciMode) {
+        if (gamepad1.a && teleopState != TeleopState.SPECIMEN_PICKUP && specimenMode) {
             teleopState = TeleopState.SPECIMEN_PICKUP;
         }
 
         // Picking Up Position (A)
-        if (gamepad1.a && teleopState != TeleopState.PICKING_UP && !speciMode) {
+        if (gamepad1.a && teleopState != TeleopState.PICKING_UP && !specimenMode) {
             teleopState = TeleopState.PICKING_UP;
         }
 
@@ -96,47 +96,48 @@ public class Teleop extends OpMode {
             slides.resetSlideEncoder();
         }
 
-        // Drop Position (X)
-        if (gamepad1.x && teleopState != TeleopState.DROP && !speciMode) {
+        // Top Basket Position (X)
+        if (gamepad1.x && teleopState != TeleopState.DROP && !specimenMode) {
             teleopState = TeleopState.DROP;
         }
 
+        // Low Basket Position (Y)
+        if (gamepad1.y && teleopState != TeleopState.DROP && !specimenMode) {
+            teleopState = TeleopState.DROPLOW;
+        }
+
         // Specimen Position (X)
-        if (gamepad1.x && teleopState != TeleopState.SPECIMEN && speciMode) {
+        if (gamepad1.x && teleopState != TeleopState.SPECIMEN && specimenMode) {
             teleopState = TeleopState.SPECIMEN;
         }
 
         // Slides move up slightly (Y)
-        if (gamepad1.y && teleopState != TeleopState.SPECIMENSCORE && speciMode) {
+        if (gamepad1.y && teleopState != TeleopState.SPECIMENSCORE && specimenMode) {
             teleopState = TeleopState.SPECIMENSCORE;
         }
 
         // Slow Mode Toggle (DUp)
-        if (!gamepad1.dpad_up) {
-            smButtonState = ButtonPressState.UNPRESSED;
-        }
-
         if (gamepad1.dpad_up) {
-            if (smButtonState == ButtonPressState.UNPRESSED) {
-                smButtonState = ButtonPressState.PRESSED_GOOD;
+            if (slowModeButtonState == ButtonPressState.UNPRESSED) {
+                slowModeButtonState = ButtonPressState.PRESSED_GOOD;
                 slowMode = !slowMode;
-            } else if (smButtonState == ButtonPressState.PRESSED_GOOD) {
-                smButtonState = ButtonPressState.DEPRESSED;
+            } else if (slowModeButtonState == ButtonPressState.PRESSED_GOOD) {
+                slowModeButtonState = ButtonPressState.DEPRESSED;
             }
+        } else {
+            slowModeButtonState = ButtonPressState.UNPRESSED;
         }
 
         // Sample/Specimen Mode Toggle (DLeft)
-        if (!gamepad1.dpad_left) {
-            ssButtonState = ButtonPressState.UNPRESSED;
-        }
-
         if (gamepad1.dpad_left) {
-            if (ssButtonState == ButtonPressState.UNPRESSED) {
-                ssButtonState = ButtonPressState.PRESSED_GOOD;
-                speciMode = !speciMode;
-            } else if (ssButtonState == ButtonPressState.PRESSED_GOOD) {
-                ssButtonState = ButtonPressState.DEPRESSED;
+            if (sampleSpecimenButtonState == ButtonPressState.UNPRESSED) {
+                sampleSpecimenButtonState = ButtonPressState.PRESSED_GOOD;
+                specimenMode = !specimenMode;
+            } else if (sampleSpecimenButtonState == ButtonPressState.PRESSED_GOOD) {
+                sampleSpecimenButtonState = ButtonPressState.DEPRESSED;
             }
+        } else {
+            sampleSpecimenButtonState = ButtonPressState.UNPRESSED;
         }
 
         goToPosition(teleopState);
