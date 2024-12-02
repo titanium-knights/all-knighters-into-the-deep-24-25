@@ -1,46 +1,50 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import androidx.annotation.NonNull;
+
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class Claw {
     Servo clawOpener;
-    Servo forearm;
     double servoAngleModifier = (double) 360 / 300;
-
-    public static double PICKUP_POSITION = .33;
-    public static double FOLDED_POSITION = 0;
-    public static double DROP_POSITION = 0.8;
-    public static double FOLDED_POSITION2 = .1;
 
     public Claw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.clawServo);
-        this.forearm = hmap.servo.get(CONFIG.forearm);
     }
 
     public void open() {
-        clawOpener.setPosition(0.85);
+        clawOpener.setPosition(1);
+    }
+
+    public class OpenClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            open();
+            return false;
+        }
+    }
+
+    public Action openAction() {
+        return new OpenClaw();
     }
 
     public void close() {
-        clawOpener.setPosition(1.0);
+        clawOpener.setPosition(0.65);
     }
 
-    public void goToPickUpPosition() {
-        forearm.setPosition(PICKUP_POSITION);
+    public class CloseClaw implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            close();
+            return false;
+        }
     }
-
-    public void goToFoldedPosition() {
-        forearm.setPosition(FOLDED_POSITION);
-    }
-
-    public void goToFoldedPosition2() {
-        forearm.setPosition(FOLDED_POSITION2);
-    }
-
-    public void goToDropPosition() { forearm.setPosition(DROP_POSITION);}
+    public Action closeAction() { return new CloseClaw(); }
 
     public double getPosition() {
         return clawOpener.getPosition() / servoAngleModifier;
