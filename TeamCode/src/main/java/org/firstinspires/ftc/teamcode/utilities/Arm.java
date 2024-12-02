@@ -38,9 +38,7 @@ public class Arm {
         arm.setPosition(0.25);
     }
 
-    /* public void toLowScoreBucketPos() {
-        arm.setPosition(0.25);
-    }*/
+    public void toLowScoreBucketPos() { arm.setPosition(0.25); }
 
     public void toScoreSpecimenPos() {
         arm.setPosition(specimenScorePosition);

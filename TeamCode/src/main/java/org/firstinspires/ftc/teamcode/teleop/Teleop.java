@@ -102,7 +102,7 @@ public class Teleop extends OpMode {
         }
 
         // Low Basket Position (Y)
-        if (gamepad1.y && teleopState != TeleopState.DROP && !specimenMode) {
+        if (gamepad1.y && teleopState != TeleopState.DROPLOW && !specimenMode) {
             teleopState = TeleopState.DROPLOW;
         }
 
@@ -163,6 +163,9 @@ public class Teleop extends OpMode {
             arm.pickingUp();
         } else if (state == TeleopState.DROP) {
             slides.slideToPosition(SlideState.TOP);
+            arm.toScoreBucketPos();
+        } else if (state == TeleopState.DROPLOW){
+            slides.slideToPosition(SlideState.MEDIUM);
             arm.toScoreBucketPos();
         } else if (state == TeleopState.SPECIMEN) {
             slides.slideToPosition(SlideState.MEDIUM);
