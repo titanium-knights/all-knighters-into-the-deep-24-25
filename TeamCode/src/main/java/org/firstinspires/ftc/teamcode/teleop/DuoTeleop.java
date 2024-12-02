@@ -40,13 +40,14 @@ public class DuoTeleop extends OpMode {
     int ticks = 0;
 
     public void initPosition() {
-        claw.goToFoldedPosition();
+        claw.getPosition();
         claw.close();
         slides.stop();
     }
 
     @Override
     public void init() {
+        // initialize util classes for hardware
         drive = new SimpleMecanumDrive(hardwareMap);
         claw = new Claw(hardwareMap);
         slides = new Slides(hardwareMap);
@@ -57,8 +58,10 @@ public class DuoTeleop extends OpMode {
 
     @Override
     public void loop() {
-       //gamepad 1 stuff
+        // Movement control using gamepad1 (left stick for forward/backward, right stick for turning)
         move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+        // Claw controls with gamepad1
         if (gamepad1.left_bumper) {
             claw.open();
             telemetry.addData("open", claw.getPosition());
@@ -68,23 +71,23 @@ public class DuoTeleop extends OpMode {
         }
 
         if (gamepad1.left_trigger > .1) {
-            claw.goToPickUpPosition();
+            claw.getPosition();
         } else if (gamepad1.right_trigger > .1) {
-            claw.goToFoldedPosition2();
+            claw.closeAction();
         }
 
-        // slides for g1
+        // Slides controls with gamepad2 (dpad for up/down)
         if (gamepad2.dpad_up) {
-            slides.changeToUpState();
+            slides.slideToPosition();
             telemetry.addData("up", slides.getEncoder());
         } else if (gamepad2.dpad_down) {
-            slides.changeToDownState();
+            slides.resetSlideEncoder();
             telemetry.addData("down", slides.getEncoder());
         } else {
             slides.stop();
         }
 
-        // arm for g1
+        // Arm controls with gamepad2 (presets for actions)
         if (!gamepad2.y) {
             yButtonState = ButtonPressState.UNPRESSED;
         }
@@ -99,14 +102,14 @@ public class DuoTeleop extends OpMode {
         }
 
         if (gamepad2.b) {
-            arm.toDropSpecimen();
-            claw.goToFoldedPosition();
+            arm.toScoreSpecimenPosAction();
+            claw.getPosition();
         } else if (gamepad2.x) {
-            arm.toPickUpSamples();
-            claw.goToPickUpPosition();
+            arm.toInitPosAction();
+            claw.getPosition();
         } else if (gamepad2.a) {
-            arm.toDropSamples();
-            claw.goToPickUpPosition();
+            arm.toScoreSpecimenPosAction();
+            claw.getPosition();
         }
 
         telemetry.addData("arm position", arm.getPosition());
@@ -115,7 +118,7 @@ public class DuoTeleop extends OpMode {
     }
 
     public void move(float x, float y, float turn) {
-        //tick stuff
+        // If the stick movement is negligible, ignore it
         if (Math.abs(x) <= STICK_MARGIN) x = .0f;
         if (Math.abs(y) <= STICK_MARGIN) y = .0f;
         if (Math.abs(turn) <= STICK_MARGIN) turn = .0f;
