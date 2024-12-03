@@ -38,6 +38,10 @@ public class Arm {
         arm.setPosition(0.25);
     }
 
+    /* public void toLowScoreBucketPos() {
+        arm.setPosition(0.25);
+    }*/
+
     public void toScoreSpecimenPos() {
         arm.setPosition(specimenScorePosition);
     }
@@ -66,7 +70,5 @@ public class Arm {
         return new toInitPosAction();
     }
 
-    public Action toScoreSpecimenPosAction() {
-        return new toScoreSpecimenPosAction();
-    }
+    public Action toScoreSpecimenPosAction() { return new toScoreSpecimenPosAction(); }
 }
