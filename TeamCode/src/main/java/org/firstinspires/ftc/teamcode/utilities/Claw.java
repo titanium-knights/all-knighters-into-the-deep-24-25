@@ -29,7 +29,7 @@ public class Claw {
         }
     }
 
-    public Action openAction() {
+    public OpenClaw openAction() {
         return new OpenClaw();
     }
 
@@ -44,7 +44,7 @@ public class Claw {
             return false;
         }
     }
-    public Action closeAction() { return new CloseClaw(); }
+    public CloseClaw closeAction() { return new CloseClaw(); }
 
     public double getPosition() {
         return clawOpener.getPosition() / servoAngleModifier;
