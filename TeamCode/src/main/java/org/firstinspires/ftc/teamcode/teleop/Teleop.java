@@ -160,6 +160,7 @@ public class Teleop extends OpMode {
                 teleopState = TeleopState.BEFORE_PICKUP;
             }
 
+            // Pick Up Specimen Position (Dpad Right)
             if (gamepad1.dpad_right && teleopState != TeleopState.SPECIMEN_PICKUP) {
                 teleopState = TeleopState.SPECIMEN_PICKUP;
             }
@@ -174,11 +175,17 @@ public class Teleop extends OpMode {
                 teleopState = TeleopState.DROP;
             }
 
+            // Drop Low Position (Trigger Right)
+            if (gamepad1.b && teleopState != TeleopState.DROP_LOW) {
+                teleopState = TeleopState.DROP_LOW;
+            }
+
             // Specimen Position (X)
             if (gamepad1.x && teleopState != TeleopState.SPECIMEN) {
                 teleopState = TeleopState.SPECIMEN;
             }
 
+            // Specimen Lower Arm (Dpad Up)
             if (gamepad1.dpad_up && teleopState != TeleopState.SPECIMEN_SCORE) {
                 teleopState = TeleopState.SPECIMEN_SCORE;
             }
@@ -218,6 +225,10 @@ public class Teleop extends OpMode {
                 slides.slideToPosition(SlideState.TOP);
                 arm.toScoreBucketPos();
                 break;
+            case DROP_LOW:
+                slides.slideToPosition(SlideState.TOP);
+                arm.toLowScoreBucketPos();
+                break;
             case SPECIMEN:
                 slides.slideToPosition(SlideState.MEDIUM);
                 arm.toScoreSpecimenPos();
@@ -243,18 +254,18 @@ public class Teleop extends OpMode {
         }
 
         // Slides control
-        if (gamepad1.right_trigger > 0.1) {
+        if (gamepad1.dpad_up) {
             slides.manualUp(gamepad1.right_trigger);
-        } else if (gamepad1.left_trigger > 0.1) {
+        } else if (gamepad1.dpad_down) {
             slides.manualDown(gamepad1.left_trigger);
         } else {
             slides.stop();
         }
 
         // Arm control using D-pad or right stick Y-axis
-        if (gamepad1.dpad_up) {
+        if (gamepad1.right_trigger > 0.1) {
             arm.manualUp(1.0);
-        } else if (gamepad1.dpad_down) {
+        } else if (gamepad1.left_trigger > 0.1) {
             arm.manualDown(1.0);
         } else if (gamepad1.right_stick_y < -0.1) { // Stick pushed up
             arm.manualUp(-gamepad1.right_stick_y); // Convert to positive value

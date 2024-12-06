@@ -18,6 +18,8 @@ public class Arm {
     public static double beforePickupPosition = 0.60;
     public static double pickingUpPosition = 0.68;
     public static double scoreBucketPosition = 0.25;
+    public static double lowScoreBucketPosition = 0.20;
+
     public static double specimenPickupPosition = 0.45;
     public static double specimenScorePosition = 0.3;
 
@@ -46,9 +48,9 @@ public class Arm {
         arm.setPosition(specimenPickupPosition);
     }
 
-    /* public void toLowScoreBucketPos() {
-        arm.setPosition(0.25);
-    }*/
+    public void toLowScoreBucketPos() {
+        arm.setPosition(lowScoreBucketPosition);
+    }
 
     public void toScoreSpecimenPos() {
         arm.setPosition(specimenScorePosition);
