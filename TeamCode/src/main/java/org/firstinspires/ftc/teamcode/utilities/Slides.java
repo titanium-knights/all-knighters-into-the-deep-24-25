@@ -14,9 +14,9 @@ public class Slides {
     private int pos;
 
     // Preset encoder values
-    private final int maxHeight = -2100;
-    private final int minHeight = 0;
-    private final int BUFFER = 50;
+    public final int maxHeight = -2100;
+    public final int minHeight = 0;
+    public final int BUFFER = 50;
 
     // Preset power values for both directions (based on weight)
     // Negative is up, positive is down
@@ -65,7 +65,7 @@ public class Slides {
             stop();
             return true;
         } else {
-            updateSliderPower(state.getEncoderValue());
+            updateSlidesPower(state.getEncoderValue());
             return false;
         }
     }
@@ -102,7 +102,7 @@ public class Slides {
     }
 
     // Exists for basic proportional control (could be expanded to PID)
-    private void updateSliderPower(int targetEncoderValue) {
+    private void updateSlidesPower(int targetEncoderValue) {
         int currentPos = slideMotor.getCurrentPosition();
         double distanceAway = targetEncoderValue - currentPos;
 

@@ -179,8 +179,8 @@ public class Teleop extends OpMode {
                 teleopState = TeleopState.SPECIMEN;
             }
 
-            if (gamepad1.dpad_up && teleopState != TeleopState.SPECIMENSCORE) {
-                teleopState = TeleopState.SPECIMENSCORE;
+            if (gamepad1.dpad_up && teleopState != TeleopState.SPECIMEN_SCORE) {
+                teleopState = TeleopState.SPECIMEN_SCORE;
             }
 
             // Apply the positions based on the state
@@ -222,7 +222,7 @@ public class Teleop extends OpMode {
                 slides.slideToPosition(SlideState.MEDIUM);
                 arm.toScoreSpecimenPos();
                 break;
-            case SPECIMENSCORE:
+            case SPECIMEN_SCORE:
                 slides.slideToPosition(SlideState.MEDIUMSCORE);
                 break;
             case SPECIMEN_PICKUP:

@@ -7,6 +7,6 @@ public enum TeleopState {
     DROP,
     SPECIMEN_PICKUP,
     SPECIMEN,
-    SPECIMENSCORE,
+    SPECIMEN_SCORE,
     MANUAL_CONTROL
 }
