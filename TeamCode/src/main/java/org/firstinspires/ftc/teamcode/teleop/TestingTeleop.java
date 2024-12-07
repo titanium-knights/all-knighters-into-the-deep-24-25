@@ -1,42 +1,27 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.widget.Button;
-
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
-import org.firstinspires.ftc.teamcode.utilities.Claw;
-import org.firstinspires.ftc.teamcode.utilities.Slides;
-import org.firstinspires.ftc.teamcode.utilities.specimenSweatshopFactory;
+import org.firstinspires.ftc.teamcode.utilities.ActiveIntake;
 
-@TeleOp(name="testing Teleop", group="default")
+@TeleOp(name="A Testing Teleop", group="default")
 public class TestingTeleop extends OpMode {
-    private Slides slides;
-    private specimenSweatshopFactory SpecimenSweatshopFactory;
 
+    ActiveIntake activeIntake;
     @Override
     public void init() {
-        slides = new Slides(hardwareMap);
-        SpecimenSweatshopFactory = new specimenSweatshopFactory(hardwareMap);
+        activeIntake = new ActiveIntake(hardwareMap);
     }
 
     @Override
     public void loop() {
 
-//        if (gamepad1.left_bumper) {
-//            SpecimenSweatshopFactory.applyForce();
-//        } else if (gamepad1.right_bumper) {
-//            SpecimenSweatshopFactory.notApplyingForce();
-//        }
-//
-//        if (gamepad1.y) {
-//            SpecimenSweatshopFactory.holdingHookInPlace();
-//        } else if (gamepad1.x) {
-//            SpecimenSweatshopFactory.notHoldingHookInPlace();
-//        }
-
-
+        if (gamepad1.dpad_up) {
+            activeIntake.intake();
+        } else if (gamepad1.dpad_down) {
+            activeIntake.outtake();
+        }
     }
 }
