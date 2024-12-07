@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -22,6 +21,10 @@ public class TestingTeleop extends OpMode {
             activeIntake.intake();
         } else if (gamepad1.dpad_down) {
             activeIntake.outtake();
+        } else if (gamepad1.dpad_left) {
+            activeIntake.intakePositional();
+        } else if (gamepad1.dpad_right) {
+            activeIntake.outtakePositional();
         }
     }
 }

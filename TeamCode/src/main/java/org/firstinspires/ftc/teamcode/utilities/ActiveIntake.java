@@ -1,25 +1,39 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class ActiveIntake {
 
-    Servo rightServo;
-    Servo leftServo;
+
+    HardwareDevice rightServo;
+    HardwareDevice leftServo;
 
     public ActiveIntake(HardwareMap hmap) {
-        rightServo = hmap.servo.get("rightIntake");
-        leftServo = hmap.servo.get("leftIntake");
+        rightServo = hmap.get("rightIntake");
+        leftServo = hmap.get("leftIntake");
+
+    }
+
+    public void intakePositional() {
+        ((Servo)rightServo).setPosition(1.0);
+        ((Servo)leftServo).setPosition(0.0);
+    }
+
+    public void outtakePositional() {
+        ((Servo)rightServo).setPosition(0.0);
+        ((Servo)leftServo).setPosition(1.0);
     }
 
     public void intake() {
-        rightServo.setPosition(1.0);
-        leftServo.setPosition(0.0);
+        ((CRServo)rightServo).setPower(1.0);
+        ((CRServo)leftServo).setPower(-1.0);
     }
 
     public void outtake() {
-        rightServo.setPosition(0.0);
-        leftServo.setPosition(1.0);
+        ((CRServo)rightServo).setPower(-1.0);
+        ((CRServo)leftServo).setPower(1.0);
     }
 }
