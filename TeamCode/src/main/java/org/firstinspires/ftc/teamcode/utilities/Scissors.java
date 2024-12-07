@@ -9,8 +9,8 @@ public class Scissors {
 
     Servo scissorsController;
     
-    public static double extendPosition = 0.35;
-    public static double retractPosition = 0.0;
+    public static double extendPosition = 1.0;
+    public static double retractPosition = 0.15;
 
     public Scissors(HardwareMap hmap) {
         this.scissorsController = hmap.servo.get(CONFIG.scissorsServo);
