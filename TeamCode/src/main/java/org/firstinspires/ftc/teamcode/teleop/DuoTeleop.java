@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Claw;
+import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 
 @Config
@@ -76,7 +77,7 @@ public class DuoTeleop extends OpMode {
 
         // Slides controls with gamepad2 (dpad for up/down)
         if (gamepad2.dpad_up) {
-            slides.slideToPosition();
+            slides.slideToPosition(SlideState.TOP);
             telemetry.addData("up", slides.getEncoder());
         } else if (gamepad2.dpad_down) {
             slides.resetSlideEncoder();
