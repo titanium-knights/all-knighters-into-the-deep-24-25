@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.utilities.Claw;
+import org.firstinspires.ftc.teamcode.utilities.topClaw;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
@@ -22,7 +22,7 @@ public class Score extends LinearOpMode {
         ElapsedTime runtime = new ElapsedTime();
         SimpleMecanumDrive drivetrain = new SimpleMecanumDrive(hardwareMap);
 
-        Claw claw = new Claw(hardwareMap);
+        topClaw claw = new topClaw(hardwareMap);
         Slides slides = new Slides(hardwareMap);
         Arm arm = new Arm(hardwareMap);
 

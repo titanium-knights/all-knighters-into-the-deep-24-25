@@ -10,15 +10,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.rr.MecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
-import org.firstinspires.ftc.teamcode.utilities.Claw;
-import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
+import org.firstinspires.ftc.teamcode.utilities.topClaw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 
 // start at A2, ykwim
 @Config
 @Autonomous(name = "PushBlue", group = "Autonomous")
 public class PushBlue extends LinearOpMode {
-    private Claw claw;
+    private topClaw claw;
     private Slides slides;
     private Arm arm;
 
@@ -31,7 +30,7 @@ public class PushBlue extends LinearOpMode {
 
         MecanumDrive drivetrain = new MecanumDrive(hardwareMap, begPose);
 
-        claw = new Claw(hardwareMap);
+        claw = new topClaw(hardwareMap);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
 
