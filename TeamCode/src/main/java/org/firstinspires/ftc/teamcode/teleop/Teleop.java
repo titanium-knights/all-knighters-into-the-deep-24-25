@@ -46,7 +46,7 @@ public class Teleop extends OpMode {
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
 
-        claw.goToFoldedPosition();
+        claw.getPosition();
         claw.close();
         slides.stop();
     }
