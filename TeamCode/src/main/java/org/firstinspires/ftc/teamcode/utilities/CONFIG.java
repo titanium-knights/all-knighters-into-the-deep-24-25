@@ -35,4 +35,5 @@ public class CONFIG {
     public static String servoThatKeepsTheHookInPlace = "sTKTHIP";
     public static String servoThatAppliesForceToHook = "sTAFT";
 
+    public static String scissorsServo = "scissors";
 }

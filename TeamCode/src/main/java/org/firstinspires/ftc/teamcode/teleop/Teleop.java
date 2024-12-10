@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.utilities.Arm;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
-import org.firstinspires.ftc.teamcode.utilities.Claw;
+import org.firstinspires.ftc.teamcode.utilities.topClaw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 
@@ -29,7 +29,7 @@ public class Teleop extends OpMode {
     private TeleopState previousTeleopState = TeleopState.INIT;
 
     private SimpleMecanumDrive drive;
-    private Claw claw;
+    private topClaw claw;
     private Slides slides;
     private Arm arm;
 
@@ -77,7 +77,7 @@ public class Teleop extends OpMode {
     public void init() {
         // Initialize hardware
         drive = new SimpleMecanumDrive(hardwareMap);
-        claw = new Claw(hardwareMap);
+        claw = new topClaw(hardwareMap);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
     }

@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.rr.MecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
-import org.firstinspires.ftc.teamcode.utilities.Claw;
+import org.firstinspires.ftc.teamcode.utilities.topClaw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.utilities.SlideState;
 @Config
 @Autonomous(name = "ScoreSpecimenPushBlue", group = "Autonomous")
 public class ScoreSpecimenPushBlue extends LinearOpMode {
-    private Claw claw;
+    private topClaw claw;
     private Slides slides;
     private SlideState slideState;
     private Arm arm;
@@ -33,7 +33,7 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
 
         MecanumDrive drivetrain = new MecanumDrive(hardwareMap, begPose);
 
-        claw = new Claw(hardwareMap);
+        claw = new topClaw(hardwareMap);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
 
