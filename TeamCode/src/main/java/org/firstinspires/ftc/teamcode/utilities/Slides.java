@@ -1,5 +1,9 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -7,103 +11,108 @@ public class Slides {
 
     // On the physical robot, the more negative the value, the higher it is
     // Same thing as encoder value
-    int pos;
+    private int pos;
 
-    // Preset encoder values,
-    final int maxHeight = -2200;
-    final int minHeight = 0;
-    final int totalHeight = Math.abs(maxHeight - minHeight);
-    final int BUFFER = 20;
+    // Preset encoder values
+    public final int maxHeight = -2100;
+    public final int minHeight = 0;
+    public final int BUFFER = 50;
 
     // Preset power values for both directions (based on weight)
     // Negative is up, positive is down
-    double slideUpPower = -1.0;
-    double slideDownPower = 1.0;
-    double idlePower = 0;
+    private double slideUpPower = -1.0;
+    private double slideDownPower = 1.0;
+    private double idlePower = -0.3;
 
-    // i don't want to do this but i have to
-    boolean hasBeenCalibrated = true;
-
-    int pastEncoderValue = 0;
-    int pastEncoderValue2 = 0;
-
-    DcMotor slideMotor;
+    private DcMotor slideMotor;
 
     public Slides(HardwareMap hmap) {
         this.slideMotor = hmap.dcMotor.get(CONFIG.slidesMotor);
 
-        // calibrate the encoder to initial position
+        // Calibrate the encoder to initial position
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         this.pos = 0;
 
-        // catch all, but in theory the motor should never be at zero power
+        // Ensure the motor brakes when power is zero
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    // for telemetry only
+    // For telemetry only
     public int getEncoder() {
         return slideMotor.getCurrentPosition();
     }
 
-    // used in initialization and l as in between movements
+    // Used in initialization and as in-between movements
     public void stop() {
-        // this is the power required to be stationary
-        if (hasBeenCalibrated) {
-            slideMotor.setPower(0);
-        } else {
-            slideMotor.setPower(idlePower);
-        }
+        // This is the power required to be stationary
+        slideMotor.setPower(idlePower);
     }
 
     private boolean encoderValueWithinBufferOfTarget(int targetEncoderValue) {
         return Math.abs(slideMotor.getCurrentPosition() - targetEncoderValue) <= BUFFER;
     }
 
-    public double getChangeInEncoderValues() {
-        return slideMotor.getCurrentPosition() - pastEncoderValue;
+    public void resetSlideEncoder() {
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.pos = 0;
     }
 
-    private boolean slidesStoppedMoving() {
-        return Math.abs(getChangeInEncoderValues()) <= .5;
-    }
-
-    public boolean isCalibrated() {
-        return hasBeenCalibrated;
-    }
-
-    // exists to switch between target encoder values
-    public void slideToPosition(SlideState state) {
-        if (state == SlideState.MANUALUP) {
-            slideMotor.setPower(-.8);
-            hasBeenCalibrated = false;
-        } else if (state == SlideState.MANUALDOWN) {
-            slideMotor.setPower(0.1);
-        } else if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
+    // Exists to switch between target encoder values
+    public boolean slideToPosition(SlideState state) {
+        if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
             stop();
-        } else if (!hasBeenCalibrated && slidesStoppedMoving() && state == SlideState.BOTTOM && slideMotor.getCurrentPosition() > -150) {
-            // recalibrate if it's at the bottom and not moving and just came down
-            slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            hasBeenCalibrated = true;
-            stop();
+            return true;
         } else {
-            updateSliderPower(state.getEncoderValue());
-            hasBeenCalibrated = false;
+            updateSlidesPower(state.getEncoderValue());
+            return false;
         }
-        pastEncoderValue = slideMotor.getCurrentPosition();
-        pastEncoderValue2 = pastEncoderValue;
     }
 
-    // exists for PID
-    private void updateSliderPower(int targetEncoderValue) {
-        int pos = slideMotor.getCurrentPosition();
-        double distanceAway = targetEncoderValue - pos;
-        double multiplier = Math.abs(distanceAway / totalHeight) / 4 + .75;
-        if (distanceAway > 0) { // moving down
-            slideMotor.setPower(slideDownPower);
-        } else if (distanceAway < 0) { // moving up
-            slideMotor.setPower(slideUpPower);
+    // Manual control methods accepting controller values
+    public void manualUp(double power) {
+        // Assume power is from 0.0 to 1.0
+        double adjustedPower = -Math.abs(power); // Negative for upward movement
+        slideMotor.setPower(adjustedPower);
+    }
+
+    public void manualDown(double power) {
+        // Assume power is from 0.0 to 1.0
+        double adjustedPower = Math.abs(power); // Positive for downward movement
+        slideMotor.setPower(adjustedPower);
+    }
+
+    public class SlideAction implements Action {
+        SlideState slideState;
+
+        public SlideAction(SlideState slideState) {
+            this.slideState = slideState;
         }
+
+        @Override
+        public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+            slideToPosition(slideState);
+            return false;
+        }
+    }
+
+    public Action getSlideAction(SlideState slideState) {
+        return new SlideAction(slideState);
+    }
+
+    // Exists for basic proportional control (could be expanded to PID)
+    private void updateSlidesPower(int targetEncoderValue) {
+        int currentPos = slideMotor.getCurrentPosition();
+        double distanceAway = targetEncoderValue - currentPos;
+
+        // Simple proportional control
+        double kP = 0.001; // Proportional gain (adjust as needed)
+        double power = kP * distanceAway;
+
+        // Limit power to max values
+        power = Math.max(-1.0, Math.min(1.0, power));
+
+        slideMotor.setPower(power);
     }
 }
