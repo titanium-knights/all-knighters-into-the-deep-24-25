@@ -23,4 +23,9 @@ public class ActiveIntake {
         rightServo.setPower(-1.0);
         leftServo.setPower(1.0);
     }
+
+    public void stop() {
+        rightServo.setPower(0.0);
+        leftServo.setPower(0.0);
+    }
 }
