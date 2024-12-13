@@ -10,4 +10,5 @@ public enum TeleopState {
     DROP_LOW,
     SPECIMEN_SCORE,
     MANUAL_CONTROL,
+    AUTO_ALIGN_PICKUP,
 }

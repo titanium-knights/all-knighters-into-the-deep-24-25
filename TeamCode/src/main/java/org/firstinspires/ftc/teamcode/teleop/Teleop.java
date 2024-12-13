@@ -147,6 +147,8 @@ public class Teleop extends OpMode {
 
         if (teleopState == TeleopState.MANUAL_CONTROL) {
             manualControl();
+        } else if (teleopState == TeleopState.AUTO_ALIGN_PICKUP) {
+            autoAlignPickup();
         } else {
             // State transitions based on gamepad inputs
 
@@ -277,6 +279,100 @@ public class Teleop extends OpMode {
 
         // Additional manual controls can be added here
     }
+
+    // Constants for alignment targets and tolerance buffers
+    // These values need to be tuned based on your hardware and sensor configuration.
+    private static final double X_TARGET = 0.0;          // Desired horizontal offset
+    private static final double X_TOLERANCE = 0.5;       // Allowed horizontal error
+    private static final double ROT_TARGET = 0.0;        // Desired rotation offset (in degrees)
+    private static final double ROT_TOLERANCE = 2.0;     // Allowed rotational error in degrees
+    private static final double DIST_TARGET = 10.0;      // Desired distance from object (in cm)
+    private static final double DIST_TOLERANCE = 1.0;    // Allowed distance error in cm
+
+    // Speeds for correction movements
+    private static final double CORRECTION_SPEED = 0.3;  // Adjust as necessary
+
+    // Dummy sensor reading methods to be implemented or integrated with actual sensors
+    private double getXValue() {
+        // Return the current horizontal offset from the target
+        // Positive means robot is too far right, negative means too far left.
+        return 0.0; // Placeholder
+    }
+
+    private double getRotationOffset() {
+        // Return the current rotational offset (e.g., from gyro or orientation sensor)
+        // Positive means we need to rotate clockwise, negative means counterclockwise.
+        return 0.0; // Placeholder
+    }
+
+    private double getDistanceValue() {
+        // Return the current distance to the target object (e.g., from a distance sensor)
+        return 0.0; // Placeholder
+    }
+
+    private void autoAlignPickup() {
+        // Read current offsets
+        double currentX = getXValue();
+        double currentRot = getRotationOffset();
+        double currentDist = getDistanceValue();
+
+        // Compute errors
+        double xError = currentX - X_TARGET;
+        double rotError = currentRot - ROT_TARGET;
+        double distError = currentDist - DIST_TARGET;
+
+        // Determine if each error is within tolerance
+        boolean xAligned = Math.abs(xError) <= X_TOLERANCE;
+        boolean rotAligned = Math.abs(rotError) <= ROT_TOLERANCE;
+        boolean distAligned = Math.abs(distError) <= DIST_TOLERANCE;
+
+        // If all conditions are met, we are done aligning
+        if (xAligned && rotAligned && distAligned) {
+            // Stop movement
+            drive.move(0, 0, 0);
+
+            // Perform any pickup action here if needed
+            // For example: arm.toPickUpPos(); claw.open(); or claw.close(); etc.
+
+            // Return to manual control or previous teleop state
+            teleopState = TeleopState.MANUAL_CONTROL;
+            return;
+        }
+
+        // Calculate corrections.
+        // Since drive.move(x,y,turn):
+        // - x > 0 means move right, x < 0 means move left
+        // - y > 0 means move backward, y < 0 means move forward (adjust based on your coordinate system)
+        // - turn > 0 means rotate clockwise, turn < 0 means rotate counterclockwise
+        double xCorrection = 0.0;
+        double yCorrection = 0.0;
+        double turnCorrection = 0.0;
+
+        // Horizontal correction
+        if (!xAligned) {
+            // If xError > 0, we're to the left of the target (depending on your coordinate definition),
+            // so move right or left accordingly.
+            xCorrection = (xError > 0) ? CORRECTION_SPEED : -CORRECTION_SPEED;
+        }
+
+        // Rotational correction
+        if (!rotAligned) {
+            turnCorrection = (rotError > 0) ? CORRECTION_SPEED : -CORRECTION_SPEED;
+        }
+
+        // Distance correction
+        if (!distAligned) {
+            // If distError > 0, we are too far from the target and need to move closer.
+            // Depending on how your robot is oriented, you might need to invert this logic.
+            yCorrection = (distError > 0) ? -CORRECTION_SPEED : CORRECTION_SPEED;
+        }
+
+        // Combine all corrections into one move command
+        // Note: It may be wise to scale these corrections so they don't overpower each other.
+        // For example, if rotation is critical, you might reduce other corrections when rotation is needed.
+        drive.move(xCorrection, yCorrection, turnCorrection);
+    }
+
 
     private void move(float x, float y, float turn) {
         // Deadzone adjustment
