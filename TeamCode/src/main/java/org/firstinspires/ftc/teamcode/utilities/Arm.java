@@ -1,70 +1,106 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+import androidx.annotation.NonNull;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
+import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class Arm {
+    private Servo arm;
+    private static final double ARM_SPEED = 0.005; // Adjust this value as needed
 
-    // hello, this is a new branch
+    // Arm positions
+    public static double initPosition = 0.01;
+    public static double beforePickupPosition = 0.60;
+    public static double pickingUpPosition = 0.68;
+    public static double scoreBucketPosition = 0.25;
+    public static double lowScoreBucketPosition = 0.20;
 
-    public DcMotor armMotor;
-
-    // position presets
-    private final double verticalEncoderValue = 4000;
-    private static final double BUFFER = 20;
-
-    public static double FULL_POWER = 1;
+    public static double specimenPickupPosition = 0.45;
+    public static double specimenScorePosition = 0.3;
 
     public Arm(HardwareMap hmap) {
-        this.armMotor = hmap.dcMotor.get(CONFIG.armMotor);
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armMotor.setZeroPowerBehavior(BRAKE);
-        armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.arm = hmap.get(Servo.class, CONFIG.armServo);
     }
 
-    // completely stop arm
+    // Preset positions
+    public void toInitPos() {
+        arm.setPosition(initPosition);
+    }
+
+    public void beforePickUp() {
+        arm.setPosition(beforePickupPosition);
+    }
+
+    public void pickingUp() {
+        arm.setPosition(pickingUpPosition);
+    }
+
+    public void toScoreBucketPos() {
+        arm.setPosition(scoreBucketPosition);
+    }
+
+    public void pickingUpSpecimen() {
+        arm.setPosition(specimenPickupPosition);
+    }
+
+    public void toLowScoreBucketPos() {
+        arm.setPosition(lowScoreBucketPosition);
+    }
+
+    public void toScoreSpecimenPos() {
+        arm.setPosition(specimenScorePosition);
+    }
+
+    public double getPosition() {
+        return arm.getPosition();
+    }
+
+    // Manual control methods accepting controller values
+    public void manualUp(double power) {
+        // Assume power is from 0.0 to 1.0
+        double newPosition = arm.getPosition() + (power * ARM_SPEED);
+        // Ensure the new position is within [0.0, 1.0]
+        newPosition = Math.min(newPosition, 1.0);
+        arm.setPosition(newPosition);
+    }
+
+    public void manualDown(double power) {
+        // Assume power is from 0.0 to 1.0
+        double newPosition = arm.getPosition() - (power * ARM_SPEED);
+        // Ensure the new position is within [0.0, 1.0]
+        newPosition = Math.max(newPosition, 0.0);
+        arm.setPosition(newPosition);
+    }
+
     public void stop() {
-        armMotor.setPower(0);
+        // For a servo, stopping may not be necessary
     }
 
-    // Returns arm position in degrees, (init pos is 0)
-    public double getEncoderValue() {
-        return armMotor.getCurrentPosition();
-    }
-
-    private boolean encoderValueWithinBufferOfTarget(int targetEncoderValue) {
-        return Math.abs(armMotor.getCurrentPosition() - targetEncoderValue) <= BUFFER;
-    }
-
-    public void runToPosition(ArmState state) {
-        if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
-            stop();
-        } else {
-            updatePower(state.getEncoderValue());
+    // Action classes (if needed)
+    public class toScoreSpecimenPosAction implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            toScoreSpecimenPos();
+            return false;
         }
     }
 
-    // exists for PID (pointless right now because we use a worm gear)
-    public void updatePower(int targetEncoderValue) {
-        int pos = armMotor.getCurrentPosition();
-        double distanceAway = targetEncoderValue - pos;
-        double multiplier = 1;
-        if (distanceAway > 0) {
-            armMotor.setPower(FULL_POWER * multiplier);
-        } else {
-            armMotor.setPower(-1 * FULL_POWER * multiplier);
+    public class toInitPosAction implements Action {
+        @Override
+        public boolean run(@NonNull TelemetryPacket packet) {
+            toInitPos();
+            return false;
         }
     }
 
-    // only use for auton!!!
-    public void setPower(double power) {
-        armMotor.setPower(power);
+    public Action toInitPosAction() {
+        return new toInitPosAction();
     }
 
+    public Action toScoreSpecimenPosAction() { return new toScoreSpecimenPosAction(); }
 }

@@ -4,7 +4,8 @@ public enum SlideState {
     MANUALUP(0),
     MANUALDOWN(0),
     TOP(-2200),
-    MEDIUM(-900),
+    MEDIUM(-450),
+    MEDIUMSCORE(-50),
     BOTTOM(0);
 
     private final int encoderValue;
