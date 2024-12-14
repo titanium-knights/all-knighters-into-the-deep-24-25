@@ -28,8 +28,7 @@ public class CONFIG {
     public static String rightIntake = "rightIntake";
     public static String leftIntake = "leftIntake";
 
-
-
+    public static String clawColorSensor = "color";
     
     // comment out the below if you aren't using specimen sweatshop factory
     public static String servoThatKeepsTheHookInPlace = "sTKTHIP";
