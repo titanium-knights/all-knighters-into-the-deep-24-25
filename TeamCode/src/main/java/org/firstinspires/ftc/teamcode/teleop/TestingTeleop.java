@@ -38,6 +38,8 @@ public class TestingTeleop extends OpMode {
             activeIntake.bringUp();
         } else if (gamepad1.right_bumper) {
             activeIntake.bringDown();
+        } else if (gamepad1.a) {
+            activeIntake.bringOverBar();
         }
     }
 }

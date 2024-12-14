@@ -4,7 +4,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.utilities.ActiveIntake;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
+import org.firstinspires.ftc.teamcode.utilities.Scissors;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.topClaw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
@@ -32,6 +34,8 @@ public class Teleop extends OpMode {
     private topClaw claw;
     private Slides slides;
     private Arm arm;
+    private ActiveIntake activeIntake;
+    private Scissors scissorSlides;
 
     final float STICK_MARGIN = 0.05f;  // Adjusted deadzone for finer control
     final double normalPower = .85;
@@ -80,6 +84,8 @@ public class Teleop extends OpMode {
         claw = new topClaw(hardwareMap);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
+        activeIntake = new ActiveIntake(hardwareMap);
+        scissorSlides = new Scissors(hardwareMap);
     }
 
     @Override
@@ -216,11 +222,15 @@ public class Teleop extends OpMode {
             case BEFORE_PICKUP:
                 slides.slideToPosition(SlideState.BOTTOM);
                 arm.beforePickUp();
+                activeIntake.bringOverBar();
                 break;
             case PICKING_UP:
                 slides.slideToPosition(SlideState.BOTTOM);
                 arm.pickingUp();
+                activeIntake.bringDown();
+                activeIntake.intake();
                 break;
+                //TODO: Add case for transferring the sample into the bucket
             case DROP:
                 slides.slideToPosition(SlideState.TOP);
                 arm.toScoreBucketPos();
