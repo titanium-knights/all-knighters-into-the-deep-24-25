@@ -10,7 +10,8 @@ public class Scissors {
     Servo scissorsController;
     
     public static double extendPosition = 0.30;
-    public static double retractPosition = 0.10;
+    public static double transferPosition = 0.01;
+    public static double neutralPosition = 0.1;
 
     public Scissors(HardwareMap hmap) {
         this.scissorsController = hmap.servo.get(CONFIG.scissorsServo);
@@ -20,7 +21,8 @@ public class Scissors {
         scissorsController.setPosition(extendPosition);
     }
 
-    public void retract() {
-        scissorsController.setPosition(retractPosition);
+    public void transfer() {
+        scissorsController.setPosition(transferPosition);
     }
+    public void neutral() {scissorsController.setPosition(neutralPosition);}
 }

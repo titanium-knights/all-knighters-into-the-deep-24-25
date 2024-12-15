@@ -12,13 +12,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class topClaw {
     Servo clawOpener;
     double servoAngleModifier = (double) 360 / 300;
+    boolean open = true;
 
     public topClaw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.clawServo);
     }
 
     public void open() {
-        clawOpener.setPosition(1);
+        clawOpener.setPosition(0.6);
+        open = true;
+    }
+    public void close() {
+        clawOpener.setPosition(0.9);
+        open = false;
+    }
+
+    public boolean openStatus() {
+        return open;
     }
 
     public class OpenClaw implements Action {
@@ -33,9 +43,7 @@ public class topClaw {
         return new OpenClaw();
     }
 
-    public void close() {
-        clawOpener.setPosition(0.65);
-    }
+
 
     public class CloseClaw implements Action {
         @Override

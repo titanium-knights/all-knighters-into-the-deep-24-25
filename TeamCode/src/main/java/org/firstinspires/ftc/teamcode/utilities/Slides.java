@@ -14,7 +14,7 @@ public class Slides {
     private int pos;
 
     // Preset encoder values
-    public final int maxHeight = -2100;
+    public final int maxHeight = -2200;
     public final int minHeight = 0;
     public final int BUFFER = 50;
 
@@ -22,7 +22,7 @@ public class Slides {
     // Negative is up, positive is down
     private double slideUpPower = -1.0;
     private double slideDownPower = 1.0;
-    private double idlePower = -0.3;
+    private double idlePower = 0;
 
     private DcMotor slideMotor;
 
@@ -65,7 +65,7 @@ public class Slides {
             stop();
             return true;
         } else {
-            updateSlidesPower(state.getEncoderValue());
+            updateSliderPowerBasic(state.getEncoderValue());
             return false;
         }
     }
@@ -114,5 +114,15 @@ public class Slides {
         power = Math.max(-1.0, Math.min(1.0, power));
 
         slideMotor.setPower(power);
+    }
+
+    private void updateSliderPowerBasic(int targetEncoderValue) {
+        int pos = slideMotor.getCurrentPosition();
+        double distanceAway = targetEncoderValue - pos;
+        if (distanceAway > 0) { // moving down
+            slideMotor.setPower(slideDownPower);
+        } else if (distanceAway < 0) { // moving up
+            slideMotor.setPower(slideUpPower);
+        }
     }
 }
