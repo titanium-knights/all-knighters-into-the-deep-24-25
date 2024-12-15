@@ -52,6 +52,13 @@ public class bottomClaw {
         rightWristServo.setPosition(neutral);
     }
 
+    public void turn90 () {
+        clawRotator.setPosition(0.3);
+    }
+    public void neutralPos () {
+        clawRotator.setPosition(0.7);
+    }
+
     public class OpenClaw implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {

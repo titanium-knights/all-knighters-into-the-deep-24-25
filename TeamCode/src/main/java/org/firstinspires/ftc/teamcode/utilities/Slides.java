@@ -112,7 +112,9 @@ public class Slides {
 
         // Limit power to max values
         power = Math.max(-1.0, Math.min(1.0, power));
-
+        if (Math.abs(power) < 0.5) {
+            power = 0.5 * (power > 0.0 ? 1.0 : -1.0);
+        }
         slideMotor.setPower(power);
     }
 

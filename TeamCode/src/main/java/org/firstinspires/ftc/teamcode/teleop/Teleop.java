@@ -221,7 +221,7 @@ public class Teleop extends OpMode {
                 arm.initPos();
                 scissorSlides.transfer();
                 bottomclaw.open();
-                bottomclaw.neutralPosition();
+                bottomclaw.bringDown();
                 break;
             case BEFORE_PICKUP:
                 slides.slideToPosition(SlideState.BOTTOM);
@@ -233,14 +233,10 @@ public class Teleop extends OpMode {
                 } else if (gamepad1.right_bumper) {
                     bottomclaw.close();
                 }
-                if (gamepad1.left_trigger > 0.1f) { //TODO: change controls
-                    double ogPos = bottomclaw.getRotatorPosition();
-                    double newPos = ogPos + 0.05;
-                    bottomclaw.setClawRotator(newPos);
+                if (gamepad1.left_trigger > 0.1f) {
+                    bottomclaw.turn90();
                 } else if (gamepad1.right_trigger > 0.1f) {
-                    double ogPos = bottomclaw.getRotatorPosition();
-                    double newPos = ogPos - 0.05;
-                    bottomclaw.setClawRotator(newPos);
+                    bottomclaw.neutralPos();
                 }
                 break;
             case TRANSFER:
@@ -256,10 +252,8 @@ public class Teleop extends OpMode {
                 bottomclaw.bringUp();
                 arm.receivingPos();
                 if (gamepad1.left_bumper) {
-                    bottomclaw.open();
                     claw.open();
                 } else if (gamepad1.right_bumper) {
-                    bottomclaw.close();
                     claw.close();
                 }
                 break;

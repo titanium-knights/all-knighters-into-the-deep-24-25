@@ -34,7 +34,7 @@ public class Score extends LinearOpMode {
         arm.initPos();
         scissorSlides.transfer();
         bottomclaw.open();
-        bottomclaw.neutralPosition();
+        bottomclaw.bringDown();
         claw.close();
         waitForStart();
         runtime.reset();
