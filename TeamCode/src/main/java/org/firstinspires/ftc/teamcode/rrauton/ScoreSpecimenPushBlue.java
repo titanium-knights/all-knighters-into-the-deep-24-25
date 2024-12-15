@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.rr.MecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
-import org.firstinspires.ftc.teamcode.utilities.Claw;
+import org.firstinspires.ftc.teamcode.utilities.topClaw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 
@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.utilities.SlideState;
 @Config
 @Autonomous(name = "ScoreSpecimenPushBlue", group = "Autonomous")
 public class ScoreSpecimenPushBlue extends LinearOpMode {
-    private Claw claw;
+    private topClaw claw;
     private Slides slides;
     private SlideState slideState;
     private Arm arm;
@@ -33,7 +33,7 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
 
         MecanumDrive drivetrain = new MecanumDrive(hardwareMap, begPose);
 
-        claw = new Claw(hardwareMap);
+        claw = new topClaw(hardwareMap);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
 
@@ -86,7 +86,7 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
 
         if (isStopRequested()) return;
         Action trajectoryAction = tab.build();
-        SequentialAction specimenPlaceAction = new SequentialAction(specimenTab1.build(), arm.toScoreSpecimenPosAction(), slides.getSlideAction(SlideState.MEDIUM), specimenTab2.build(), slides.getSlideAction(SlideState.MEDIUMSCORE), claw.openAction(), specimenTab3.build());
+        SequentialAction specimenPlaceAction = new SequentialAction(specimenTab1.build(), slides.getSlideAction(SlideState.MEDIUM), specimenTab2.build(), slides.getSlideAction(SlideState.MEDIUMSCORE), claw.openAction(), specimenTab3.build());
 
         Actions.runBlocking(new SequentialAction(
                 specimenPlaceAction,

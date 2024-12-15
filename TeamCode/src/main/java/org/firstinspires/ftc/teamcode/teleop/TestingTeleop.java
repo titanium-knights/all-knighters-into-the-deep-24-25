@@ -1,42 +1,78 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.widget.Button;
-
-import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
-import org.firstinspires.ftc.teamcode.utilities.Claw;
-import org.firstinspires.ftc.teamcode.utilities.Slides;
-import org.firstinspires.ftc.teamcode.utilities.specimenSweatshopFactory;
+import org.firstinspires.ftc.teamcode.utilities.Scissors;
+//import org.firstinspires.ftc.teamcode.utilities.ActiveIntake;
+import org.firstinspires.ftc.teamcode.utilities.topClaw;
+import org.firstinspires.ftc.teamcode.utilities.bottomClaw;
+import org.firstinspires.ftc.teamcode.utilities.Arm;
 
-@TeleOp(name="testing Teleop", group="default")
+
+@TeleOp(name="Testing Teleop", group="default")
 public class TestingTeleop extends OpMode {
-    private Slides slides;
-    private specimenSweatshopFactory SpecimenSweatshopFactory;
-
+    Scissors scissors;
+    //ActiveIntake activeIntake;
+    topClaw topclaw;
+    bottomClaw bottomclaw;
+    Arm arm;
     @Override
     public void init() {
-        slides = new Slides(hardwareMap);
-        SpecimenSweatshopFactory = new specimenSweatshopFactory(hardwareMap);
+        scissors = new Scissors(hardwareMap);
+        //activeIntake = new ActiveIntake(hardwareMap);
+        topclaw = new topClaw(hardwareMap);
+        bottomclaw = new bottomClaw(hardwareMap);
+        arm = new Arm(hardwareMap);
     }
 
     @Override
     public void loop() {
+        if (gamepad1.x) {
+            bottomclaw.open();
+        } else if (gamepad1.y) {
+            bottomclaw.close();
+        }
 
-//        if (gamepad1.left_bumper) {
-//            SpecimenSweatshopFactory.applyForce();
-//        } else if (gamepad1.right_bumper) {
-//            SpecimenSweatshopFactory.notApplyingForce();
+        if (gamepad1.a) {
+            scissors.extend();
+        } else if (gamepad1.b) {
+            scissors.transfer();
+        } else if (gamepad1.dpad_up) {
+            scissors.neutral();
+        }
+
+        if (gamepad1.dpad_left) {
+            double ogPos = bottomclaw.getRotatorPosition();
+            double newPos = ogPos + 0.005;
+            bottomclaw.setClawRotator(newPos);
+        } else if (gamepad1.dpad_right) {
+            double ogPos = bottomclaw.getRotatorPosition();
+            double newPos = ogPos - 0.005;
+            bottomclaw.setClawRotator(newPos);
+        }
+        telemetry.addData("Claw Position2", bottomclaw.getRotatorPosition());
+
+      
+//        if (gamepad1.dpad_up) {
+//            activeIntake.intake();
+//        } else if (gamepad1.dpad_down) {
+//            activeIntake.outtake();
+//        } else if (gamepad1.dpad_right) {
+//            activeIntake.stop();
 //        }
-//
-//        if (gamepad1.y) {
-//            SpecimenSweatshopFactory.holdingHookInPlace();
-//        } else if (gamepad1.x) {
-//            SpecimenSweatshopFactory.notHoldingHookInPlace();
+
+//        else if (gamepad1.dpad_left) {
+//            activeIntake.bringOverBar();
 //        }
 
-
+        if(gamepad1.left_bumper) {
+            bottomclaw.bringUp();
+        } else if (gamepad1.right_bumper) {
+            bottomclaw.bringDown();
+        }
+        else if (gamepad1.back) {
+            bottomclaw.neutralPosition();
+        }
     }
 }
