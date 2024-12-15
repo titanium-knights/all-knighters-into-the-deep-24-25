@@ -177,6 +177,7 @@ public class Teleop extends OpMode {
                 teleopState = TeleopState.NEUTRAL;
             }
 
+            // Transfer Position (Left trigger)
             if (gamepad1.left_trigger > 0.1f && (teleopState != TeleopState.TRANSFER && teleopState != TeleopState.BEFORE_PICKUP)) {
                 teleopState = TeleopState.TRANSFER;
             }
