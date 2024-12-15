@@ -4,9 +4,12 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+//import org.firstinspires.ftc.teamcode.utilities.ActiveIntake;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
+import org.firstinspires.ftc.teamcode.utilities.Scissors;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.topClaw;
+import org.firstinspires.ftc.teamcode.utilities.bottomClaw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 
@@ -30,8 +33,11 @@ public class Teleop extends OpMode {
 
     private SimpleMecanumDrive drive;
     private topClaw claw;
+    private bottomClaw bottomclaw;
     private Slides slides;
     private Arm arm;
+    //private ActiveIntake activeIntake;
+    private Scissors scissorSlides;
 
     final float STICK_MARGIN = 0.05f;  // Adjusted deadzone for finer control
     final double normalPower = .85;
@@ -80,13 +86,22 @@ public class Teleop extends OpMode {
         claw = new topClaw(hardwareMap);
         slides = new Slides(hardwareMap);
         arm = new Arm(hardwareMap);
+        //activeIntake = new ActiveIntake(hardwareMap);
+        scissorSlides = new Scissors(hardwareMap);
+        bottomclaw = new bottomClaw(hardwareMap);
+        slides.slideToPosition(SlideState.BOTTOM);
+        arm.initPos();
+        scissorSlides.transfer();
+        bottomclaw.open();
+        bottomclaw.bringUp();
+        claw.close();
     }
 
     @Override
     public void loop() {
         long currentTime = System.currentTimeMillis();
 
-        // 'A' Button state management using ButtonPressState
+        // 'BACK' Button state management using ButtonPressState
         if (gamepad1.a) {
             if (aButtonState == ButtonPressState.UNPRESSED) {
                 aButtonState = ButtonPressState.PRESSED_GOOD;
@@ -103,13 +118,13 @@ public class Teleop extends OpMode {
             // else, button is still unpressed, do nothing
         }
 
-        // Check for other buttons pressed during 'A' counting
+        // Check for other buttons pressed during 'BACK' counting
         if (isCountingAPresses() && isAnyOtherButtonJustPressed()) {
             // Reset the counting
             buttonPressHistory.clear();
         }
 
-        // Check for five consecutive 'A' button presses and releases
+        // Check for five consecutive 'BACK' button presses and releases
         if (checkForFiveConsecutiveAPresses()) {
             if (teleopState != TeleopState.MANUAL_CONTROL) {
                 previousTeleopState = teleopState;
@@ -143,7 +158,7 @@ public class Teleop extends OpMode {
         }
 
         // Robot movement control is always active
-        move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        move(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         if (teleopState == TeleopState.MANUAL_CONTROL) {
             manualControl();
@@ -155,19 +170,22 @@ public class Teleop extends OpMode {
                 teleopState = TeleopState.INIT;
             }
 
-            // Before Picking Up Position (A)
-            if (gamepad1.a && teleopState != TeleopState.BEFORE_PICKUP && !isCountingAPresses()) {
+            // Before Picking Up Position (Dpad Right)
+            if (gamepad1.dpad_right && teleopState != TeleopState.BEFORE_PICKUP && !isCountingAPresses()) {
                 teleopState = TeleopState.BEFORE_PICKUP;
             }
 
-            // Pick Up Specimen Position (Dpad Right)
-            if (gamepad1.dpad_right && teleopState != TeleopState.SPECIMEN_PICKUP) {
-                teleopState = TeleopState.SPECIMEN_PICKUP;
+            // Neutral Position (Dpad Left)
+            if (gamepad1.dpad_left && teleopState != TeleopState.NEUTRAL) {
+                if (teleopState == TeleopState.SPECIMEN_SCORE && !claw.openStatus()) {
+                    claw.open();
+                }
+                teleopState = TeleopState.NEUTRAL;
             }
 
-            // Picking Up Position (Dpad Down)
-            if (gamepad1.dpad_down && teleopState != TeleopState.PICKING_UP) {
-                teleopState = TeleopState.PICKING_UP;
+            // Transfer Position (Left trigger)
+            if (gamepad1.left_trigger > 0.1f && (teleopState != TeleopState.TRANSFER && teleopState != TeleopState.BEFORE_PICKUP)) {
+                teleopState = TeleopState.TRANSFER;
             }
 
             // Drop Position (B)
@@ -175,18 +193,13 @@ public class Teleop extends OpMode {
                 teleopState = TeleopState.DROP;
             }
 
-            // Drop Low Position (Trigger Right)
-            if (gamepad1.b && teleopState != TeleopState.DROP_LOW) {
-                teleopState = TeleopState.DROP_LOW;
-            }
-
-            // Specimen Position (X)
-            if (gamepad1.x && teleopState != TeleopState.SPECIMEN) {
+            // Specimen Position (Dpad Up)
+            if (gamepad1.dpad_up && teleopState != TeleopState.SPECIMEN) {
                 teleopState = TeleopState.SPECIMEN;
             }
 
-            // Specimen Lower Arm (Dpad Up)
-            if (gamepad1.dpad_up && teleopState != TeleopState.SPECIMEN_SCORE) {
+            // Specimen Lower Arm (Dpad Down)
+            if (gamepad1.dpad_down && teleopState != TeleopState.SPECIMEN_SCORE) {
                 teleopState = TeleopState.SPECIMEN_SCORE;
             }
 
@@ -211,34 +224,77 @@ public class Teleop extends OpMode {
         switch (state) {
             case INIT:
                 slides.slideToPosition(SlideState.BOTTOM);
-                arm.toInitPos();
+                arm.initPos();
+                scissorSlides.transfer();
+                bottomclaw.open();
+                bottomclaw.bringDown();
                 break;
             case BEFORE_PICKUP:
                 slides.slideToPosition(SlideState.BOTTOM);
-                arm.beforePickUp();
+                bottomclaw.bringDown();
+                scissorSlides.extend();
+                arm.receivingPos();
+                if (gamepad1.left_bumper) {
+                    bottomclaw.open();
+                } else if (gamepad1.right_bumper) {
+                    bottomclaw.close();
+                }
+                if (gamepad1.left_trigger > 0.1f) {
+                    bottomclaw.turn90();
+                } else if (gamepad1.right_trigger > 0.1f) {
+                    bottomclaw.neutralPos();
+                }
                 break;
-            case PICKING_UP:
+            case TRANSFER:
                 slides.slideToPosition(SlideState.BOTTOM);
-                arm.pickingUp();
+                scissorSlides.transfer();
+                bottomclaw.bringUp();
+                bottomclaw.openHalf();
+                arm.receivingPos();
+                break;
+            case NEUTRAL:
+                scissorSlides.neutral();
+                bottomclaw.neutralPosition();
+                arm.receivingPos();
+                slides.slideToPosition(SlideState.BOTTOM);
+                if (gamepad1.left_bumper) {
+                    claw.open();
+                } else if (gamepad1.right_bumper) {
+                    claw.close();
+                }
                 break;
             case DROP:
                 slides.slideToPosition(SlideState.TOP);
-                arm.toScoreBucketPos();
+                if (gamepad1.left_bumper) {
+                    arm.toScoreBucketPos();
+                }
+                scissorSlides.neutral();
+                bottomclaw.neutralPosition();
                 break;
             case DROP_LOW:
-                slides.slideToPosition(SlideState.TOP);
-                arm.toLowScoreBucketPos();
+                slides.slideToPosition(SlideState.MEDIUM);
+                if (gamepad1.left_bumper) {
+                    arm.toScoreBucketPos();
+                }
+                scissorSlides.neutral();
                 break;
             case SPECIMEN:
+                arm.receivingPos();
                 slides.slideToPosition(SlideState.MEDIUM);
-                arm.toScoreSpecimenPos();
+                scissorSlides.neutral();
+                if (gamepad1.left_bumper) {
+                    claw.open();
+                } else if (gamepad1.right_bumper) {
+                    bottomclaw.close();
+                }
                 break;
             case SPECIMEN_SCORE:
+                arm.receivingPos();
                 slides.slideToPosition(SlideState.MEDIUMSCORE);
-                break;
-            case SPECIMEN_PICKUP:
-                slides.slideToPosition(SlideState.BOTTOM);
-                arm.pickingUpSpecimen();
+                scissorSlides.neutral();
+                if (gamepad1.left_bumper) {
+                    claw.open();
+                }
                 break;
             default:
                 break;
@@ -253,29 +309,28 @@ public class Teleop extends OpMode {
             claw.close();
         }
 
-        // Slides control
-        if (gamepad1.dpad_up) {
-            slides.manualUp(gamepad1.right_trigger);
-        } else if (gamepad1.dpad_down) {
-            slides.manualDown(gamepad1.left_trigger);
-        } else {
-            slides.stop();
-        }
-
-        // Arm control using D-pad or right stick Y-axis
+        // Arm control using triggers
         if (gamepad1.right_trigger > 0.1) {
             arm.manualUp(1.0);
         } else if (gamepad1.left_trigger > 0.1) {
             arm.manualDown(1.0);
-        } else if (gamepad1.right_stick_y < -0.1) { // Stick pushed up
-            arm.manualUp(-gamepad1.right_stick_y); // Convert to positive value
-        } else if (gamepad1.right_stick_y > 0.1) { // Stick pushed down
-            arm.manualDown(gamepad1.right_stick_y);
         } else {
             arm.stop();
         }
 
+        // Slide Control using sticks
+        if (gamepad1.right_stick_y < -0.1) { // Stick pushed up
+            slides.manualUp(-gamepad1.right_stick_y); // Convert to positive value
+        } else if (gamepad1.right_stick_y > 0.1) { // Stick pushed down
+            slides.manualDown(gamepad1.right_stick_y);
+        } else {
+            slides.stop();
+        }
+
         // Additional manual controls can be added here
+        if (gamepad1.start) {
+            slides.resetSlideEncoder();
+        }
     }
 
     private void move(float x, float y, float turn) {

@@ -4,17 +4,16 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.utilities.Arm;
-import org.firstinspires.ftc.teamcode.utilities.Scissors;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
-import org.firstinspires.ftc.teamcode.utilities.topClaw;
-import org.firstinspires.ftc.teamcode.utilities.bottomClaw;
-import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
+import org.firstinspires.ftc.teamcode.utilities.Slides;
+import org.firstinspires.ftc.teamcode.utilities.topClaw;
 
 @Config
 @Autonomous(name="Score", group="Auton")
-public class Score extends LinearOpMode {
+public class ScoreSlow extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,23 +26,26 @@ public class Score extends LinearOpMode {
         topClaw claw = new topClaw(hardwareMap);
         Slides slides = new Slides(hardwareMap);
         Arm arm = new Arm(hardwareMap);
-        Scissors scissorSlides = new Scissors(hardwareMap);
-        bottomClaw bottomclaw = new bottomClaw(hardwareMap);
 
-        slides.slideToPosition(SlideState.BOTTOM);
-        arm.initPos();
-        scissorSlides.transfer();
-        bottomclaw.open();
-        bottomclaw.neutralPosition();
         claw.close();
+        arm.toInitPos();
         waitForStart();
         runtime.reset();
 
-        sleep(3000);
+        sleep(10000);
         sleep(10);
+
+        // primary movement
+        drivetrain.move(.55, 0, 0);
+        sleep(1000);
+        drivetrain.move(0, -0.8, 0);
+        sleep(1000);
+
         telemetry.addLine("move arm and forearm into position");
         telemetry.update();
 
+        claw.close();
+        arm.toScoreSpecimenPos();
         boolean slidesAtPosition = false;
         while (!slidesAtPosition) {
             slidesAtPosition = slides.slideToPosition(SlideState.MEDIUM);
@@ -53,7 +55,7 @@ public class Score extends LinearOpMode {
         telemetry.addLine("Run into the bar");
         telemetry.update();
         drivetrain.move(0, -.55, 0);
-        sleep(1050);
+        sleep(780);
         drivetrain.move(0,0,0);
         sleep(2000);
 
@@ -78,12 +80,12 @@ public class Score extends LinearOpMode {
         sleep(800);
         drivetrain.move(0, 0, 0);
         sleep(100);
-//        drivetrain.move(.8, 0 ,0);
-//        sleep(1000);
-//        drivetrain.move(0,0,0.4);
-//        sleep(100);
-//        drivetrain.move(0,0,0);
-//        sleep(1000);
+        drivetrain.move(.8, 0 ,0);
+        sleep(1000);
+        drivetrain.move(0,0,0.4);
+        sleep(100);
+        drivetrain.move(0,0,0);
+        sleep(1000);
 
         telemetry.addData("Status", "Run Time: " + runtime);
         telemetry.update();
