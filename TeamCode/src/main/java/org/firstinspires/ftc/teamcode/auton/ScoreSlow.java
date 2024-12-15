@@ -34,6 +34,13 @@ public class ScoreSlow extends LinearOpMode {
 
         sleep(10000);
         sleep(10);
+
+        // primary movement
+        drivetrain.move(.55, 0, 0);
+        sleep(1000);
+        drivetrain.move(0, -0.8, 0);
+        sleep(1000);
+
         telemetry.addLine("move arm and forearm into position");
         telemetry.update();
 
