@@ -4,6 +4,8 @@ public enum TeleopState {
     INIT,
     BEFORE_PICKUP,
     PICKING_UP,
+    TRANSFER,
+    NEUTRAL,
     DROP,
     SPECIMEN_PICKUP,
     SPECIMEN,

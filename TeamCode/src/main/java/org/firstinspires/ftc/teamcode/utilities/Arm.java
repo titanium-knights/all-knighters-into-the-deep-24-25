@@ -14,47 +14,30 @@ public class Arm {
     private static final double ARM_SPEED = 0.005; // Adjust this value as needed
 
     // Arm positions
-    public static double initPosition = 0.01;
-    public static double beforePickupPosition = 0.60;
-    public static double pickingUpPosition = 0.68;
-    public static double scoreBucketPosition = 0.25;
-    public static double lowScoreBucketPosition = 0.20;
+    public static double receivingPosition = 0.1;
+    public static double scoreBucketPosition = 0.65;
 
-    public static double specimenPickupPosition = 0.45;
-    public static double specimenScorePosition = 0.3;
+
 
     public Arm(HardwareMap hmap) {
         this.arm = hmap.get(Servo.class, CONFIG.armServo);
     }
 
     // Preset positions
-    public void toInitPos() {
-        arm.setPosition(initPosition);
+    public void receivingPos() {
+        arm.setPosition(receivingPosition);
     }
 
-    public void beforePickUp() {
-        arm.setPosition(beforePickupPosition);
-    }
-
-    public void pickingUp() {
-        arm.setPosition(pickingUpPosition);
+    public void initPos () {
+        arm.setPosition(0.3);
     }
 
     public void toScoreBucketPos() {
         arm.setPosition(scoreBucketPosition);
     }
 
-    public void pickingUpSpecimen() {
-        arm.setPosition(specimenPickupPosition);
-    }
 
-    public void toLowScoreBucketPos() {
-        arm.setPosition(lowScoreBucketPosition);
-    }
 
-    public void toScoreSpecimenPos() {
-        arm.setPosition(specimenScorePosition);
-    }
 
     public double getPosition() {
         return arm.getPosition();
@@ -82,18 +65,12 @@ public class Arm {
     }
 
     // Action classes (if needed)
-    public class toScoreSpecimenPosAction implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            toScoreSpecimenPos();
-            return false;
-        }
-    }
+
 
     public class toInitPosAction implements Action {
         @Override
         public boolean run(@NonNull TelemetryPacket packet) {
-            toInitPos();
+            receivingPos();
             return false;
         }
     }
@@ -102,5 +79,5 @@ public class Arm {
         return new toInitPosAction();
     }
 
-    public Action toScoreSpecimenPosAction() { return new toScoreSpecimenPosAction(); }
+
 }

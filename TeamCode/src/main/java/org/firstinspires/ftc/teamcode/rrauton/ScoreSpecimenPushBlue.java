@@ -86,7 +86,7 @@ public class ScoreSpecimenPushBlue extends LinearOpMode {
 
         if (isStopRequested()) return;
         Action trajectoryAction = tab.build();
-        SequentialAction specimenPlaceAction = new SequentialAction(specimenTab1.build(), arm.toScoreSpecimenPosAction(), slides.getSlideAction(SlideState.MEDIUM), specimenTab2.build(), slides.getSlideAction(SlideState.MEDIUMSCORE), claw.openAction(), specimenTab3.build());
+        SequentialAction specimenPlaceAction = new SequentialAction(specimenTab1.build(), slides.getSlideAction(SlideState.MEDIUM), specimenTab2.build(), slides.getSlideAction(SlideState.MEDIUMSCORE), claw.openAction(), specimenTab3.build());
 
         Actions.runBlocking(new SequentialAction(
                 specimenPlaceAction,
