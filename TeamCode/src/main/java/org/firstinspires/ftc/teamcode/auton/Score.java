@@ -34,7 +34,7 @@ public class Score extends LinearOpMode {
         arm.initPos();
         scissorSlides.transfer();
         bottomclaw.open();
-        bottomclaw.bringDown();
+        bottomclaw.neutralPosition();
         claw.close();
         waitForStart();
         runtime.reset();
@@ -53,7 +53,7 @@ public class Score extends LinearOpMode {
         telemetry.addLine("Run into the bar");
         telemetry.update();
         drivetrain.move(0, -.55, 0);
-        sleep(1100);
+        sleep(1050);
         drivetrain.move(0,0,0);
         sleep(2000);
 

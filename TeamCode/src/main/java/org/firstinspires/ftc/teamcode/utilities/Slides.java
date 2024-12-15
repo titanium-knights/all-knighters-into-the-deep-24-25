@@ -22,7 +22,7 @@ public class Slides {
     // Negative is up, positive is down
     private double slideUpPower = -1.0;
     private double slideDownPower = 1.0;
-    private double idlePower = 0;
+    private static double idlePower = -0.3;
 
     private DcMotor slideMotor;
 
@@ -46,7 +46,11 @@ public class Slides {
     // Used in initialization and as in-between movements
     public void stop() {
         // This is the power required to be stationary
-        slideMotor.setPower(idlePower);
+        if (Math.abs(slideMotor.getCurrentPosition()) > 100) {
+            slideMotor.setPower(idlePower);
+        } else {
+            slideMotor.setPower(0.0);
+        }
     }
 
     private boolean encoderValueWithinBufferOfTarget(int targetEncoderValue) {

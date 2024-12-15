@@ -89,6 +89,12 @@ public class Teleop extends OpMode {
         //activeIntake = new ActiveIntake(hardwareMap);
         scissorSlides = new Scissors(hardwareMap);
         bottomclaw = new bottomClaw(hardwareMap);
+        slides.slideToPosition(SlideState.BOTTOM);
+        arm.initPos();
+        scissorSlides.transfer();
+        bottomclaw.open();
+        bottomclaw.bringUp();
+        claw.close();
     }
 
     @Override
@@ -152,7 +158,7 @@ public class Teleop extends OpMode {
         }
 
         // Robot movement control is always active
-        move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        move(-gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         if (teleopState == TeleopState.MANUAL_CONTROL) {
             manualControl();
@@ -171,7 +177,7 @@ public class Teleop extends OpMode {
 
             // Neutral Position (Dpad Left)
             if (gamepad1.dpad_left && teleopState != TeleopState.NEUTRAL) {
-                if (teleopState == TeleopState.SPECIMEN_SCORE && claw.openStatus() == false) {
+                if (teleopState == TeleopState.SPECIMEN_SCORE && !claw.openStatus()) {
                     claw.open();
                 }
                 teleopState = TeleopState.NEUTRAL;
@@ -247,10 +253,10 @@ public class Teleop extends OpMode {
                 arm.receivingPos();
                 break;
             case NEUTRAL:
-                slides.slideToPosition(SlideState.BOTTOM);
                 scissorSlides.neutral();
-                bottomclaw.bringUp();
+                bottomclaw.neutralPosition();
                 arm.receivingPos();
+                slides.slideToPosition(SlideState.BOTTOM);
                 if (gamepad1.left_bumper) {
                     claw.open();
                 } else if (gamepad1.right_bumper) {

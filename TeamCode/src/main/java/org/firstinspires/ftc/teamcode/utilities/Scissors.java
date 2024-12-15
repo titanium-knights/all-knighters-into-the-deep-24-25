@@ -9,9 +9,9 @@ public class Scissors {
 
     Servo scissorsController;
     
-    public static double extendPosition = 0.30;
-    public static double transferPosition = 0.01;
-    public static double neutralPosition = 0.1;
+    public static double extendPosition = 1.0;
+    public static double transferPosition = 0.0;
+    public static double neutralPosition = 0.5;
 
     public Scissors(HardwareMap hmap) {
         this.scissorsController = hmap.servo.get(CONFIG.scissorsServo);

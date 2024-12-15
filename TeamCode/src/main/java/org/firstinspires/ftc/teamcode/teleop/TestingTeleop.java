@@ -35,9 +35,11 @@ public class TestingTeleop extends OpMode {
         }
 
         if (gamepad1.a) {
-
+            scissors.extend();
         } else if (gamepad1.b) {
-
+            scissors.transfer();
+        } else if (gamepad1.dpad_up) {
+            scissors.neutral();
         }
 
         if (gamepad1.dpad_left) {
@@ -72,6 +74,5 @@ public class TestingTeleop extends OpMode {
         else if (gamepad1.back) {
             bottomclaw.neutralPosition();
         }
-
     }
 }
