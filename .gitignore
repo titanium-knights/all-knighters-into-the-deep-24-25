@@ -79,8 +79,3 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
-
-# user added
-**/.DS_Store
-**/eocvsim_workspace.json
-.vscode/

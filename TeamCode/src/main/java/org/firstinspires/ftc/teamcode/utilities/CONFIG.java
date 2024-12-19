@@ -4,36 +4,29 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class CONFIG {
+    //TODO: label all strings with associated ports and types.
+    // ex: ch motor 3 (control hub > motor > port 3)
+
     // drivetrain wheels
-    public static String FRONT_LEFT = "fl"; //ch 0
-    public static String FRONT_RIGHT = "fr"; //ch 2
-    public static String BACK_LEFT = "bl"; //ch 3
-    public static String BACK_RIGHT = "br"; //ch 1
+    public static String FRONT_LEFT = "fl";  // ch motor 0
+    public static String FRONT_RIGHT = "fr"; // ch motor 2
+    public static String BACK_LEFT = "bl";   // ch motor 3
+    public static String BACK_RIGHT = "br";  // ch motor 1
 
     // webcam
     public static String webcam = "Webcam 1";
-    public static String clawServo = "claw";
 
-    // for scoring:
+    // intake
+    public static String clawServoBottom = "clawB";
+    public static String clawRotator = "clawR";
+    public static String scissorsServo = "scissors";
+
+    // outtake:
     public static String slidesMotor = "slidesMotor";
-    public static String armMotor = "armMotor";
-    // public static String forearm = "clawR"; // clawRotator
     public static String armServo = "armServo";
-
-    // pull up (left is with the robot facing forward away from you)
-    public static String leftPullUp = "cl";
-    public static String rightPullUp = "cr";
+    public static String clawServo = "claw";
 
     // yuma's active intake
     public static String rightIntake = "rightIntake";
     public static String leftIntake = "leftIntake";
-
-
-
-    
-    // comment out the below if you aren't using specimen sweatshop factory
-    public static String servoThatKeepsTheHookInPlace = "sTKTHIP";
-    public static String servoThatAppliesForceToHook = "sTAFT";
-
-    public static String scissorsServo = "scissors";
 }
