@@ -14,15 +14,15 @@ public class CONFIG {
     public static String BACK_RIGHT = "br";  // ch motor 1
 
     // webcam
-    public static String webcam = "Webcam 1";
+    public static String webcam = "Webcam 1"; //
 
     // intake
-    public static String clawServoBottom = "clawB";
-    public static String clawRotator = "clawR";
-    public static String scissorsServo = "scissors";
+    public static String clawServoBottom = "clawB"; //
+    public static String clawRotator = "clawR"; //
+    public static String scissorsServo = "scissors"; //
 
     // outtake:
-    public static String slidesMotor = "slidesMotor";
+    public static String slidesMotor = "slidesMotor"; //
     public static String armServo = "armServo";
     public static String clawServo = "claw";
 
