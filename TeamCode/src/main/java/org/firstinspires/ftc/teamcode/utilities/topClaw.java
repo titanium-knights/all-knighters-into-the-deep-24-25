@@ -27,7 +27,7 @@ public class topClaw {
         open = false;
     }
 
-    public boolean openStatus() {
+    public boolean getOpenStatus() {
         return open;
     }
 
