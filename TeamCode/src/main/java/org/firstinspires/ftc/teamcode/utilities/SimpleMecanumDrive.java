@@ -49,6 +49,7 @@ public class SimpleMecanumDrive {
         fr.setPower(dot_fr / max);
         bl.setPower(dot_bl / max);
     }
+
     public void moveFL(double x, double y, double turn) {
         double dot_fl = dot(Objects.requireNonNull(directions.get(fl)), new double[]{x, y}) - turn;
         double dot_fr = (dot(Objects.requireNonNull(directions.get(fr)), new double[]{x, y}) - turn);
@@ -61,6 +62,7 @@ public class SimpleMecanumDrive {
         fr.setPower(0);
         bl.setPower(0);
     }
+
     public void moveFR(double x, double y, double turn) {
         double dot_fl = dot(Objects.requireNonNull(directions.get(fl)), new double[]{x, y}) - turn;
         double dot_fr = (dot(Objects.requireNonNull(directions.get(fr)), new double[]{x, y}) - turn);
