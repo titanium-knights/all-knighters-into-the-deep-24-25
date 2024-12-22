@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Scissors {
 
     private Servo scissorsServo;
-    private Servo secondScissorsServo; // New servo
+    private Servo secondScissorsServo;
 
     public static double fullyExtendedPosition = 1.0; // fully extended position
     public static double loadingPosition = 0.0; // transferring/loading position
@@ -16,21 +16,20 @@ public class Scissors {
 
     public Scissors(HardwareMap hardwareMap) {
         this.scissorsServo = hardwareMap.servo.get(CONFIG.scissorsServo);
-        this.secondScissorsServo = hardwareMap.servo.get(CONFIG.secondScissorsServo); // Initialize new servo
+        this.secondScissorsServo = hardwareMap.servo.get(CONFIG.secondScissorsServo);
     }
 
     public void moveToFullyExtended() {
         scissorsServo.setPosition(fullyExtendedPosition);
-        secondScissorsServo.setPosition(fullyExtendedPosition); // Move the second servo to the same position
-    }
+        secondScissorsServo.setPosition(fullyExtendedPosition);
 
     public void moveToLoadingPosition() {
         scissorsServo.setPosition(loadingPosition);
-        secondScissorsServo.setPosition(loadingPosition); // Move the second servo to the loading position
+        secondScissorsServo.setPosition(loadingPosition);
     }
 
     public void moveToIdlePosition() {
         scissorsServo.setPosition(idlePosition);
-        secondScissorsServo.setPosition(idlePosition); // Move the second servo to idle position
+        secondScissorsServo.setPosition(idlePosition);
     }
 }
