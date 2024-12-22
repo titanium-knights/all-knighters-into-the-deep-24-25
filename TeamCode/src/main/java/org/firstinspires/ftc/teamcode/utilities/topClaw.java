@@ -1,24 +1,21 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class topClaw {
-    Servo clawOpener;
-    double servoAngleModifier = (double) 360 / 300;
-    boolean open = true;
+    private final Servo clawOpener;
+    private final static double servoAngleModifier = (double) 360 / 300;
+    private boolean open = true;
 
     public static double openPos = 0.6;
     public static double closePos = 0.9;
 
-    public topClaw(HardwareMap hmap) { this.clawOpener = hmap.servo.get(CONFIG.clawServo); }
+    public topClaw(HardwareMap hmap) {
+        this.clawOpener = hmap.servo.get(CONFIG.topClawServo);
+    }
 
     public void open() {
         clawOpener.setPosition(openPos);
@@ -30,27 +27,11 @@ public class topClaw {
         open = false;
     }
 
-    public boolean openStatus() { return open; }
-
-    public class OpenClaw implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            open();
-            return false;
-        }
+    public boolean openStatus() {
+        return open;
     }
 
-    public Action openAction() { return new OpenClaw(); }
-
-    public class CloseClaw implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            close();
-            return false;
-        }
+    public double getPosition() {
+        return clawOpener.getPosition() / topClaw.servoAngleModifier;
     }
-
-    public Action closeAction() { return new CloseClaw(); }
-
-    public double getPosition() { return clawOpener.getPosition() / servoAngleModifier; }
 }

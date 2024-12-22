@@ -28,7 +28,7 @@ public class CONFIG {
     // outtake:
     public static String slidesMotor = "slidesMotor"; //
     public static String armServo = "armServo";
-    public static String clawServo = "claw";
+    public static String topClawServo = "claw"; // tape: Claw, ch sp 1
 
     // yuma's active intake
     public static String rightIntake = "rightIntake";
