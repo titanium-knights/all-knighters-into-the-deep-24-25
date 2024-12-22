@@ -21,11 +21,11 @@ public class Scissors {
 
     public void moveToFullyExtended() {
         scissorsServo.setPosition(fullyExtendedPosition);
-        secondScissorsServo.setPosition(fullyExtendedPosition);
+        secondScissorsServo.setPosition(loadingPosition);
 
     public void moveToLoadingPosition() {
         scissorsServo.setPosition(loadingPosition);
-        secondScissorsServo.setPosition(loadingPosition);
+        secondScissorsServo.setPosition(fullyExtendedPosition);
     }
 
     public void moveToIdlePosition() {
