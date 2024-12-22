@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class Scissors {
 
-    private Servo scissorsR;
-    private Servo scissorsL;
+    private final Servo scissorsR;
+    private final Servo scissorsL;
 
     public static double fullyExtendedPosition = 1.0; // fully extended position
     public static double loadingPosition = 0.0; // transferring/loading position
@@ -26,11 +26,11 @@ public class Scissors {
 
     public void moveToLoadingPosition() {
         scissorsR.setPosition(loadingPosition);
-        scissorsL.setPosition(1-loadingPosition);
+        scissorsL.setPosition(1 - loadingPosition);
     }
 
     public void moveToIdlePosition() {
         scissorsR.setPosition(idlePosition);
-        scissorsL.setPosition(idlePosition);
+        scissorsL.setPosition(1 - idlePosition);
     }
 }
