@@ -14,7 +14,7 @@ public class CONFIG {
     public static String BACK_RIGHT = "br";  // ch motor 1
 
     // scissors
-    public static String scissorsR= "scissorsR"; // tape: none, ch servo 2
+    public static String scissorsR = "scissorsR"; // tape: none, ch servo 2
     public static String scissorsL = "scissorsL"; // tape: none, eh servo 5
 
     // webcam
@@ -24,7 +24,6 @@ public class CONFIG {
     public static String clawServoBottom = "clawB"; //
     public static String clawRotator = "clawR"; //
     public static String rightWristServo = "rightWrist"; // tape: “R Wrist”, eh sp 3
-    public static String scissorsServo = "scissors"; //
 
     // outtake:
     public static String slidesMotor = "slidesMotor"; //
