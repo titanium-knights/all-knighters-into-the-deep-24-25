@@ -18,17 +18,17 @@ public class CONFIG {
     public static String scissorsL = "scissorsL"; // tape: none, eh servo 5
 
     // webcam
-    public static String webcam = "Webcam 1";
+    public static String webcam = "Webcam 1"; //
 
     // intake
-    public static String clawServoBottom = "clawB";
-    public static String clawRotator = "clawR";
-    public static String scissorsServo = "scissors";
+    public static String clawServoBottom = "clawB"; //
+    public static String clawRotator = "clawR"; //
+    public static String scissorsServo = "scissors"; //
 
     // outtake:
-    public static String slidesMotor = "slidesMotor";
+    public static String slidesMotor = "slidesMotor"; //
     public static String armServo = "armServo";
-    public static String clawServo = "claw";
+    public static String topClawServo = "claw"; // tape: Claw, ch sp 1
 
     // yuma's active intake
     public static String rightIntake = "rightIntake";
