@@ -7,29 +7,30 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class Scissors {
 
-    private Servo scissorsServo;
-    private Servo secondScissorsServo;
+    private Servo scissorsR;
+    private Servo scissorsL;
 
     public static double fullyExtendedPosition = 1.0; // fully extended position
     public static double loadingPosition = 0.0; // transferring/loading position
     public static double idlePosition = 0.5; // not doing anything position
 
     public Scissors(HardwareMap hardwareMap) {
-        this.scissorsServo = hardwareMap.servo.get(CONFIG.scissorsServo);
-        this.secondScissorsServo = hardwareMap.servo.get(CONFIG.secondScissorsServo);
+        this.scissorsR = hardwareMap.servo.get(CONFIG.scissorsR);
+        this.scissorsL = hardwareMap.servo.get(CONFIG.scissorsL);
     }
 
     public void moveToFullyExtended() {
-        scissorsServo.setPosition(fullyExtendedPosition);
-        secondScissorsServo.setPosition(loadingPosition);
+        scissorsR.setPosition(fullyExtendedPosition);
+        scissorsL.setPosition(1 - fullyExtendedPosition);
+    }
 
     public void moveToLoadingPosition() {
-        scissorsServo.setPosition(loadingPosition);
-        secondScissorsServo.setPosition(fullyExtendedPosition);
+        scissorsR.setPosition(loadingPosition);
+        scissorsL.setPosition(1-loadingPosition);
     }
 
     public void moveToIdlePosition() {
-        scissorsServo.setPosition(idlePosition);
-        secondScissorsServo.setPosition(idlePosition);
+        scissorsR.setPosition(idlePosition);
+        scissorsL.setPosition(idlePosition);
     }
 }

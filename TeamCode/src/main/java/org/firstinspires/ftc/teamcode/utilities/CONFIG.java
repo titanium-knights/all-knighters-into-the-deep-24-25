@@ -14,8 +14,8 @@ public class CONFIG {
     public static String BACK_RIGHT = "br";  // ch motor 1
 
     //scissors
-    public static String scissorsServo = "scissors_servo";
-    public static String secondScissorsServo = "second_scissors_servo";
+    public static String scissorsR= "scissorsR";
+    public static String scissorsL = "scissorsL";
 
     // webcam
     public static String webcam = "Webcam 1";
