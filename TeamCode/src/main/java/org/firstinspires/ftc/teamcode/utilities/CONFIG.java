@@ -23,6 +23,7 @@ public class CONFIG {
     // intake
     public static String clawServoBottom = "clawB"; //
     public static String clawRotator = "clawR"; //
+    public static String rightWristServo = "rightWrist"; // tape: “R Wrist”, eh sp 3
     public static String scissorsServo = "scissors"; //
 
     // outtake:
