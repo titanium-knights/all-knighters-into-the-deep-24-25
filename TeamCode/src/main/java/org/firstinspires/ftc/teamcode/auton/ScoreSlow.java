@@ -28,7 +28,7 @@ public class ScoreSlow extends LinearOpMode {
         Arm arm = new Arm(hardwareMap);
 
         claw.close();
-        arm.toInitPos();
+        //arm.toInitPos();
         waitForStart();
         runtime.reset();
 
@@ -45,7 +45,7 @@ public class ScoreSlow extends LinearOpMode {
         telemetry.update();
 
         claw.close();
-        arm.toScoreSpecimenPos();
+        //arm.toScoreSpecimenPos();
         boolean slidesAtPosition = false;
         while (!slidesAtPosition) {
             slidesAtPosition = slides.slideToPosition(SlideState.MEDIUM);

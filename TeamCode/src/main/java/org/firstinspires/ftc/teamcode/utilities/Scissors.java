@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Scissors {
 
     Servo scissorsController;
+    Servo scissorsControllerL;
     
     public static double extendPosition = 1.0;
     public static double transferPosition = 0.0;
@@ -19,10 +20,15 @@ public class Scissors {
 
     public void extend() {
         scissorsController.setPosition(extendPosition);
+        scissorsControllerL.setPosition(0.0);
     }
 
     public void transfer() {
         scissorsController.setPosition(transferPosition);
+        scissorsControllerL.setPosition(0.0);
     }
-    public void neutral() {scissorsController.setPosition(neutralPosition);}
+    public void neutral() {
+        scissorsController.setPosition(neutralPosition);
+        scissorsControllerL.setPosition(0.0);
+    }
 }

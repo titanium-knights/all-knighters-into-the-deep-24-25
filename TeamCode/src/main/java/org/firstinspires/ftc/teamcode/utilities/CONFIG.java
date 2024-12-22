@@ -17,6 +17,7 @@ public class CONFIG {
     public static String clawServoBottom = "clawB";
     public static String clawRotator = "clawR"; // clawRotator
     public static String scissorsServo = "scissors";
+    public static String scissorsServoL = "scissorsL";
 
     // outtake:
     public static String slidesMotor = "slidesMotor";
