@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import com.acmerobotics.dashboard.config.Config;
-
-@Config
 public class CONFIG {
     //TODO: label all strings with associated ports and types.
     // ex: ch motor 3 (control hub > motor > port 3)
@@ -18,19 +15,15 @@ public class CONFIG {
     public static String scissorsL = "scissorsL"; // tape: none, eh servo 5
 
     // webcam
-    public static String webcam = "Webcam 1"; //
+    public static String webcam = "Webcam 1";
 
     // intake
-    public static String clawServoBottom = "clawB"; //
-    public static String clawRotator = "clawR"; //
-    public static String rightWristServo = "rightWrist"; // tape: “R Wrist”, eh sp 3
+    public static String clawServoBottom = "clawB";      // tape: “R Servo (Intake)”, eh servo 0
+    public static String clawRotator = "clawR";          // tape: “L Servo (Intake)”, eh servo 1
+    public static String rightWristServo = "rightWrist"; // tape: “R Wrist”, eh servo 3
 
     // outtake:
-    public static String slidesMotor = "slidesMotor"; //
-    public static String armServo = "armServo"; // tape: “R Bucket”, ch servo 0
-    public static String topClawServo = "claw"; // tape: Claw, ch sp 1
-
-    // yuma's active intake
-    public static String rightIntake = "rightIntake";
-    public static String leftIntake = "leftIntake";
+    public static String slidesMotor = "slidesMotor";   //
+    public static String armServo = "armServo";         // tape: “R Bucket”, ch servo 0
+    public static String topClawServo = "claw";         // tape: "Claw", ch servo 1
 }
