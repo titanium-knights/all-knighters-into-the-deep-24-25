@@ -1,52 +1,78 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class bottomClaw {
+
+    public static final double OPEN_CLAW_POSITION = 0.6;
+    public static final double OPEN_CLAW_HALF_POSITION = 0.75;
+    public static final double CLOSE_CLAW_POSITION = 0.9;
+
+    public static final double ORTHOGONAL_CLAW_ROTATOR_POSITION = 0.3;
+    public static final double NEUTRAL_CLAW_ROTATOR_POSITION = 0.7;
+
+    public static final double RIGHT_WRIST_UP_POSITION = 0.0;
+    public static final double RIGHT_WRIST_DOWN_POSITION = 0.1;
+
     Servo clawOpener;
-    double servoAngleModifier = (double) 360 / 300;
+    Servo clawRotator;
+    Servo rightWristServo;
 
     public bottomClaw(HardwareMap hmap) {
-        this.clawOpener = hmap.servo.get(CONFIG.clawServo);
+        this.clawOpener = hmap.servo.get(CONFIG.clawServoBottom);
+        this.clawRotator = hmap.servo.get(CONFIG.clawRotator);
+        this.rightWristServo = hmap.servo.get(CONFIG.rightWristServo);
     }
 
-    public void open() {
-        clawOpener.setPosition(1);
+    public double getClawOpenerPosition() {
+        return clawOpener.getPosition();
     }
 
-    public class OpenClaw implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            open();
-            return false;
-        }
+    public double getClawRotatorPosition() {
+        return clawRotator.getPosition();
     }
 
-    public Action openAction() {
-        return new OpenClaw();
+    public double getRightWristServoPosition() {
+        return rightWristServo.getPosition();
     }
 
-    public void close() {
-        clawOpener.setPosition(0.65);
+    public void openClaw() {
+        clawOpener.setPosition(OPEN_CLAW_POSITION);
     }
 
-    public class CloseClaw implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            close();
-            return false;
-        }
+    public void openClawHalf() {
+        clawOpener.setPosition(OPEN_CLAW_HALF_POSITION);
     }
-    public Action closeAction() { return new CloseClaw(); }
 
-    public double getPosition() {
-        return clawOpener.getPosition() / servoAngleModifier;
+    public void closeClaw() {
+        clawOpener.setPosition(CLOSE_CLAW_POSITION);
+    }
+
+    public void calibrateZeroClawRotator(double pos) {
+        clawRotator.setPosition(pos);
+    }
+
+    public void bottomClawUpPositionPreset() {
+        rightWristUpPosition();
+        neutralClawRotatorPosition();
+    }
+
+    public void orthogonalClawRotatorPosition() {
+        clawRotator.setPosition(ORTHOGONAL_CLAW_ROTATOR_POSITION);
+    }
+
+    public void neutralClawRotatorPosition() {
+        clawRotator.setPosition(NEUTRAL_CLAW_ROTATOR_POSITION);
+    }
+
+    public void rightWristUpPosition() {
+        rightWristServo.setPosition(RIGHT_WRIST_UP_POSITION);
+    }
+
+    public void rightWristDownPosition() {
+        rightWristServo.setPosition(RIGHT_WRIST_DOWN_POSITION);
     }
 }
