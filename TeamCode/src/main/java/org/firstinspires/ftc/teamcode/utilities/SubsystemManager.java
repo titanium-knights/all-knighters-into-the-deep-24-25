@@ -12,9 +12,17 @@ public class SubsystemManager {
 
     // store hardware util classes as publicly accessible fields
     public SimpleMecanumDrive drive;
+    public Arm arm;
+    public BottomClaw bottomClaw;
+    public Scissors scissors;
+    public TopClaw topClaw;
 
     public SubsystemManager(HardwareMap hmap) {
         // add util class initializations here
         drive = new SimpleMecanumDrive(hmap);
+        arm = new Arm(hmap);
+        bottomClaw = new BottomClaw(hmap);
+        scissors = new Scissors(hmap);
+        topClaw = new TopClaw(hmap);
     }
 }
