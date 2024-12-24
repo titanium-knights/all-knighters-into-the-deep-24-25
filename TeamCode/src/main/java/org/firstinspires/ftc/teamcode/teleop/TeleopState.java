@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.teleop;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 public abstract class TeleopState {
-    private final SubsystemManager subsystemManager;
-    private boolean isActive = false;
-    private final TeleopState[] dependentStates;
+    protected final SubsystemManager subsystemManager;
+    protected static boolean isActive = false;
+    protected final TeleopState[] dependentStates;
 
     public TeleopState(SubsystemManager subsystemManager) {
         this(subsystemManager, new TeleopState[0]);
@@ -31,13 +31,15 @@ public abstract class TeleopState {
     /**
      * Function to move subsystems to the state and run any code needed to maintain the state.
      * This is where the main logic of the state should be placed.
+     * This function should mark the current state as active.
+     * TODO: not sure if theres a way to enforce this on all child classes
      */
     public abstract void runState();
 
     /**
      * @return whether the state is currently active or not
      */
-    public boolean isActive() {
+    public static boolean isActive() {
         return isActive;
     }
 }
