@@ -29,13 +29,13 @@ public class ClawColorSensor {
     /**
      * @return std deviation between red, green, and blue values
      */
-    public int stdDev() {
+    public double stdDev() {
         int mean = (red() + green() + blue()) / 3;
-        return (int) Math.sqrt((Math.pow(red() - mean, 2) + Math.pow(green() - mean, 2) + Math.pow(blue() - mean, 2)) / 3);
+        return Math.sqrt((Math.pow(red() - mean, 2) + Math.pow(green() - mean, 2) + Math.pow(blue() - mean, 2)) / 3);
     }
 
     public boolean mostly(ColorOptions color) {
-        if (stdDev() < 10) return false;
+        if (stdDev() < 10.0) return false;
 
         switch (color) {
             case RED:
