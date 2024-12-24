@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 public class Arm {
-    private Servo armServo;
+    private final Servo armServo;
 
     private static final double INIT_POSITION = 0.3;
     private static final double RECEIVING_POSITION = 0.1;
@@ -27,18 +27,26 @@ public class Arm {
         armServo.setPosition(SCORE_BUCKET_POSITION);
     }
 
+    /**
+     * Slowly move the arm up
+     * @param power double in the range [0.0, 1.0]
+     */
     public void manualUp(double power) {
-        // Assume power is from 0.0 to 1.0
         double newPosition = armServo.getPosition() + (power * ARM_SPEED);
-        // Ensure the new position is within [0.0, 1.0]
+
+        // Ensure the new position does not exceed 1.0
         newPosition = Math.min(newPosition, 1.0);
         armServo.setPosition(newPosition);
     }
 
+    /**
+     * Slowly move the arm down
+     * @param power double in the range [0.0, 1.0]
+     */
     public void manualDown(double power) {
-        // Assume power is from 0.0 to 1.0
         double newPosition = armServo.getPosition() - (power * ARM_SPEED);
-        // Ensure the new position is within [0.0, 1.0]
+
+        // Ensure the new position is not less than 0.0
         newPosition = Math.max(newPosition, 0.0);
         armServo.setPosition(newPosition);
     }
