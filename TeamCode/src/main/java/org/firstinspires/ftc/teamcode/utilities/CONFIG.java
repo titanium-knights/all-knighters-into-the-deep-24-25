@@ -14,8 +14,9 @@ public class CONFIG {
     public static String scissorsR = "scissorsR"; // tape: none, ch servo 2
     public static String scissorsL = "scissorsL"; // tape: none, eh servo 5
 
-    // webcam
+    // misc
     public static String webcam = "Webcam 1";
+    public static String clawColorSensor = "color";
 
     // intake
     public static String clawServoBottom = "clawB";      // tape: “R Servo (Intake)”, eh servo 0
