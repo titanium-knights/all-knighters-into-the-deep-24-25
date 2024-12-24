@@ -91,7 +91,7 @@ public class Teleop extends OpMode {
         bottomclaw = new bottomClaw(hardwareMap);
         slides.slideToPosition(SlideState.BOTTOM);
         arm.initPos();
-        scissorSlides.transfer();
+        scissorSlides.init();
         bottomclaw.open();
         bottomclaw.bringUp();
         claw.close();
@@ -225,7 +225,7 @@ public class Teleop extends OpMode {
             case INIT:
                 slides.slideToPosition(SlideState.BOTTOM);
                 arm.initPos();
-                scissorSlides.transfer();
+                scissorSlides.init();
                 bottomclaw.open();
                 bottomclaw.bringDown();
                 break;
@@ -247,20 +247,22 @@ public class Teleop extends OpMode {
                 break;
             case TRANSFER:
                 slides.slideToPosition(SlideState.BOTTOM);
-                scissorSlides.transfer();
+                scissorSlides.init();
                 bottomclaw.bringUp();
                 bottomclaw.openHalf();
                 arm.receivingPos();
                 break;
             case NEUTRAL:
                 scissorSlides.neutral();
-                bottomclaw.neutralPosition();
+                bottomclaw.bringUp();
                 arm.receivingPos();
                 slides.slideToPosition(SlideState.BOTTOM);
                 if (gamepad1.left_bumper) {
                     claw.open();
+                    bottomclaw.open();
                 } else if (gamepad1.right_bumper) {
                     claw.close();
+                    bottomclaw.close();
                 }
                 break;
             case DROP:

@@ -23,7 +23,7 @@ public class topClaw {
         open = true;
     }
     public void close() {
-        clawOpener.setPosition(0.9);
+        clawOpener.setPosition(0.83);
         open = false;
     }
 

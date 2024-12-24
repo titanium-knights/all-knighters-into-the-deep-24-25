@@ -32,7 +32,7 @@ public class Score extends LinearOpMode {
 
         slides.slideToPosition(SlideState.BOTTOM);
         arm.initPos();
-        scissorSlides.transfer();
+        scissorSlides.init();
         bottomclaw.open();
         bottomclaw.neutralPosition();
         claw.close();

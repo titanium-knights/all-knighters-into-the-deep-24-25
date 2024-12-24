@@ -10,25 +10,31 @@ public class Scissors {
     Servo scissorsController;
     Servo scissorsControllerL;
     
-    public static double extendPosition = 1.0;
-    public static double transferPosition = 0.0;
-    public static double neutralPosition = 0.5;
+    public static double extendPosition = 0.35;
+    public static double transferPosition = 0.0011;
+    public static double neutralPosition = 0.15;
 
     public Scissors(HardwareMap hmap) {
         this.scissorsController = hmap.servo.get(CONFIG.scissorsServo);
+        this.scissorsControllerL = hmap.servo.get(CONFIG.scissorsServoL);
     }
 
     public void extend() {
         scissorsController.setPosition(extendPosition);
-        scissorsControllerL.setPosition(0.0);
+        scissorsControllerL.setPosition(1-extendPosition);
     }
 
-    public void transfer() {
+    public void init() {
         scissorsController.setPosition(transferPosition);
-        scissorsControllerL.setPosition(0.0);
+        scissorsControllerL.setPosition(1-transferPosition);
     }
     public void neutral() {
         scissorsController.setPosition(neutralPosition);
-        scissorsControllerL.setPosition(0.0);
+        scissorsControllerL.setPosition(1-neutralPosition);
+    }
+
+    public double getPosition() {
+        return scissorsController.getPosition();
+
     }
 }

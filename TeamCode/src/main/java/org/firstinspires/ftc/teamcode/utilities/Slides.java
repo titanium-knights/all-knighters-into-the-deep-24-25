@@ -22,7 +22,7 @@ public class Slides {
     // Negative is up, positive is down
     private double slideUpPower = -1.0;
     private double slideDownPower = 1.0;
-    private static double idlePower = -0.3;
+    private static double idlePower = -0.2;
 
     private DcMotor slideMotor;
 
@@ -46,11 +46,12 @@ public class Slides {
     // Used in initialization and as in-between movements
     public void stop() {
         // This is the power required to be stationary
-        if (Math.abs(slideMotor.getCurrentPosition()) > 100) {
-            slideMotor.setPower(idlePower);
-        } else {
-            slideMotor.setPower(0.0);
-        }
+        slideMotor.setPower(idlePower);
+//        if (Math.abs(slideMotor.getCurrentPosition()) > 100) {
+//            slideMotor.setPower(idlePower);
+//        } else {
+//            slideMotor.setPower(0.0);
+//        }
     }
 
     private boolean encoderValueWithinBufferOfTarget(int targetEncoderValue) {
@@ -85,6 +86,17 @@ public class Slides {
         // Assume power is from 0.0 to 1.0
         double adjustedPower = Math.abs(power); // Positive for downward movement
         slideMotor.setPower(adjustedPower);
+    }
+    private void updateSliderPowerBasic(int targetEncoderValue) {
+        int pos = slideMotor.getCurrentPosition();
+        double distanceAway = targetEncoderValue - pos;
+        if (distanceAway > 0) { // moving down
+            slideMotor.setPower(slideDownPower);
+        } else if (distanceAway < 0) { // moving up
+            slideMotor.setPower(slideUpPower);
+        } else {
+            slideMotor.setPower(idlePower);
+        }
     }
 
     public class SlideAction implements Action {
@@ -122,13 +134,5 @@ public class Slides {
         slideMotor.setPower(power);
     }
 
-    private void updateSliderPowerBasic(int targetEncoderValue) {
-        int pos = slideMotor.getCurrentPosition();
-        double distanceAway = targetEncoderValue - pos;
-        if (distanceAway > 0) { // moving down
-            slideMotor.setPower(slideDownPower);
-        } else if (distanceAway < 0) { // moving up
-            slideMotor.setPower(slideUpPower);
-        }
-    }
+
 }

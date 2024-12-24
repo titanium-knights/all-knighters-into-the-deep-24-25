@@ -28,30 +28,43 @@ public class TestingTeleop extends OpMode {
 
     @Override
     public void loop() {
+//        if (gamepad1.x) {
+//            bottomclaw.open();
+//        } else if (gamepad1.y) {
+//            bottomclaw.close();
+//        }
         if (gamepad1.x) {
-            bottomclaw.open();
+            arm.toScoreBucketPos();
+            topclaw.open();
         } else if (gamepad1.y) {
-            bottomclaw.close();
+            arm.initPos();
+            topclaw.close();
         }
 
         if (gamepad1.a) {
             scissors.extend();
         } else if (gamepad1.b) {
-            scissors.transfer();
+            scissors.init();
         } else if (gamepad1.dpad_up) {
             scissors.neutral();
         }
 
+//        if (gamepad1.dpad_left) {
+//            double ogPos = bottomclaw.getRotatorPosition();
+//            double newPos = ogPos + 0.005;
+//            bottomclaw.setClawRotator(newPos);
+//        } else if (gamepad1.dpad_right) {
+//            double ogPos = bottomclaw.getRotatorPosition();
+//            double newPos = ogPos - 0.005;
+//            bottomclaw.setClawRotator(newPos);
+//        }
         if (gamepad1.dpad_left) {
-            double ogPos = bottomclaw.getRotatorPosition();
-            double newPos = ogPos + 0.005;
-            bottomclaw.setClawRotator(newPos);
+            bottomclaw.turn90();
         } else if (gamepad1.dpad_right) {
-            double ogPos = bottomclaw.getRotatorPosition();
-            double newPos = ogPos - 0.005;
-            bottomclaw.setClawRotator(newPos);
+            bottomclaw.neutralPos();
         }
         telemetry.addData("Claw Position2", bottomclaw.getRotatorPosition());
+        telemetry.addData("Scissors Controller", scissors.getPosition());
 
       
 //        if (gamepad1.dpad_up) {
