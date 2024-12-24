@@ -42,4 +42,8 @@ public abstract class TeleopState {
     public static boolean isActive() {
         return isActive;
     }
+
+    public TeleopState[] getDependentStates() {
+        return dependentStates;
+    }
 }
