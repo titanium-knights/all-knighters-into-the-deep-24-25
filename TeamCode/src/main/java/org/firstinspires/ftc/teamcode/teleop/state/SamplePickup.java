@@ -5,22 +5,20 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.teleop.TeleopState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
-public class Neutral extends TeleopState {
-    public Neutral(SubsystemManager subsystemManager) {
+public class SamplePickup extends TeleopState {
+    public SamplePickup(SubsystemManager subsystemManager) {
         super(subsystemManager);
     }
 
     @Override
     public void runToState(TeleopState state) {
-        // empty because there are no states dependent on being in the neutral state
+        // no dependent states
     }
 
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
-
-        subsystemManager.topClaw.close();
-        subsystemManager.bottomClaw.closeClaw();
-        subsystemManager.scissors.moveToIdlePosition();
-        subsystemManager.arm.toInitPos();
+        subsystemManager.bottomClaw.openClaw();
+        subsystemManager.bottomClaw.rightWristDownPosition();
+        subsystemManager.bottomClaw.orthogonalClawRotatorPosition();
     }
 }

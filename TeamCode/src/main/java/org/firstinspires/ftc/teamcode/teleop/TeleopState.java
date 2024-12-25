@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
+
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 public abstract class TeleopState {
     protected final SubsystemManager subsystemManager;
-    protected static boolean isActive = false;
     protected final TeleopState[] dependentStates;
 
     public TeleopState(SubsystemManager subsystemManager) {
@@ -14,6 +15,13 @@ public abstract class TeleopState {
     public TeleopState(SubsystemManager subsystemManager, TeleopState[] dependentStates) {
         this.subsystemManager = subsystemManager;
         this.dependentStates = dependentStates;
+    }
+
+    /**
+     * @return whether the state is currently active or not
+     */
+    public boolean isActive() {
+        return Teleop.currentState != null && Teleop.currentState.getClass().equals(this.getClass());
     }
 
     /**
@@ -31,17 +39,8 @@ public abstract class TeleopState {
     /**
      * Function to move subsystems to the state and run any code needed to maintain the state.
      * This is where the main logic of the state should be placed.
-     * This function should mark the current state as active.
-     * TODO: not sure if theres a way to enforce this on all child classes
      */
-    public abstract void runState();
-
-    /**
-     * @return whether the state is currently active or not
-     */
-    public static boolean isActive() {
-        return isActive;
-    }
+    public abstract void runState(Gamepad gamepad1, Gamepad gamepad2);
 
     public TeleopState[] getDependentStates() {
         return dependentStates;

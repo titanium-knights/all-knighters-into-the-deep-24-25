@@ -3,17 +3,21 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
+import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 public class Teleop extends OpMode {
-    private TeleopState currentState;
+    public static TeleopState currentState;
     private SubsystemManager subsystemManager;
     private final Gamepad prevGamepad1 = new Gamepad();
     private final Gamepad prevGamepad2 = new Gamepad();
 
     // instance variables for all potential states
     private Neutral neutralState;
+    private BeforeSamplePickup beforeSamplePickupState;
+    private SamplePickup samplePickupState;
 
     @Override
     public void init() {
@@ -21,6 +25,8 @@ public class Teleop extends OpMode {
         subsystemManager = new SubsystemManager(hardwareMap);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
+        beforeSamplePickupState = new BeforeSamplePickup(subsystemManager, new TeleopState[] { samplePickupState });
+        samplePickupState = new SamplePickup(subsystemManager);
     }
 
     @Override
@@ -32,13 +38,14 @@ public class Teleop extends OpMode {
         if (gamepad1.a) {
             currentState = neutralState;
         } else if (gamepad1.b) {
-            // currentState = someOtherState;
+             currentState = beforeSamplePickupState;
         }
 
         // run the current state
-        currentState.runState();
+        currentState.runState(gamepad1, gamepad2);
 
-        // save the state of the gamepads for the next loop
+        // save the state of the game controllers for the next loop
+        // useful for debounce + rising/falling edge detection
         prevGamepad1.copy(gamepad1);
         prevGamepad2.copy(gamepad2);
     }
