@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-public class topClaw {
+public class TopClaw {
     private final Servo clawOpener;
     private final static double servoAngleModifier = (double) 360 / 300;
     private boolean open = true;
@@ -13,7 +13,7 @@ public class topClaw {
     public static double openPos = 0.6;
     public static double closePos = 0.9;
 
-    public topClaw(HardwareMap hmap) {
+    public TopClaw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.topClawServo);
     }
 
@@ -32,6 +32,6 @@ public class topClaw {
     }
 
     public double getPosition() {
-        return clawOpener.getPosition() / topClaw.servoAngleModifier;
+        return clawOpener.getPosition() / TopClaw.servoAngleModifier;
     }
 }

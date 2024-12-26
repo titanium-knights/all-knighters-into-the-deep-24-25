@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
-public class bottomClaw {
+public class BottomClaw {
 
     public static final double OPEN_CLAW_POSITION = 0.6;
     public static final double OPEN_CLAW_HALF_POSITION = 0.75;
@@ -21,7 +21,7 @@ public class bottomClaw {
     Servo clawRotator;
     Servo rightWristServo;
 
-    public bottomClaw(HardwareMap hmap) {
+    public BottomClaw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.clawServoBottom);
         this.clawRotator = hmap.servo.get(CONFIG.clawRotator);
         this.rightWristServo = hmap.servo.get(CONFIG.rightWristServo);
