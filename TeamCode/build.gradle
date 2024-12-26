@@ -14,6 +14,7 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
+
 apply plugin: 'org.team11260.fast-load-plugin'
 apply plugin: 'kotlin-android'
 
@@ -36,12 +37,11 @@ repositories {
 
 dependencies {
     implementation project(':FtcRobotController')
+    annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 
-    implementation "com.acmerobotics.roadrunner:ftc:0.1.14"
-    implementation "com.acmerobotics.roadrunner:core:1.0.0"
-    implementation "com.acmerobotics.roadrunner:actions:1.0.0"
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.20'
     implementation "com.acmerobotics.dashboard:dashboard:0.4.16"
-
     implementation 'org.team11260:fast-load:0.1.2'
 }
 

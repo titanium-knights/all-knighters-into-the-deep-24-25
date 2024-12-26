@@ -1,83 +1,57 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Action;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Config
 public class Arm {
-    private Servo arm;
-    private static final double ARM_SPEED = 0.005; // Adjust this value as needed
+    private final Servo armServo;
 
-    // Arm positions
-    public static double receivingPosition = 0.1;
-    public static double scoreBucketPosition = 0.65;
-
-
+    private static final double INIT_POSITION = 0.3;
+    private static final double RECEIVING_POSITION = 0.1;
+    private static final double SCORE_BUCKET_POSITION = 0.65;
+    private static final double ARM_SPEED = 0.005;
 
     public Arm(HardwareMap hmap) {
-        this.arm = hmap.get(Servo.class, CONFIG.armServo);
+        this.armServo = hmap.get(Servo.class, CONFIG.armServo);
     }
 
-    // Preset positions
-    public void receivingPos() {
-        arm.setPosition(receivingPosition);
+    public void toReceivingPos() {
+        armServo.setPosition(RECEIVING_POSITION);
     }
 
-    public void initPos () {
-        arm.setPosition(0.3);
+    public void toInitPos() {
+        armServo.setPosition(INIT_POSITION);
     }
 
     public void toScoreBucketPos() {
-        arm.setPosition(scoreBucketPosition);
+        armServo.setPosition(SCORE_BUCKET_POSITION);
     }
 
+    /**
+     * Slowly move the arm up
+     * @param power double in the range [0.0, 1.0]
+     */
+    public void manualUp(double power) {
+        double newPosition = armServo.getPosition() + (power * ARM_SPEED);
 
+        // Ensure the new position does not exceed 1.0
+        newPosition = Math.min(newPosition, 1.0);
+        armServo.setPosition(newPosition);
+    }
 
+    /**
+     * Slowly move the arm down
+     * @param power double in the range [0.0, 1.0]
+     */
+    public void manualDown(double power) {
+        double newPosition = armServo.getPosition() - (power * ARM_SPEED);
+
+        // Ensure the new position is not less than 0.0
+        newPosition = Math.max(newPosition, 0.0);
+        armServo.setPosition(newPosition);
+    }
 
     public double getPosition() {
-        return arm.getPosition();
+        return armServo.getPosition();
     }
-
-    // Manual control methods accepting controller values
-    public void manualUp(double power) {
-        // Assume power is from 0.0 to 1.0
-        double newPosition = arm.getPosition() + (power * ARM_SPEED);
-        // Ensure the new position is within [0.0, 1.0]
-        newPosition = Math.min(newPosition, 1.0);
-        arm.setPosition(newPosition);
-    }
-
-    public void manualDown(double power) {
-        // Assume power is from 0.0 to 1.0
-        double newPosition = arm.getPosition() - (power * ARM_SPEED);
-        // Ensure the new position is within [0.0, 1.0]
-        newPosition = Math.max(newPosition, 0.0);
-        arm.setPosition(newPosition);
-    }
-
-    public void stop() {
-        // For a servo, stopping may not be necessary
-    }
-
-    // Action classes (if needed)
-
-
-    public class toInitPosAction implements Action {
-        @Override
-        public boolean run(@NonNull TelemetryPacket packet) {
-            receivingPos();
-            return false;
-        }
-    }
-
-    public Action toInitPosAction() {
-        return new toInitPosAction();
-    }
-
-
 }
