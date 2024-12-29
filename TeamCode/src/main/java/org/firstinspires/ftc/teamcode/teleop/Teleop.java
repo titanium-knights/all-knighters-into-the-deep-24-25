@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
@@ -8,6 +9,8 @@ import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
 import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
+
+@TeleOp(name = "Driver Teleop", group = "User Control")
 public class Teleop extends OpMode {
     public static TeleopState currentState;
     private SubsystemManager subsystemManager;
@@ -27,6 +30,8 @@ public class Teleop extends OpMode {
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager, new TeleopState[] { samplePickupState });
         samplePickupState = new SamplePickup(subsystemManager);
+        // set current state to be at neutral
+        currentState = neutralState;
     }
 
     @Override
