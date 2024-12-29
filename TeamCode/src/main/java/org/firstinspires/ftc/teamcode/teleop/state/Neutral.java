@@ -11,13 +11,7 @@ public class Neutral extends TeleopState {
     }
 
     @Override
-    public void runToState(TeleopState state) {
-        // empty because there are no states dependent on being in the neutral state
-    }
-
-    @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
-
         subsystemManager.topClaw.close();
         subsystemManager.bottomClaw.closeClaw();
         subsystemManager.scissors.moveToIdlePosition();

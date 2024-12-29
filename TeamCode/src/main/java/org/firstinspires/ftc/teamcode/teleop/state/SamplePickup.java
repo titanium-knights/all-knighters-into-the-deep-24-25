@@ -6,13 +6,8 @@ import org.firstinspires.ftc.teamcode.teleop.TeleopState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 public class SamplePickup extends TeleopState {
-    public SamplePickup(SubsystemManager subsystemManager) {
-        super(subsystemManager);
-    }
-
-    @Override
-    public void runToState(TeleopState state) {
-        // no dependent states
+    public SamplePickup(SubsystemManager subsystemManager, TeleopState[] dependencies) {
+        super(subsystemManager, dependencies);
     }
 
     @Override
