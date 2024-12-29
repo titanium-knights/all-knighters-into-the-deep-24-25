@@ -21,7 +21,7 @@ public class Scissors {
 
     public void moveToFullyExtended() {
         scissorsR.setPosition(fullyExtendedPosition);
-        scissorsL.setPosition(1 - fullyExtendedPosition);
+        scissorsL.setPosition(0.95 - fullyExtendedPosition);
     }
 
     public void moveToLoadingPosition() {
