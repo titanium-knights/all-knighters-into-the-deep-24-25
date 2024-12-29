@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.CustomFilteredPIDFCoefficients;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.CustomPIDFCoefficients;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilterParameters;
+import org.firstinspires.ftc.teamcode.utilities.CONFIG;
 
 /**
  * This is the FollowerConstants class. It holds many constants and parameters for various parts of
@@ -24,10 +25,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.util.KalmanFilterParameters;
 public class FollowerConstants {
 
     // This section is for configuring your motors
-    public static String leftFrontMotorName = "leftFront";
-    public static String leftRearMotorName = "leftRear";
-    public static String rightFrontMotorName = "rightFront";
-    public static String rightRearMotorName = "rightRear";
+    public static String leftFrontMotorName = CONFIG.FRONT_LEFT;
+    public static String leftRearMotorName = CONFIG.BACK_LEFT;
+    public static String rightFrontMotorName = CONFIG.FRONT_RIGHT;
+    public static String rightRearMotorName = CONFIG.BACK_RIGHT;
 
     public static DcMotorSimple.Direction leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
     public static DcMotorSimple.Direction rightFrontMotorDirection = DcMotorSimple.Direction.REVERSE;

@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
 import org.firstinspires.ftc.teamcode.pedroPathing.util.NanoTimer;
+import org.firstinspires.ftc.teamcode.utilities.CONFIG;
 
 /**
  * This is the ThreeWheelIMULocalizer class. This class extends the Localizer superclass and is a
@@ -98,14 +99,14 @@ public class ThreeWheelIMULocalizer extends Localizer {
         rightEncoderPose = new Pose(-3, -5.7, 0);
         strafeEncoderPose = new Pose(6.9, 1, Math.toRadians(90));
 
-
         // TODO: replace these with your encoder ports
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "lb"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "lf"));
-        strafeEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "rf"));
+        // TODO: check which one is left and right between those two
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, CONFIG.BACK_LEFT));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, CONFIG.BACK_RIGHT));
+        strafeEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, CONFIG.FRONT_RIGHT));
 
         // TODO: reverse any encoders necessary
-        leftEncoder.setDirection(Encoder.REVERSE);
+        leftEncoder.setDirection(Encoder.FORWARD);
         rightEncoder.setDirection(Encoder.FORWARD);
         strafeEncoder.setDirection(Encoder.FORWARD);
 
