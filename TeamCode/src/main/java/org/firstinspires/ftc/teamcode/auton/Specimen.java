@@ -27,7 +27,8 @@ public class Specimen extends OpMode {
     private PathChain parkRobot;
     private Slides slides;
     private TopClaw specimenClaw;
-    private AutonState state = AutonState.DRIVE_TO_CHAMBER;
+    private AutonState state = AutonState.START_DRIVE_TO_CHAMBER;
+    private AutonState previousState = AutonState.START_DRIVE_TO_CHAMBER;
 
     private void sleep(int millis) {
         try {
@@ -92,25 +93,13 @@ public class Specimen extends OpMode {
             case RAISING_SLIDES:
                 boolean slidesRaised = slides.slideToPosition(SlideState.MEDIUM);
                 if (slidesRaised) {
-                    state = AutonState.DRIVE_TO_CHAMBER;
+                    state = AutonState.START_DRIVE_TO_CHAMBER;
                 }
                 break;
-            case DRIVE_TO_CHAMBER:
-                /* note: the reason for the while loop is so that this isn't called multiple times
-                 * theoretically the while loop isn't a problem because the auton is short. However,
-                 * if the auton does not stop when the stop button is pressed, this may be the cause
-                 * an easy fix is to add another state (first time we START driving) and once
-                 * that is run once, you would switch to this state that just waits until the path
-                 * finishes
-                 */
+            case START_DRIVE_TO_CHAMBER:
                 follower.followPath(driveToChamber);
-                while (!follower
-                        .atParametricEnd()) { // FIXME: this is blocking and MAY cause problems
-                    telemetry.clear();
-                    telemetry.addData("Path Progress (%)", follower.getCurrentTValue() * 100.0);
-                    telemetry.update();
-                }
-                state = AutonState.LOWERING_SLIDES;
+                state = AutonState.DRIVING;
+                previousState = AutonState.START_DRIVE_TO_CHAMBER;
                 break;
             case LOWERING_SLIDES:
                 boolean slidesLowered = slides.slideToPosition(SlideState.BOTTOM);
@@ -121,26 +110,35 @@ public class Specimen extends OpMode {
             case SCORING_SPECIMEN:
                 specimenClaw.open();
                 sleep(1000);
-                state = AutonState.PARKING_ROBOT;
+                state = AutonState.START_PARKING_ROBOT;
                 break;
-            case PARKING_ROBOT:
-                // see previous note
+            case START_PARKING_ROBOT:
                 follower.followPath(parkRobot);
-                while (!follower
-                        .atParametricEnd()) { // FIXME: this is blocking and MAY cause problems
+                state = AutonState.DRIVING;
+                previousState = AutonState.START_PARKING_ROBOT;
+                break;
+            case DRIVING:
+                if (!follower.atParametricEnd()) {
                     telemetry.clear();
                     telemetry.addData("Path Progress (%)", follower.getCurrentTValue() * 100.0);
                     telemetry.update();
+                } else {
+                    if (previousState == AutonState.START_DRIVE_TO_CHAMBER) {
+                        state = AutonState.LOWERING_SLIDES;
+                    } else {
+                        requestOpModeStop();
+                    }
                 }
-                break;
         }
     }
 
+    // these will not necessarily be the same for all autons
     private enum AutonState {
-        DRIVE_TO_CHAMBER,
+        DRIVING,
+        START_DRIVE_TO_CHAMBER,
         RAISING_SLIDES,
         LOWERING_SLIDES,
         SCORING_SPECIMEN,
-        PARKING_ROBOT
+        START_PARKING_ROBOT
     }
 }
