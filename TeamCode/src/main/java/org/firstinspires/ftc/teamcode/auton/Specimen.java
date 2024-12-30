@@ -101,7 +101,7 @@ public class Specimen extends OpMode {
                 previousState = AutonState.START_DRIVE_TO_CHAMBER;
                 break;
             case LOWERING_SLIDES:
-                boolean slidesLowered = slides.slideToPosition(SlideState.BOTTOM);;
+                boolean slidesLowered = slides.slideToPosition(SlideState.BOTTOM);
 
                 if (timeOfLastAction!=0 && slidesLowered && (runtime.milliseconds() - timeOfLastAction > 1500)) {
                     state = AutonState.SCORING_SPECIMEN;
@@ -125,15 +125,15 @@ public class Specimen extends OpMode {
                 previousState = AutonState.START_PARKING_ROBOT;
                 break;
             case DRIVING:
-                if (!follower.atParametricEnd()) {
-                    telemetry.addData("Path Progress (%)", follower.getCurrentTValue() * 100.0);
-                    telemetry.update();
-                } else {
+                if (follower.atParametricEnd()) {
                     if (previousState == AutonState.START_DRIVE_TO_CHAMBER) {
                         state = AutonState.LOWERING_SLIDES;
                     } else {
                         telemetry.addLine("Auton should be complete by now. Did it do everything it was supposed to?");
                     }
+                } else {
+                    telemetry.addData("Path Progress (%)", follower.getCurrentTValue() * 100.0);
+                    telemetry.update();
                 }
         }
     }
