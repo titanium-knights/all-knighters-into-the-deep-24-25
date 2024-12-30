@@ -37,9 +37,9 @@ public class Specimen extends LinearOpMode {
                 .addPath(
                         // Line 1
                         new BezierLine(
-                                new Point(9.757, 84.983, Point.CARTESIAN),
-                                new Point(11.668, 84.983, Point.CARTESIAN)))
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(90))
+                                new Point(0.000, 0.000, Point.CARTESIAN),
+                                new Point(0.000, 0.000, Point.CARTESIAN)))
+                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(0))
                 .build();
 
         PathChain parkRobot = follower.pathBuilder()
@@ -47,39 +47,71 @@ public class Specimen extends LinearOpMode {
                         // Line 2
                         new BezierLine(
                                 new Point(36.780, 74.381, Point.CARTESIAN),
-                                new Point(36.616, 70.170, Point.CARTESIAN)))
+                                new Point(36.780, 74.381, Point.CARTESIAN)
+                        )
+                )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270))
                 .build();
 
         waitForStart();
         runtime.reset();
-        follower.setPose(new Pose(9.757, 84.983, (int) Math.toRadians(90)));
+        follower.setPose(new Pose(0.000, 0.000, (int) Math.toRadians(90)));
         follower.update();
         sleep(600);
+
+        telemetry.addLine("gonna raise slides");
+        telemetry.update();
+
         boolean slidesRaised = slides.slideToPosition(SlideState.MEDIUM);
         while (opModeIsActive() && !slidesRaised) {
             slidesRaised = slides.slideToPosition(SlideState.MEDIUM);
-            // follower.update(); // maybe wanna uncomment but prob not
+            follower.update(); // maybe wanna uncomment but prob not
+
+            telemetry.addLine("slides go up up up!");
+            telemetry.update();
         }
+        telemetry.addLine("slides are up!");
+        telemetry.update();
+
+        telemetry.addLine("gonna go to the chamber now");
+        telemetry.update();
+
         follower.update();
         follower.followPath(driveToChamber);
         while (opModeIsActive() && !follower.atParametricEnd()) {
             follower.update();
+            telemetry.addLine("going to the chamber");
+            telemetry.update();
         }
+
+        telemetry.addLine("went to chamber. gonna lower slides");
+        telemetry.update();
 
         slidesRaised = slides.slideToPosition(SlideState.BOTTOM);
         while (opModeIsActive() && !slidesRaised) {
             slidesRaised = slides.slideToPosition(SlideState.BOTTOM);
-            // follower.update(); // maybe wanna uncomment but prob not
+            follower.update(); // maybe wanna uncomment but prob not
+
+            telemetry.addLine("slides go down");
+            telemetry.update();
         }
+
+        telemetry.addLine("slides are down. gonna open claw");
+        telemetry.update();
+
         sleep(600);
         specimenClaw.open();
         sleep(1500);
+
+        telemetry.addLine("claw is open. gonna park now");
+        telemetry.update();
 
         follower.update();
         follower.followPath(parkRobot);
         while (opModeIsActive() && !follower.atParametricEnd()) {
             follower.update();
+            telemetry.addLine("parking");
+            telemetry.update();
         }
     }
 }
