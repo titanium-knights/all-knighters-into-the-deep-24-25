@@ -38,7 +38,7 @@ public class Specimen extends LinearOpMode {
                         // Line 1
                         new BezierLine(
                                 new Point(0.000, 0.000, Point.CARTESIAN),
-                                new Point(0.000, 0.000, Point.CARTESIAN)))
+                                new Point(0.001, 0.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(0))
                 .build();
 
@@ -46,13 +46,14 @@ public class Specimen extends LinearOpMode {
                 .addPath(
                         // Line 2
                         new BezierLine(
-                                new Point(36.780, 74.381, Point.CARTESIAN),
-                                new Point(36.780, 74.381, Point.CARTESIAN)
+                                new Point(0.000, 0.000, Point.CARTESIAN),
+                                new Point(0.002, 0.000, Point.CARTESIAN)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(270))
                 .build();
 
+        specimenClaw.close();
         waitForStart();
         runtime.reset();
         follower.setPose(new Pose(0.000, 0.000, (int) Math.toRadians(90)));
@@ -70,9 +71,11 @@ public class Specimen extends LinearOpMode {
             telemetry.addLine("slides go up up up!");
             telemetry.update();
         }
+        sleep(600);
         telemetry.addLine("slides are up!");
         telemetry.update();
 
+        sleep(600);
         telemetry.addLine("gonna go to the chamber now");
         telemetry.update();
 
@@ -83,6 +86,7 @@ public class Specimen extends LinearOpMode {
             telemetry.addLine("going to the chamber");
             telemetry.update();
         }
+        sleep(600);
 
         telemetry.addLine("went to chamber. gonna lower slides");
         telemetry.update();
@@ -95,6 +99,7 @@ public class Specimen extends LinearOpMode {
             telemetry.addLine("slides go down");
             telemetry.update();
         }
+        sleep(600);
 
         telemetry.addLine("slides are down. gonna open claw");
         telemetry.update();
