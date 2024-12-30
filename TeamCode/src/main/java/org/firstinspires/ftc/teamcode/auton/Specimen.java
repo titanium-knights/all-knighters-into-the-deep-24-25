@@ -29,7 +29,7 @@ public class Specimen extends OpMode {
     private TopClaw specimenClaw;
     private AutonState state = AutonState.START_DRIVE_TO_CHAMBER;
     private AutonState previousState = AutonState.START_DRIVE_TO_CHAMBER;
-
+    private double timeOfLastAction = 0;
     private void sleep(int millis) {
         try {
             Thread.sleep(millis);
@@ -54,8 +54,7 @@ public class Specimen extends OpMode {
                                 // Line 1
                                 new BezierCurve(
                                         new Point(11.165, 83.740, Point.CARTESIAN),
-                                        new Point(29.227, 70.276, Point.CARTESIAN),
-                                        new Point(36.123, 71.590, Point.CARTESIAN)))
+                                        new Point(15.165, 80.740, Point.CARTESIAN)))
                         .setTangentHeadingInterpolation()
                         .build();
 
@@ -65,17 +64,15 @@ public class Specimen extends OpMode {
                                 // Line 2
                                 new BezierCurve(
                                         new Point(36.123, 71.590, Point.CARTESIAN),
-                                        new Point(48.274, 58.290, Point.CARTESIAN),
-                                        new Point(32.511, 8.702, Point.CARTESIAN),
-                                        new Point(77.665, 40.721, Point.CARTESIAN)))
+                                        new Point(43.123, 71.590, Point.CARTESIAN)))
                         .setTangentHeadingInterpolation()
-                        .addPath(
-                                // Line 3
-                                new BezierCurve(
-                                        new Point(77.665, 40.721, Point.CARTESIAN),
-                                        new Point(77.993, 18.554, Point.CARTESIAN),
-                                        new Point(8.374, 20.196, Point.CARTESIAN)))
-                        .setTangentHeadingInterpolation()
+//                        .addPath(
+//                                // Line 3
+//                                new BezierCurve(
+//                                        new Point(77.665, 40.721, Point.CARTESIAN),
+//                                        new Point(77.993, 18.554, Point.CARTESIAN),
+//                                        new Point(8.374, 20.196, Point.CARTESIAN)))
+//                        .setTangentHeadingInterpolation()
                         .build();
     }
 
@@ -89,6 +86,8 @@ public class Specimen extends OpMode {
     public void loop() {
         follower.update();
         telemetry.addData("State", state);
+        telemetry.update();
+
         switch (state) {
             case RAISING_SLIDES:
                 boolean slidesRaised = slides.slideToPosition(SlideState.MEDIUM);
@@ -108,9 +107,13 @@ public class Specimen extends OpMode {
                 }
                 break;
             case SCORING_SPECIMEN:
-                specimenClaw.open();
-                sleep(1000);
-                state = AutonState.START_PARKING_ROBOT;
+                if (timeOfLastAction == 0) {
+                    timeOfLastAction = runtime.milliseconds();
+                    specimenClaw.open();
+                } else if (runtime.milliseconds() - timeOfLastAction > 500) {
+                    state = AutonState.START_PARKING_ROBOT;
+                    timeOfLastAction = 0; // IMPORTANT: reset the timeOfLastAction to zero when not in use
+                }
                 break;
             case START_PARKING_ROBOT:
                 follower.followPath(parkRobot);
@@ -119,20 +122,19 @@ public class Specimen extends OpMode {
                 break;
             case DRIVING:
                 if (!follower.atParametricEnd()) {
-                    telemetry.clear();
                     telemetry.addData("Path Progress (%)", follower.getCurrentTValue() * 100.0);
                     telemetry.update();
                 } else {
                     if (previousState == AutonState.START_DRIVE_TO_CHAMBER) {
                         state = AutonState.LOWERING_SLIDES;
                     } else {
-                        requestOpModeStop();
+                        telemetry.addLine("Auton should be complete by now. Did it do everything it was supposed to?");
                     }
                 }
         }
     }
 
-    // these will not necessarily be the same for all autons
+    // these will not necessarily be the same for all auton paths
     private enum AutonState {
         DRIVING,
         START_DRIVE_TO_CHAMBER,
