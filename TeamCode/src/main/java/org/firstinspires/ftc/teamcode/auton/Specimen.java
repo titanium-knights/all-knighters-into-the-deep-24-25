@@ -101,16 +101,20 @@ public class Specimen extends OpMode {
                 previousState = AutonState.START_DRIVE_TO_CHAMBER;
                 break;
             case LOWERING_SLIDES:
-                boolean slidesLowered = slides.slideToPosition(SlideState.BOTTOM);
-                if (slidesLowered) {
+                boolean slidesLowered = slides.slideToPosition(SlideState.BOTTOM);;
+
+                if (timeOfLastAction!=0 && slidesLowered && (runtime.milliseconds() - timeOfLastAction > 1500)) {
                     state = AutonState.SCORING_SPECIMEN;
+                    timeOfLastAction = 0; // IMPORTANT: reset the timeOfLastAction to zero when not in use
+                } else {
+                    if (timeOfLastAction==0) timeOfLastAction = runtime.milliseconds();
                 }
                 break;
             case SCORING_SPECIMEN:
                 if (timeOfLastAction == 0) {
                     timeOfLastAction = runtime.milliseconds();
                     specimenClaw.open();
-                } else if (runtime.milliseconds() - timeOfLastAction > 500) {
+                } else if (runtime.milliseconds() - timeOfLastAction > 1500) {
                     state = AutonState.START_PARKING_ROBOT;
                     timeOfLastAction = 0; // IMPORTANT: reset the timeOfLastAction to zero when not in use
                 }
