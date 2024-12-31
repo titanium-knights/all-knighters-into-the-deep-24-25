@@ -6,16 +6,16 @@ import org.firstinspires.ftc.teamcode.teleop.TeleopState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
-public class BeforeSamplePickup extends TeleopState {
-    public BeforeSamplePickup(SubsystemManager subsystemManager) {
+public class Init extends TeleopState {
+    public Init(SubsystemManager subsystemManager) {
         super(subsystemManager);
     }
 
     @Override
-    public void runState(Gamepad gamepad1, Gamepad gamepad2) {
-        subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-        subsystemManager.arm.toReceivingPos();
-        subsystemManager.scissors.moveToFullyExtended(); // scissors extend
+    public void runState(Gamepad gamepad1, Gamepad gamepad2) { // everything in init position
+
+        subsystemManager.arm.toInitPos();
+        subsystemManager.scissors.moveToFullyRetracted();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
     }

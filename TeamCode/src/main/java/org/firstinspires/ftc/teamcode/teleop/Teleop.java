@@ -7,6 +7,13 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
 import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
+import org.firstinspires.ftc.teamcode.teleop.state.SamplePickupTwist90;
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeBucketScore;
+import org.firstinspires.ftc.teamcode.teleop.state.BucketScore;
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
+import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
+import org.firstinspires.ftc.teamcode.teleop.state.Init;
+
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import java.util.Arrays;
@@ -21,6 +28,12 @@ public class Teleop extends OpMode {
     private Neutral neutralState;
     private BeforeSamplePickup beforeSamplePickupState;
     private SamplePickup samplePickupState;
+    private SamplePickupTwist90 samplePickupTwist90State;
+    private BeforeBucketScore beforeBucketScoreState;
+    private BucketScore bucketScoreState;
+    private BeforeSpecimenScore beforeSpecimenScoreState;
+    private SpecimenScore specimenScoreState;
+    private Init initState;
 
     @Override
     public void init() {
@@ -29,25 +42,61 @@ public class Teleop extends OpMode {
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
-        samplePickupState =
-                new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupState});
-        // set current state to be at neutral
-        currentState = neutralState;
+        samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupState});
+        samplePickupTwist90State = new SamplePickupTwist90(subsystemManager, new TeleopState[] {samplePickupState});
+        beforeBucketScoreState = new BeforeBucketScore(subsystemManager);
+        bucketScoreState = new BucketScore(subsystemManager, new TeleopState[] {beforeBucketScoreState});
+        beforeSpecimenScoreState = new BeforeSpecimenScore(subsystemManager);
+        specimenScoreState = new SpecimenScore(subsystemManager, new TeleopState[] {beforeSpecimenScoreState});
+        initState = new Init(subsystemManager);
+
+        // set current state to be at init
+        currentState = initState;
     }
 
     @Override
     public void loop() {
         // non-state based logic
-        subsystemManager.drive.move(
-                gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+        // drivetrain
+        subsystemManager.drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
+        // claw
+        if (gamepad1.left_bumper) {
+            subsystemManager.bottomClaw.openClaw();
+            subsystemManager.topClaw.open();
+        } else if (gamepad1.right_bumper) {
+            subsystemManager.bottomClaw.closeClaw();
+            subsystemManager.topClaw.close();
+        }
+
+
+        // TODO: figure out how to implement without getting in the way of the states
+        // resetting slide encoders in the case something goes wrong (gamepad2 only)
+        if (gamepad2.right_stick_y > 0.1) { // Stick pushed down
+            subsystemManager.slides.manualDown(gamepad2.right_stick_y);
+        }
+        if (gamepad2.start) {
+            subsystemManager.slides.resetSlideEncoder();
+        }
 
         // logic to run to states
-        if (gamepad1.a) {
+        if (gamepad1.dpad_left) {
             switchToState(neutralState);
-        } else if (gamepad1.b) {
+        } else if (gamepad1.dpad_right) {
             switchToState(beforeSamplePickupState);
         } else if (gamepad1.x) {
             switchToState(samplePickupState);
+        } else if (gamepad1.y) {
+            switchToState(samplePickupTwist90State);
+        } else if (gamepad1.left_trigger > 0.01f) {
+            switchToState(beforeBucketScoreState);
+        } else if (gamepad1.right_trigger > 0.01f) {
+            switchToState(bucketScoreState);
+        } else if (gamepad1.dpad_up) {
+            switchToState(beforeSpecimenScoreState);
+        } else if (gamepad1.dpad_down) {
+            switchToState(specimenScoreState);
         }
 
         // run the current state

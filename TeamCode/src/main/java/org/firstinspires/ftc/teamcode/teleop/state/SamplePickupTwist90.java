@@ -6,8 +6,8 @@ import org.firstinspires.ftc.teamcode.teleop.TeleopState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
-public class SamplePickup extends TeleopState {
-    public SamplePickup(SubsystemManager subsystemManager, TeleopState[] dependencies) {
+public class SamplePickupTwist90 extends TeleopState {
+    public SamplePickupTwist90(SubsystemManager subsystemManager, TeleopState[] dependencies) {
         super(subsystemManager, dependencies);
     }
 
@@ -16,7 +16,7 @@ public class SamplePickup extends TeleopState {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toReceivingPos();
         subsystemManager.scissors.moveToFullyExtended();
-        subsystemManager.bottomClaw.rightWristDownPosition(); // wrists go down
-        subsystemManager.bottomClaw.neutralClawRotatorPosition();
+        subsystemManager.bottomClaw.rightWristDownPosition();
+        subsystemManager.bottomClaw.orthogonalClawRotatorPosition(); // twist wrist 90 degrees
     }
 }

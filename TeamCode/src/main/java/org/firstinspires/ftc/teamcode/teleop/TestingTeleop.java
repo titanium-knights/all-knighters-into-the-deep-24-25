@@ -9,23 +9,24 @@ import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 @TeleOp(name = "Testing Teleop", group = "User Control")
 public class TestingTeleop extends OpMode {
 
-    private Scissors scissors;
+
     private SubsystemManager manager;
 
     @Override
     public void init() {
         manager = new SubsystemManager(hardwareMap);
-        scissors = manager.scissors;
     }
 
     @Override
     public void loop() {
         if (gamepad1.a) {
-            scissors.moveToIdlePosition();
+            manager.scissors.moveToIdlePosition();
+            manager.bottomClaw.rightWristUpPosition();
+            manager.bottomClaw.neutralClawRotatorPosition();
         } else if (gamepad1.b) {
-            scissors.moveToFullyExtended();
+            manager.scissors.moveToFullyExtended();
         } else if (gamepad1.x) {
-            scissors.moveToLoadingPosition();
+            manager.scissors.moveToFullyRetracted();
         }
     }
 }

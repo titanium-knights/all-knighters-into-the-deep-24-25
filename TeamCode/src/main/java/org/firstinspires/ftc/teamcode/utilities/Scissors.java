@@ -11,7 +11,7 @@ public class Scissors {
     private final Servo scissorsL;
 
     public static double fullyExtendedPosition = 0.35; // fully extended position
-    public static double loadingPosition = 0.0011; // transferring/loading position
+    public static double fullyRetractedPosition = 0.0011; // transferring/loading position
     public static double idlePosition = 0.15; // not doing anything position
 
     public Scissors(HardwareMap hardwareMap) {
@@ -24,9 +24,9 @@ public class Scissors {
         scissorsL.setPosition(0.95 - fullyExtendedPosition);
     }
 
-    public void moveToLoadingPosition() {
-        scissorsR.setPosition(loadingPosition);
-        scissorsL.setPosition(1 - loadingPosition);
+    public void moveToFullyRetracted() {
+        scissorsR.setPosition(fullyRetractedPosition);
+        scissorsL.setPosition(1 - fullyRetractedPosition);
     }
 
     public void moveToIdlePosition() {
