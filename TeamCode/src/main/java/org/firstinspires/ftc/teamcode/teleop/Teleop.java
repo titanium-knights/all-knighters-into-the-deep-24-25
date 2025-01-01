@@ -73,7 +73,6 @@ public class Teleop extends OpMode {
             subsystemManager.topClaw.close();
         }
 
-        // TODO: figure out how to implement without getting in the way of the states
         // resetting slide encoders in the case something goes wrong (gamepad2 only)
         if (gamepad2.right_stick_y > 0.1) { // Stick pushed down
             subsystemManager.slides.manualDown(gamepad2.right_stick_y);
