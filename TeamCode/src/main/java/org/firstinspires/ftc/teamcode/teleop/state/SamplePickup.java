@@ -19,6 +19,6 @@ public class SamplePickup extends TeleopState {
         subsystemManager.arm.toReceivingPos();
         subsystemManager.scissors.moveToFullyExtended();
         subsystemManager.bottomClaw.rightWristDownPosition(); // wrists go down
-        subsystemManager.bottomClaw.closeClaw();
+        subsystemManager.bottomClaw.closeClaw(); // claw closes
     }
 }

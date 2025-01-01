@@ -19,6 +19,6 @@ public class BeforeBucketScore extends TeleopState {
         subsystemManager.arm.toReceivingPos();
         subsystemManager.scissors.moveToIdlePosition();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
-        subsystemManager.bottomClaw.rightWristInitPosition();
+        subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
     }
 }

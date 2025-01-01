@@ -19,7 +19,7 @@ public class BeforeSamplePickup extends TeleopState {
         subsystemManager.arm.toReceivingPos();
         subsystemManager.scissors.moveToFullyExtended(); // scissors extend
         subsystemManager.bottomClaw.pickUpClawRotatorPosition();
-        subsystemManager.bottomClaw.rightWristHalfUpPosition();
+        subsystemManager.bottomClaw.rightWristHalfUpPosition(); // claw is rotated down
         subsystemManager.bottomClaw.openClaw();
     }
 }
