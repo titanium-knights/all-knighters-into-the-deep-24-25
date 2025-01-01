@@ -28,5 +28,12 @@ public class TestingTeleop extends OpMode {
         } else if (gamepad1.x) {
             manager.scissors.moveToFullyRetracted();
         }
+        if (gamepad1.left_bumper) {
+            manager.bottomClaw.openClaw();
+            manager.topClaw.open();
+        } else if (gamepad1.right_bumper) {
+            manager.bottomClaw.closeClaw();
+            manager.topClaw.close();
+        }
     }
 }

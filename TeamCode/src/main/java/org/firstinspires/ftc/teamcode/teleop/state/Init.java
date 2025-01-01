@@ -14,9 +14,9 @@ public class Init extends TeleopState {
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) { // everything in init position
 
-        subsystemManager.arm.toInitPos();
+        subsystemManager.arm.toReceivingPos();
         subsystemManager.scissors.moveToFullyRetracted();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
-        subsystemManager.bottomClaw.rightWristUpPosition();
+        subsystemManager.bottomClaw.rightWristInitPosition();
     }
 }
