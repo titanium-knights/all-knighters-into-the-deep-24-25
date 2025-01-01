@@ -7,15 +7,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class BottomClaw {
 
-    public static final double OPEN_CLAW_POSITION = 0.6;
+    public static final double OPEN_CLAW_POSITION = 0.5;
     public static final double OPEN_CLAW_HALF_POSITION = 0.75;
     public static final double CLOSE_CLAW_POSITION = 0.9;
 
     public static final double ORTHOGONAL_CLAW_ROTATOR_POSITION = 0.3;
-    public static final double NEUTRAL_CLAW_ROTATOR_POSITION = 0.7;
+    public static final double NEUTRAL_CLAW_ROTATOR_POSITION = 0.0;
+    public static final double PICKUP_CLAW_ROTATOR_POSITION = 0.7;
 
-    public static final double RIGHT_WRIST_UP_POSITION = 0.0;
-    public static final double RIGHT_WRIST_DOWN_POSITION = 0.1;
+    public static final double RIGHT_WRIST_UP_POSITION = 0.01;
+    public static final double RIGHT_WRIST_DOWN_POSITION = 0.75;
+    public static final double RIGHT_WRIST_HALFUP_POSITION = 0.67;
+    public static final double RIGHT_WRIST_INIT_POSITION = 0.8;
+
 
     Servo clawOpener;
     Servo clawRotator;
@@ -68,6 +72,10 @@ public class BottomClaw {
         clawRotator.setPosition(NEUTRAL_CLAW_ROTATOR_POSITION);
     }
 
+    public void pickUpClawRotatorPosition() {
+        clawRotator.setPosition(PICKUP_CLAW_ROTATOR_POSITION);
+    }
+
     public void rightWristUpPosition() {
         rightWristServo.setPosition(RIGHT_WRIST_UP_POSITION);
     }
@@ -75,4 +83,6 @@ public class BottomClaw {
     public void rightWristDownPosition() {
         rightWristServo.setPosition(RIGHT_WRIST_DOWN_POSITION);
     }
+    public void rightWristHalfUpPosition() {rightWristServo.setPosition(RIGHT_WRIST_HALFUP_POSITION);}
+    public void rightWristInitPosition() {rightWristServo.setPosition(RIGHT_WRIST_INIT_POSITION);}
 }
