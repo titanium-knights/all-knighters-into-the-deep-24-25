@@ -34,6 +34,8 @@ public class Teleop extends OpMode {
     private BeforeSpecimenScore beforeSpecimenScoreState;
     private SpecimenScore specimenScoreState;
     private Init initState;
+    private static boolean slowMode = false;
+    private static final double SLOW_MODE_MULTIPLIER = 0.3;
 
     @Override
     public void init() {
@@ -59,8 +61,8 @@ public class Teleop extends OpMode {
         // non-state based logic
 
         // drivetrain
-        if (beforeSamplePickupState.isActive() || samplePickupState.isActive() || beforeSamplePickupTwist90State.isActive() || beforeBucketScoreState.isActive()) {
-            subsystemManager.drive.move(gamepad1.left_stick_x * 0.3, gamepad1.left_stick_y * 0.3, gamepad1.right_stick_x * 0.3);
+        if (Teleop.slowMode) {
+            subsystemManager.drive.move(gamepad1.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad1.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad1.right_stick_x * SLOW_MODE_MULTIPLIER);
         } else {
             subsystemManager.drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
         }
@@ -115,11 +117,18 @@ public class Teleop extends OpMode {
         prevGamepad2.copy(gamepad2);
     }
 
+    public static void setSlowMode(boolean slowMode) {
+        Teleop.slowMode = slowMode;
+    }
+
     public void switchToState(TeleopState state) {
         // if the state we're trying to move to has potential dependencies and we are not in one of
         // them, don't move
-        if (state.getDependencyStates().length == 0
-                || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)) {
+        if (
+                state.getDependencyStates().length == 0
+                || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)
+        ) {
+            Teleop.slowMode = false;
             currentState = state;
         }
     }
