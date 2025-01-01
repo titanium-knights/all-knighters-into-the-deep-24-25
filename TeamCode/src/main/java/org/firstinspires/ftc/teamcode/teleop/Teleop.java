@@ -70,8 +70,10 @@ public class Teleop extends OpMode {
 
         // claw
         if (gamepad1.left_bumper) {
+            subsystemManager.bottomClaw.openClaw();
             subsystemManager.topClaw.open();
         } else if (gamepad1.right_bumper) {
+            subsystemManager.bottomClaw.closeClaw();
             subsystemManager.topClaw.close();
         }
 
