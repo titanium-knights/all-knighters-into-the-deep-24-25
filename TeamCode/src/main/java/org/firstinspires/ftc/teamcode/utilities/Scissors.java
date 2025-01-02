@@ -11,8 +11,8 @@ public class Scissors {
     private final DcMotor scissorsMotor;
     public final int BUFFER = 20;
     public final double idlePower = 0;
-    public final double scissorsOut = .4;
-    public final double scissorsIn = -.4;
+    public final double scissorsOut = .1;
+    public final double scissorsIn = -.1;
 
     private int pos;
 
