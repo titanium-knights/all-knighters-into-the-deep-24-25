@@ -1,40 +1,73 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class Scissors {
 
-    private final Servo scissorsR;
-    private final Servo scissorsL;
+    private final DcMotor scissorsMotor;
+    public final int BUFFER = 20;
+    public final double idlePower = 0;
+    public final double scissorsOut = .4;
+    public final double scissorsIn = -.4;
 
-    public static double fullyExtendedPosition = 0.34; // fully extended position
-    public static double fullyRetractedPosition = 0.0011; // transferring/loading position
-    public static double idlePosition = 0.151; // not doing anything position
+    private int pos;
 
     public Scissors(HardwareMap hardwareMap) {
-        this.scissorsR = hardwareMap.servo.get(CONFIG.scissorsR);
-        this.scissorsL = hardwareMap.servo.get(CONFIG.scissorsL);
+        this.scissorsMotor = hardwareMap.dcMotor.get(CONFIG.scissorsMotor);
+
+        // Calibrate the encoder to initial position
+        scissorsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        scissorsMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.pos = 0;
+
+        // Ensure the motor brakes when power is zero
+        scissorsMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void moveToFullyExtended() {
-        scissorsR.setPosition(fullyExtendedPosition);
-        scissorsL.setPosition(1.01 - fullyExtendedPosition);
+
+    public int getEncoder() {
+        return scissorsMotor.getCurrentPosition();
     }
 
-    public void moveToFullyRetracted() {
-        scissorsR.setPosition(fullyRetractedPosition);
-        scissorsL.setPosition(1 - fullyRetractedPosition);
+    public void stop() {
+        // The power required to be stationary
+        scissorsMotor.setPower(idlePower);
     }
 
-    public void moveToIdlePosition() {
-        scissorsR.setPosition(idlePosition);
-        scissorsL.setPosition(1 - idlePosition);
+    private boolean encoderValueWithinBufferOfTarget(int targetEncoderValue) {
+        return Math.abs(scissorsMotor.getCurrentPosition() - targetEncoderValue) <= BUFFER;
     }
 
-    public double getPosition() {
-        return scissorsR.getPosition();
+    public void resetSlideEncoder() {
+        scissorsMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        scissorsMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.pos = 0;
+    }
+
+    // Exists to switch between target encoder values
+    public boolean scissorsToPosition(ScissorsState state) {
+        if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
+            stop();
+            return true;
+        } else {
+            updateSlidesPowerBasic(state.getEncoderValue());
+            return false;
+        }
+    }
+
+    private void updateSlidesPowerBasic(int targetEncoderValue) {
+        int pos = scissorsMotor.getCurrentPosition();
+        double distanceAway = targetEncoderValue - pos;
+        if (distanceAway > 0) { // moving down
+            scissorsMotor.setPower(scissorsOut);
+        } else if (distanceAway < 0) { // moving up
+            scissorsMotor.setPower(scissorsIn);
+        } else {
+            scissorsMotor.setPower(idlePower);
+        }
     }
 }
