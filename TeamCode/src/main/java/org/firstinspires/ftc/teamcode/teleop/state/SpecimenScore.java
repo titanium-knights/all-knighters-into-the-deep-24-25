@@ -15,7 +15,7 @@ public class SpecimenScore extends TeleopState{
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE); // slides move down to score specimen
         subsystemManager.arm.toReceivingPos();
-        subsystemManager.scissors.moveToIdlePosition();
+        //subsystemManager.scissors.moveToIdlePosition();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
     }

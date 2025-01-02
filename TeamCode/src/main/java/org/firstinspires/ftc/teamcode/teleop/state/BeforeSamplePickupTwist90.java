@@ -17,7 +17,7 @@ public class BeforeSamplePickupTwist90 extends TeleopState {
         Teleop.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toReceivingPos();
-        subsystemManager.scissors.moveToFullyExtended();
+        //subsystemManager.scissors.moveToFullyExtended();
         subsystemManager.bottomClaw.rightWristDownPosition();
         subsystemManager.bottomClaw.orthogonalClawRotatorPosition(); // twist wrist 90 degrees
         subsystemManager.bottomClaw.openClaw();

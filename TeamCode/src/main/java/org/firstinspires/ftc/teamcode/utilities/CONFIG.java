@@ -11,7 +11,7 @@ public class CONFIG {
     public static String BACK_RIGHT = "br";  // ch motor 1
 
     // scissors
-    public static String scissorsMotor = "scissorsMotor"; // tape: none, ch servo 2
+    public static String scissorsMotor = "scissorsMotor"; // tape: "scissorsMotor", eh motor 1
     // misc
     public static String webcam = "Webcam 1";
     public static String clawColorSensor = "color";

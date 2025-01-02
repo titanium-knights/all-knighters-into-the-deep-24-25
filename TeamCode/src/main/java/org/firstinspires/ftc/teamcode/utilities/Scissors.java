@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Scissors {
 
     private final DcMotor scissorsMotor;
-    public final int BUFFER = 20;
+    public final int BUFFER = 5;
     public final double idlePower = 0;
-    public final double scissorsOut = .4;
-    public final double scissorsIn = -.4;
+    public final double scissorsOut = -.2;
+    public final double scissorsIn = .2;
 
     private int pos;
 

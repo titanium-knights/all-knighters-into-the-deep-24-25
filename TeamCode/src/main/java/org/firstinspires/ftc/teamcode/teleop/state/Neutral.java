@@ -15,7 +15,7 @@ public class Neutral extends TeleopState {
     public void runState(Gamepad gamepad1, Gamepad gamepad2) { // everything in neutral position
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toReceivingPos();
-        subsystemManager.scissors.moveToIdlePosition();
+        //subsystemManager.scissors.moveToIdlePosition();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
     }

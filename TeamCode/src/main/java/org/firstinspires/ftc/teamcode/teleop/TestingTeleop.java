@@ -22,9 +22,12 @@ public class TestingTeleop extends OpMode {
     public void loop() {
         if (gamepad1.a) {
             manager.scissors.scissorsToPosition(ScissorsState.IN);
+            telemetry.addData("state in", true);
         }
         if (gamepad1.b) {
             manager.scissors.scissorsToPosition(ScissorsState.OUT);
+            telemetry.addData("state out", false);
         }
+        telemetry.addData("encoder value", manager.scissors.getEncoder());
     }
 }
