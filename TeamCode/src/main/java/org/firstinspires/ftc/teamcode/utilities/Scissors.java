@@ -34,6 +34,22 @@ public class Scissors {
         scissorsL.setPosition(1 - idlePosition);
     }
 
+    public void scissorsLeftOut() {
+        scissorsL.setPosition(1-.34);
+    }
+
+    public void scissorsLeftIn() {
+        scissorsL.setPosition(1-.0011);
+    }
+
+    public void scissorsRightOut() {
+        scissorsR.setPosition(1-.34);
+    }
+
+    public void scissorsRightIn() {
+        scissorsR.setPosition(1-.0011);
+    }
+
     public double getPosition() {
         return scissorsR.getPosition();
     }

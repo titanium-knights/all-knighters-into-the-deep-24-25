@@ -20,20 +20,13 @@ public class TestingTeleop extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.a) {
-            manager.scissors.moveToIdlePosition();
-            manager.bottomClaw.rightWristUpPosition();
-            manager.bottomClaw.neutralClawRotatorPosition();
+            manager.scissors.scissorsLeftIn();
         } else if (gamepad1.b) {
-            manager.scissors.moveToFullyExtended();
+            manager.scissors.scissorsRightIn();
         } else if (gamepad1.x) {
-            manager.scissors.moveToFullyRetracted();
-        }
-        if (gamepad1.left_bumper) {
-            manager.bottomClaw.openClaw();
-            manager.topClaw.open();
-        } else if (gamepad1.right_bumper) {
-            manager.bottomClaw.closeClaw();
-            manager.topClaw.close();
+            manager.scissors.scissorsLeftOut();
+        } else if (gamepad1.y) {
+            manager.scissors.scissorsRightOut();
         }
     }
 }
