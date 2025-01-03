@@ -7,10 +7,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.utilities.Arm;
 import org.firstinspires.ftc.teamcode.utilities.Scissors;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
-import org.firstinspires.ftc.teamcode.utilities.topClaw;
-import org.firstinspires.ftc.teamcode.utilities.bottomClaw;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
+import org.firstinspires.ftc.teamcode.utilities.ScissorsState;
+import org.firstinspires.ftc.teamcode.utilities.BottomClaw;
+import org.firstinspires.ftc.teamcode.utilities.TopClaw;
+
 
 @Config
 @Autonomous(name="Score", group="Auton")
@@ -24,66 +26,78 @@ public class Score extends LinearOpMode {
         ElapsedTime runtime = new ElapsedTime();
         SimpleMecanumDrive drivetrain = new SimpleMecanumDrive(hardwareMap);
 
-        topClaw claw = new topClaw(hardwareMap);
         Slides slides = new Slides(hardwareMap);
-        Arm arm = new Arm(hardwareMap);
-        Scissors scissorSlides = new Scissors(hardwareMap);
-        bottomClaw bottomclaw = new bottomClaw(hardwareMap);
+        TopClaw topClaw = new TopClaw(hardwareMap);
 
+        // initialize positions
         slides.slideToPosition(SlideState.BOTTOM);
-        arm.initPos();
-        scissorSlides.init();
-        bottomclaw.open();
-        bottomclaw.neutralPosition();
-        claw.close();
+        topClaw.close();
         waitForStart();
         runtime.reset();
 
-        sleep(3000);
-        sleep(10);
-        telemetry.addLine("move arm and forearm into position");
-        telemetry.update();
+        // preloaded specimen scoring
+        drivetrain.move(1,0,0);
+        slides.slideToPosition(SlideState.MEDIUM);
+        sleep(500);
+        slides.slideToPosition(SlideState.MEDIUM_SCORE);
+        drivetrain.move(-1,0,0);
+        sleep(400);
+        slides.slideToPosition(SlideState.BOTTOM);
 
-        boolean slidesAtPosition = false;
-        while (!slidesAtPosition) {
-            slidesAtPosition = slides.slideToPosition(SlideState.MEDIUM);
-        }
-        sleep(2000);
+        // first push back three of them
+        // push one
+        drivetrain.move(1, 1,0);
+        sleep(500);
+        drivetrain.move(1, 0, 0);
+        sleep(300);
+        drivetrain.move(0, 1, 0);
+        sleep(200);
+        drivetrain.move(-1, 0, 0);
 
-        telemetry.addLine("Run into the bar");
-        telemetry.update();
-        drivetrain.move(0, -.55, 0);
-        sleep(1050);
-        drivetrain.move(0,0,0);
-        sleep(2000);
+        // push two
+        drivetrain.move(1, 0, 0);
+        sleep(600);
+        drivetrain.move(0, 1, 0);
+        sleep(200);
+        drivetrain.move(-1, 0, 0);
+        sleep(600);
 
-        slidesAtPosition = false;
-        while (!slidesAtPosition && opModeIsActive()) {
-            slidesAtPosition = slides.slideToPosition(SlideState.MEDIUMSCORE);
-        }
+        // push three
+        drivetrain.move(1, 0, 0);
+        sleep(600);
+        drivetrain.move(0, 1, 0);
+        sleep(200);
+        drivetrain.move(-1, 0, 0);
+        sleep(600);
 
-        sleep(1000);
-        claw.open();
-        drivetrain.move(0, .55, 0);
-        drivetrain.move(0, 0, 0);
+        // turn around (now it's facing backwards)
+        drivetrain.move(0, 0, 1);
+        sleep(600);
+
+        // scoring specimen mechanism
+        // pickup from wall
+        drivetrain.move(1, 0, 0);
+        sleep(300);
+        topClaw.open();
+        sleep(500);
+        topClaw.close();
+
+        // turn, backup, then forward to score
+        drivetrain.move(0, 0, 1);
+        sleep(600);
+        drivetrain.move(1, -1, 0);
+        slides.slideToPosition(SlideState.MEDIUM);
+        sleep(600);
+        slides.slideToPosition(SlideState.MEDIUM_SCORE);
 
 
-        slidesAtPosition = false;
-        while (!slidesAtPosition && opModeIsActive()) {
-            slidesAtPosition = slides.slideToPosition(SlideState.BOTTOM);
-        }
+        // then reverse the process
 
-        sleep(100);
-        drivetrain.move(0, .55, 0);
-        sleep(800);
-        drivetrain.move(0, 0, 0);
-        sleep(100);
-//        drivetrain.move(.8, 0 ,0);
-//        sleep(1000);
-//        drivetrain.move(0,0,0.4);
-//        sleep(100);
-//        drivetrain.move(0,0,0);
-//        sleep(1000);
+        // pickup from wall
+
+        // turn + backup, then turn + forward, then forward to score
+
+        // then reverse the process
 
         telemetry.addData("Status", "Run Time: " + runtime);
         telemetry.update();
