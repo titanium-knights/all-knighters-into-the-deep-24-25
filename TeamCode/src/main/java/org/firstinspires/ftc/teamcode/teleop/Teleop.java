@@ -62,27 +62,33 @@ public class Teleop extends OpMode {
 
         // drivetrain
         if (Teleop.slowMode) {
-            subsystemManager.drive.move(gamepad1.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad1.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad1.right_stick_x * SLOW_MODE_MULTIPLIER);
+            subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
         } else {
-            subsystemManager.drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
         }
 
 
         // claw
         if (gamepad1.left_bumper) {
             subsystemManager.bottomClaw.openClaw();
-            subsystemManager.topClaw.open();
         } else if (gamepad1.right_bumper) {
             subsystemManager.bottomClaw.closeClaw();
+        }
+
+        if (gamepad1.a) {
+            subsystemManager.topClaw.open();
+        } else if (gamepad1.b) {
             subsystemManager.topClaw.close();
         }
 
         // resetting slide encoders in the case something goes wrong (gamepad2 only)
-        if (gamepad2.right_stick_y > 0.1) { // Stick pushed down
-            subsystemManager.slides.manualDown(gamepad2.right_stick_y);
+        if (gamepad1.right_stick_y > 0.1) { // Stick pushed down
+            subsystemManager.slides.manualDown(gamepad1.right_stick_y);
+            subsystemManager.scissors.manualDown(gamepad1.right_stick_y);
         }
-        if (gamepad2.start) {
+        if (gamepad1.start) {
             subsystemManager.slides.resetSlideEncoder();
+            subsystemManager.scissors.resetSlideEncoder();
         }
 
         // logic to run to states
@@ -102,7 +108,7 @@ public class Teleop extends OpMode {
             switchToState(beforeSpecimenScoreState);
         } else if (gamepad1.dpad_down) {
             switchToState(specimenScoreState);
-        } else if (gamepad1.start) {
+        } else if (gamepad2.start) {
             switchToState(initState);
         }
 

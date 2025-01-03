@@ -21,20 +21,27 @@ public class TestingTeleop extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.a) {
-            manager.scissors.scissorsToPosition(ScissorsState.IN);
-            telemetry.addData("state in", true);
+            manager.bottomClaw.openClaw();
+            telemetry.addData("open", true);
+        } else if (gamepad1.b){
+            manager.bottomClaw.closeClaw();
+            telemetry.addData("closed", true);
         }
-        if (gamepad1.b) {
-            manager.scissors.scissorsToPosition(ScissorsState.OUT);
-            telemetry.addData("state out", false);
-        }
-        if (gamepad1.x) {
-            manager.scissors.manualDown(-0.7);
-        } else if (gamepad1.y) {
-            manager.scissors.manualUp(0.5);
-        } else {
-            manager.scissors.stop();
-        }
+//        if (gamepad1.a) {
+//            manager.scissors.scissorsToPosition(ScissorsState.IN);
+//            telemetry.addData("state in", true);
+//        }
+//        if (gamepad1.b) {
+//            manager.scissors.scissorsToPosition(ScissorsState.OUT);
+//            telemetry.addData("state out", false);
+//        }
+//        if (gamepad1.x) {
+//            manager.scissors.manualDown(-0.7);
+//        } else if (gamepad1.y) {
+//            manager.scissors.manualUp(0.5);
+//        } else {
+//            //manager.scissors.stop();
+//        }
         telemetry.addData("encoder value", manager.scissors.getEncoder());
     }
 }

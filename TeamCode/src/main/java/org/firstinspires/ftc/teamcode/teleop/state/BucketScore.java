@@ -15,7 +15,6 @@ public class BucketScore extends TeleopState{
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         subsystemManager.slides.slideToPosition(SlideState.TOP);
         subsystemManager.arm.toScoreBucketPos(); // arm rotates to empty bucket + score
-        //subsystemManager.scissors.moveToIdlePosition();
         subsystemManager.scissors.scissorsToPosition(ScissorsState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();

@@ -10,7 +10,8 @@ public class Scissors {
 
     private final DcMotor scissorsMotor;
     public final int BUFFER = 10;
-    public final double idlePower = -0.05;
+    public final double idlePowerIN = -0.05; // -0.1
+    public final double idlePowerOUT = -0.05; // 0.1, -0.1, -0.01, 0.01, 0.0
     public final double scissorsOut = -.5;
     public final double scissorsIn = .5;
 
@@ -33,7 +34,7 @@ public class Scissors {
         return scissorsMotor.getCurrentPosition();
     }
 
-    public void stop() {
+    public void stop(double idlePower) {
         // The power required to be stationary
         scissorsMotor.setPower(idlePower);
     }
@@ -51,10 +52,14 @@ public class Scissors {
     // Exists to switch between target encoder values
     public boolean scissorsToPosition(ScissorsState state) {
         if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
-            stop();
+            if (state.equals("IN")) {
+                stop(idlePowerIN);
+            } else if (state.equals("OUT")){
+                stop(idlePowerOUT);
+            }
             return true;
         } else {
-            updateSlidesPowerBasic(state.getEncoderValue());
+            updateSlidesPowerBasic(state.getEncoderValue(), state);
             return false;
         }
     }
@@ -72,15 +77,25 @@ public class Scissors {
         scissorsMotor.setPower(adjustedPower);
     }
 
-    private void updateSlidesPowerBasic(int targetEncoderValue) {
+    private boolean updateSlidesPowerBasic(int targetEncoderValue, ScissorsState state) {
         int pos = scissorsMotor.getCurrentPosition();
         double distanceAway = targetEncoderValue - pos;
         if (distanceAway > 0) { // moving down
             scissorsMotor.setPower(scissorsOut);
+            return true;
         } else if (distanceAway < 0) { // moving up
             scissorsMotor.setPower(scissorsIn);
+            return true;
         } else {
-            scissorsMotor.setPower(idlePower);
+            if (state.equals("IN")) {
+                scissorsMotor.setPower(idlePowerIN);
+                return true;
+            } else if (state.equals("OUT")){
+                scissorsMotor.setPower(idlePowerOUT);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }
