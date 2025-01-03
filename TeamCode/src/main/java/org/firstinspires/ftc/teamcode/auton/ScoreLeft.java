@@ -4,19 +4,16 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.utilities.Arm;
-import org.firstinspires.ftc.teamcode.utilities.Scissors;
+
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
-import org.firstinspires.ftc.teamcode.utilities.ScissorsState;
-import org.firstinspires.ftc.teamcode.utilities.BottomClaw;
 import org.firstinspires.ftc.teamcode.utilities.TopClaw;
 
 
 @Config
-@Autonomous(name="Score", group="Auton")
-public class Score extends LinearOpMode {
+@Autonomous(name="ScoreLeft", group="Auton")
+public class ScoreLeft extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -53,6 +50,7 @@ public class Score extends LinearOpMode {
         drivetrain.move(0, 1, 0);
         sleep(200);
         drivetrain.move(-1, 0, 0);
+        sleep(600);
 
         // push two
         drivetrain.move(1, 0, 0);
@@ -69,35 +67,6 @@ public class Score extends LinearOpMode {
         sleep(200);
         drivetrain.move(-1, 0, 0);
         sleep(600);
-
-        // turn around (now it's facing backwards)
-        drivetrain.move(0, 0, 1);
-        sleep(600);
-
-        // scoring specimen mechanism
-        // pickup from wall
-        drivetrain.move(1, 0, 0);
-        sleep(300);
-        topClaw.open();
-        sleep(500);
-        topClaw.close();
-
-        // turn, backup, then forward to score
-        drivetrain.move(0, 0, 1);
-        sleep(600);
-        drivetrain.move(1, -1, 0);
-        slides.slideToPosition(SlideState.MEDIUM);
-        sleep(600);
-        slides.slideToPosition(SlideState.MEDIUM_SCORE);
-
-
-        // then reverse the process
-
-        // pickup from wall
-
-        // turn + backup, then turn + forward, then forward to score
-
-        // then reverse the process
 
         // go back (park)
         drivetrain.move(-1, 1, 0);
