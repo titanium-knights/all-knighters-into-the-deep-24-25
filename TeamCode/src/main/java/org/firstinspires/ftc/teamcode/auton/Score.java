@@ -99,6 +99,11 @@ public class Score extends LinearOpMode {
 
         // then reverse the process
 
+        // go back (park)
+        drivetrain.move(-1, 1, 0);
+        sleep(700);
+        drivetrain.move(0, 0, 0);
+
         telemetry.addData("Status", "Run Time: " + runtime);
         telemetry.update();
     }
