@@ -24,11 +24,11 @@ public class LConstants {
         ThreeWheelIMUConstants.forwardTicksToInches = .001989436789;
         ThreeWheelIMUConstants.strafeTicksToInches = .001989436789;
         ThreeWheelIMUConstants.turnTicksToInches = .001989436789;
-        ThreeWheelIMUConstants.leftY = 6;
-        ThreeWheelIMUConstants.rightY = -6;
+        ThreeWheelIMUConstants.leftY = 5.551181;
+        ThreeWheelIMUConstants.rightY = -5.866142;
         ThreeWheelIMUConstants.strafeX = .23622;
-        ThreeWheelIMUConstants.leftEncoder_HardwareMapName = CONFIG.BACK_LEFT;
-        ThreeWheelIMUConstants.rightEncoder_HardwareMapName = CONFIG.BACK_RIGHT;
+        ThreeWheelIMUConstants.leftEncoder_HardwareMapName = CONFIG.BACK_RIGHT; // back left before
+        ThreeWheelIMUConstants.rightEncoder_HardwareMapName = CONFIG.FRONT_LEFT; // back right before
         ThreeWheelIMUConstants.strafeEncoder_HardwareMapName = CONFIG.FRONT_RIGHT;
         ThreeWheelIMUConstants.leftEncoderDirection = Encoder.REVERSE;
         ThreeWheelIMUConstants.rightEncoderDirection = Encoder.REVERSE;
