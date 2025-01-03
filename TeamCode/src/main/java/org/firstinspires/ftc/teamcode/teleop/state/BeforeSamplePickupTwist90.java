@@ -20,7 +20,7 @@ public class BeforeSamplePickupTwist90 extends TeleopState {
         subsystemManager.arm.toReceivingPos();
         subsystemManager.scissors.scissorsToPosition(ScissorsState.OUT);
         subsystemManager.bottomClaw.rightWristDownPosition();
-        subsystemManager.bottomClaw.orthogonalClawRotatorPosition(); // twist wrist 90 degrees
         subsystemManager.bottomClaw.openClaw();
+        subsystemManager.bottomClaw.orthogonalClawRotatorPosition(); // twist wrist 90 degrees
     }
 }

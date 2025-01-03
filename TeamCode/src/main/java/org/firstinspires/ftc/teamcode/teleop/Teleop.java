@@ -71,15 +71,17 @@ public class Teleop extends OpMode {
         // claw
         if (gamepad1.left_bumper) {
             subsystemManager.bottomClaw.openClaw();
+            subsystemManager.topClaw.open();
         } else if (gamepad1.right_bumper) {
             subsystemManager.bottomClaw.closeClaw();
-        }
-
-        if (gamepad1.a) {
-            subsystemManager.topClaw.open();
-        } else if (gamepad1.b) {
             subsystemManager.topClaw.close();
         }
+
+//        if (gamepad1.a) {
+//            subsystemManager.topClaw.open();
+//        } else if (gamepad1.b) {
+//            subsystemManager.topClaw.close();
+//        }
 
         // resetting slide encoders in the case something goes wrong (gamepad2 only)
         if (gamepad1.right_stick_y > 0.1) { // Stick pushed down

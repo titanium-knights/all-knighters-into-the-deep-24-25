@@ -20,10 +20,10 @@ public class TestingTeleop extends OpMode {
 
     @Override
     public void loop() {
-        if (gamepad1.a) {
+        if (gamepad1.left_bumper) {
             manager.bottomClaw.openClaw();
             telemetry.addData("open", true);
-        } else if (gamepad1.b){
+        } else if (gamepad1.right_bumper){
             manager.bottomClaw.closeClaw();
             telemetry.addData("closed", true);
         }

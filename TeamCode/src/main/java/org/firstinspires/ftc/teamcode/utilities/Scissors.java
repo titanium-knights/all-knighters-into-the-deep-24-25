@@ -13,7 +13,7 @@ public class Scissors {
     public final double idlePowerIN = -0.05; // -0.1
     public final double idlePowerOUT = -0.05; // 0.1, -0.1, -0.01, 0.01, 0.0
     public final double scissorsOut = -.5;
-    public final double scissorsIn = .5;
+    public final double scissorsIn = .3;
 
     private int pos;
 
