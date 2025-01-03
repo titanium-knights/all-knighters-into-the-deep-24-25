@@ -3,16 +3,16 @@ package org.firstinspires.ftc.teamcode.utilities;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 
 @Config
 public class Scissors {
 
     private final DcMotor scissorsMotor;
-    public final int BUFFER = 20;
-    public final double idlePower = 0;
-    public final double scissorsOut = .1;
-    public final double scissorsIn = -.1;
+    public final int BUFFER = 10;
+    public final double idlePowerIN = -0.05; // -0.1
+    public final double idlePowerOUT = -0.05; // 0.1, -0.1, -0.01, 0.01, 0.0
+    public final double scissorsOutPower = -.5;
+    public final double scissorsInPower = .3;
 
     private int pos;
 
@@ -33,7 +33,7 @@ public class Scissors {
         return scissorsMotor.getCurrentPosition();
     }
 
-    public void stop() {
+    public void stop(double idlePower) {
         // The power required to be stationary
         scissorsMotor.setPower(idlePower);
     }
@@ -51,23 +51,50 @@ public class Scissors {
     // Exists to switch between target encoder values
     public boolean scissorsToPosition(ScissorsState state) {
         if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
-            stop();
+            if (state == ScissorsState.IN) {
+                stop(idlePowerIN);
+            } else if (state == ScissorsState.OUT){
+                stop(idlePowerOUT);
+            }
             return true;
         } else {
-            updateSlidesPowerBasic(state.getEncoderValue());
+            updateSlidesPowerBasic(state.getEncoderValue(), state);
             return false;
         }
     }
 
-    private void updateSlidesPowerBasic(int targetEncoderValue) {
+    // manual controls
+    public void manualUp(double power) {
+        // Assume power is from 0.0 to 1.0
+        double adjustedPower = -Math.abs(power); // Negative for upward movement
+        scissorsMotor.setPower(adjustedPower);
+    }
+
+    public void manualDown(double power) {
+        // Assume power is from 0.0 to 1.0
+        double adjustedPower = Math.abs(power); // Positive for downward movement
+        scissorsMotor.setPower(adjustedPower);
+    }
+
+    private boolean updateSlidesPowerBasic(int targetEncoderValue, ScissorsState state) {
         int pos = scissorsMotor.getCurrentPosition();
         double distanceAway = targetEncoderValue - pos;
         if (distanceAway > 0) { // moving down
-            scissorsMotor.setPower(scissorsOut);
+            scissorsMotor.setPower(scissorsOutPower);
+            return true;
         } else if (distanceAway < 0) { // moving up
-            scissorsMotor.setPower(scissorsIn);
+            scissorsMotor.setPower(scissorsInPower);
+            return true;
         } else {
-            scissorsMotor.setPower(idlePower);
+            if (state == ScissorsState.IN) {
+                scissorsMotor.setPower(idlePowerIN);
+                return true;
+            } else if (state == ScissorsState.OUT) {
+                scissorsMotor.setPower(idlePowerOUT);
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 }

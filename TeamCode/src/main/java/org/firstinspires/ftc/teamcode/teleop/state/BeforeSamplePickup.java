@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.firstinspires.ftc.teamcode.teleop.TeleopState;
+import org.firstinspires.ftc.teamcode.utilities.ScissorsState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
@@ -17,7 +18,7 @@ public class BeforeSamplePickup extends TeleopState {
         Teleop.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toReceivingPos();
-        subsystemManager.scissors.moveToFullyExtended(); // scissors extend
+        subsystemManager.scissors.scissorsToPosition(ScissorsState.OUT); // scissors extend
         subsystemManager.bottomClaw.pickUpClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristHalfUpPosition(); // claw is rotated down
         subsystemManager.bottomClaw.openClaw();
