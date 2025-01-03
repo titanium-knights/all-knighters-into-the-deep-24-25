@@ -9,10 +9,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Scissors {
 
     private final DcMotor scissorsMotor;
-    public final int BUFFER = 5;
-    public final double idlePower = 0;
-    public final double scissorsOut = -.2;
-    public final double scissorsIn = .2;
+    public final int BUFFER = 10;
+    public final double idlePower = -0.05;
+    public final double scissorsOut = -.5;
+    public final double scissorsIn = .5;
 
     private int pos;
 
@@ -57,6 +57,19 @@ public class Scissors {
             updateSlidesPowerBasic(state.getEncoderValue());
             return false;
         }
+    }
+
+    // manual controls
+    public void manualUp(double power) {
+        // Assume power is from 0.0 to 1.0
+        double adjustedPower = -Math.abs(power); // Negative for upward movement
+        scissorsMotor.setPower(adjustedPower);
+    }
+
+    public void manualDown(double power) {
+        // Assume power is from 0.0 to 1.0
+        double adjustedPower = Math.abs(power); // Positive for downward movement
+        scissorsMotor.setPower(adjustedPower);
     }
 
     private void updateSlidesPowerBasic(int targetEncoderValue) {

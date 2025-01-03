@@ -28,6 +28,13 @@ public class TestingTeleop extends OpMode {
             manager.scissors.scissorsToPosition(ScissorsState.OUT);
             telemetry.addData("state out", false);
         }
+        if (gamepad1.x) {
+            manager.scissors.manualDown(-0.7);
+        } else if (gamepad1.y) {
+            manager.scissors.manualUp(0.5);
+        } else {
+            manager.scissors.stop();
+        }
         telemetry.addData("encoder value", manager.scissors.getEncoder());
     }
 }

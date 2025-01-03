@@ -16,6 +16,7 @@ public class BeforeSpecimenScore extends TeleopState {
         subsystemManager.slides.slideToPosition(SlideState.MEDIUM); // slides extend to medium height
         subsystemManager.arm.toReceivingPos();
         //subsystemManager.scissors.moveToIdlePosition();
+        subsystemManager.scissors.stop();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.closeClaw();
