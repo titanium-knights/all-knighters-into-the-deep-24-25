@@ -9,10 +9,10 @@ public class Scissors {
 
     private final DcMotor scissorsMotor;
     public final int BUFFER = 10;
-    public final double idlePowerIN = -0.05; // -0.1
-    public final double idlePowerOUT = -0.05; // 0.1, -0.1, -0.01, 0.01, 0.0
-    public final double scissorsOutPower = -.5;
-    public final double scissorsInPower = .3;
+    public final double idlePowerIN = -.02; // -0.02
+    public final double idlePowerOUT = -.05; // -0.05
+    public final double scissorsOutPower = -.8; // -0.5
+    public final double scissorsInPower = .5; // 0.3
 
     private int pos;
 
@@ -61,13 +61,6 @@ public class Scissors {
             updateSlidesPowerBasic(state.getEncoderValue(), state);
             return false;
         }
-    }
-
-    // manual controls
-    public void manualUp(double power) {
-        // Assume power is from 0.0 to 1.0
-        double adjustedPower = -Math.abs(power); // Negative for upward movement
-        scissorsMotor.setPower(adjustedPower);
     }
 
     public void manualDown(double power) {
