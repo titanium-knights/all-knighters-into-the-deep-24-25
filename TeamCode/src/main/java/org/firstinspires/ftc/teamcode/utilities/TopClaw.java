@@ -11,7 +11,7 @@ public class TopClaw {
     private boolean open = true;
 
     public static double openPos = 0.75;
-    public static double closePos = 0.86;
+    public static double closePos = 0.931;
 
     public TopClaw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.topClawServo);

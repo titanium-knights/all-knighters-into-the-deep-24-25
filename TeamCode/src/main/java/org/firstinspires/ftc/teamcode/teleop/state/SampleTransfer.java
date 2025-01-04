@@ -18,6 +18,6 @@ public class SampleTransfer extends TeleopState {
         subsystemManager.arm.toReceivingPos();
         subsystemManager.scissors.scissorsToPosition(ScissorsState.NEUTRAL);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
-        subsystemManager.bottomClaw.rightWristUpPosition();
+        subsystemManager.bottomClaw.rightWristDownPosition();
     }
 }
