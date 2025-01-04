@@ -80,20 +80,18 @@ public class Teleop extends OpMode {
             subsystemManager.topClaw.close();
         }
 
-//        if (gamepad1.a) {
-//            subsystemManager.topClaw.open();
-//        } else if (gamepad1.b) {
-//            subsystemManager.topClaw.close();
-//        }
-
         // resetting slide encoders in the case something goes wrong (gamepad2 only)
-        if (gamepad1.right_stick_y > 0.1) { // Stick pushed down
-            subsystemManager.slides.manualDown(gamepad1.right_stick_y);
-            subsystemManager.scissors.manualDown(gamepad1.right_stick_y);
-        }
-        if (gamepad1.start) {
-            subsystemManager.slides.resetSlideEncoder();
-            subsystemManager.scissors.resetSlideEncoder();
+        if (initState.isActive()) {
+            if (gamepad1.right_stick_y > 0.1) { // Stick pushed down
+                subsystemManager.slides.manualDown(0.5);
+                subsystemManager.scissors.manualDown(0.5);
+            } else if (gamepad1.left_stick_y > 0.1) {
+                subsystemManager.scissors.manualUp(-0.5);
+            }
+            if (gamepad2.start) {
+                subsystemManager.slides.resetSlideEncoder();
+                subsystemManager.scissors.resetSlideEncoder();
+            }
         }
 
         // logic to run to states
@@ -113,7 +111,7 @@ public class Teleop extends OpMode {
             switchToState(beforeSpecimenScoreState);
         } else if (gamepad1.dpad_down) {
             switchToState(specimenScoreState);
-        } else if (gamepad2.start) {
+        } else if (gamepad1.start) {
             switchToState(initState);
         }
 

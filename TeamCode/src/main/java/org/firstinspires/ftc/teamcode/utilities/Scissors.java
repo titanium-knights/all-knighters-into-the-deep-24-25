@@ -9,10 +9,10 @@ public class Scissors {
 
     private final DcMotor scissorsMotor;
     public final int BUFFER = 10;
-    public final double idlePowerIN = -.02; // -0.02
-    public final double idlePowerOUT = -.05; // -0.05
-    public final double scissorsOutPower = -.8; // -0.5
-    public final double scissorsInPower = .5; // 0.3
+    public final double idlePowerIN = -.02; // -0.02, -0.02 with tightly screwed
+    public final double idlePowerOUT = -.05; // -0.05, -0.05 with tightly screwed
+    public final double scissorsOutPower = -.5; // -0.5, -0.8 with tightly screwed
+    public final double scissorsInPower = .3; // 0.3, 0.5 with tightly screwed
 
     private int pos;
 
@@ -66,6 +66,11 @@ public class Scissors {
     public void manualDown(double power) {
         // Assume power is from 0.0 to 1.0
         double adjustedPower = Math.abs(power); // Positive for downward movement
+        scissorsMotor.setPower(adjustedPower);
+    }
+    public void manualUp(double power) {
+        // Assume power is from 0.0 to 1.0
+        double adjustedPower = -Math.abs(power); // Negative for upward movement
         scissorsMotor.setPower(adjustedPower);
     }
 
