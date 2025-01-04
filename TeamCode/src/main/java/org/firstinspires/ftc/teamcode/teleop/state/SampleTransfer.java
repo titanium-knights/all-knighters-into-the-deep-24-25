@@ -7,8 +7,8 @@ import org.firstinspires.ftc.teamcode.utilities.ScissorsState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
-public class Neutral extends TeleopState {
-    public Neutral(SubsystemManager subsystemManager) {
+public class SampleTransfer extends TeleopState {
+    public SampleTransfer(SubsystemManager subsystemManager) {
         super(subsystemManager);
     }
 
@@ -18,6 +18,6 @@ public class Neutral extends TeleopState {
         subsystemManager.arm.toReceivingPos();
         subsystemManager.scissors.scissorsToPosition(ScissorsState.NEUTRAL);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
-        subsystemManager.bottomClaw.rightWristUpPosition();
+        subsystemManager.bottomClaw.rightWristDownPosition();
     }
 }

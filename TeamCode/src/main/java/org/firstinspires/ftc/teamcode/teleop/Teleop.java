@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
+import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
 import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeBucketScore;
@@ -29,6 +30,7 @@ public class Teleop extends OpMode {
     private BeforeSamplePickup beforeSamplePickupState;
     private SamplePickup samplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
+    private SampleTransfer sampleTransferState;
     private BeforeBucketScore beforeBucketScoreState;
     private BucketScore bucketScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
@@ -46,6 +48,7 @@ public class Teleop extends OpMode {
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupState, beforeSamplePickupTwist90State});
+        sampleTransferState = new SampleTransfer(subsystemManager);
         beforeBucketScoreState = new BeforeBucketScore(subsystemManager);
         bucketScoreState = new BucketScore(subsystemManager, new TeleopState[] {beforeBucketScoreState});
         beforeSpecimenScoreState = new BeforeSpecimenScore(subsystemManager);
@@ -77,22 +80,6 @@ public class Teleop extends OpMode {
             subsystemManager.topClaw.close();
         }
 
-//        if (gamepad1.a) {
-//            subsystemManager.topClaw.open();
-//        } else if (gamepad1.b) {
-//            subsystemManager.topClaw.close();
-//        }
-
-        // resetting slide encoders in the case something goes wrong (gamepad2 only)
-        if (gamepad1.right_stick_y > 0.1) { // Stick pushed down
-            subsystemManager.slides.manualDown(gamepad1.right_stick_y);
-            subsystemManager.scissors.manualDown(gamepad1.right_stick_y);
-        }
-        if (gamepad1.start) {
-            subsystemManager.slides.resetSlideEncoder();
-            subsystemManager.scissors.resetSlideEncoder();
-        }
-
         // logic to run to states
         if (gamepad1.dpad_left) {
             switchToState(neutralState);
@@ -102,6 +89,8 @@ public class Teleop extends OpMode {
             switchToState(samplePickupState);
         } else if (gamepad1.y) {
             switchToState(beforeSamplePickupTwist90State);
+        } else if (gamepad1.b) {
+            switchToState(sampleTransferState);
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
         } else if (gamepad1.right_trigger > 0.01f) {
@@ -110,7 +99,7 @@ public class Teleop extends OpMode {
             switchToState(beforeSpecimenScoreState);
         } else if (gamepad1.dpad_down) {
             switchToState(specimenScoreState);
-        } else if (gamepad2.start) {
+        } else if (gamepad1.start) {
             switchToState(initState);
         }
 
@@ -121,9 +110,6 @@ public class Teleop extends OpMode {
         // useful for debounce + rising/falling edge detection
         prevGamepad1.copy(gamepad1);
         prevGamepad2.copy(gamepad2);
-
-        telemetry.addData("scissors encoders", subsystemManager.scissors.getEncoder());
-
     }
 
     public static void setSlowMode(boolean slowMode) {
