@@ -9,10 +9,10 @@ public class Scissors {
 
     private final DcMotor scissorsMotor;
     public final int BUFFER = 10;
-    public final double idlePowerIN = -.02; // -0.02, -0.02 with tightly screwed
-    public final double idlePowerOUT = -.05; // -0.05, -0.05 with tightly screwed
-    public final double scissorsOutPower = -.5; // -0.5, -0.8 with tightly screwed
-    public final double scissorsInPower = .3; // 0.3, 0.5 with tightly screwed
+    public final double idlePowerIN = -.0; // -0.02, -0.02 with tightly screwed
+    public final double idlePowerOUT = -.0; // -0.05, -0.05 with tightly screwed
+    public final double scissorsOutPower = 1; // 0.5, -0.8 with tightly screwed
+    public final double scissorsInPower = -1; // -0.3, 0.5 with tightly screwed
 
     private int pos;
 
@@ -58,7 +58,7 @@ public class Scissors {
             }
             return true;
         } else {
-            updateSlidesPowerBasic(state.getEncoderValue(), state);
+            updateScissorsPower(state.getEncoderValue(), state);
             return false;
         }
     }
@@ -74,14 +74,18 @@ public class Scissors {
         scissorsMotor.setPower(adjustedPower);
     }
 
-    private boolean updateSlidesPowerBasic(int targetEncoderValue, ScissorsState state) {
+    public double getScissorsPower() {
+        return scissorsMotor.getPower();
+    }
+
+    private boolean updateScissorsPower(int targetEncoderValue, ScissorsState state) {
         int pos = scissorsMotor.getCurrentPosition();
         double distanceAway = targetEncoderValue - pos;
-        if (distanceAway > 0) { // moving down
-            scissorsMotor.setPower(scissorsOutPower);
+        if (distanceAway > 0) { // moving in
+            scissorsMotor.setPower(scissorsInPower * Math.abs(distanceAway) / 76 * .7 + scissorsInPower * .3);
             return true;
-        } else if (distanceAway < 0) { // moving up
-            scissorsMotor.setPower(scissorsInPower);
+        } else if (distanceAway < 0) { // moving out
+            scissorsMotor.setPower(scissorsOutPower * Math.abs(distanceAway) / 76 * .7 + scissorsOutPower * .3);
             return true;
         } else {
             if (state == ScissorsState.IN) {
