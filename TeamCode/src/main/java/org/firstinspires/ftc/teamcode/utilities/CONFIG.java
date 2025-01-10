@@ -21,6 +21,9 @@ public class CONFIG {
     public static String clawRotator = "clawR";          // tape: “L Servo (Intake)”, eh servo 1
     public static String rightWristServo = "rightWrist"; // tape: “R Wrist”,          eh servo 3
 
+    public static String rotatingClawServo = "";
+    public static String rotatingClawRotationServo = "";
+
     // outtake:
     public static String slidesMotor = "slidesMotor";   // tape: “SlidesMotor”, eh motor 3
     public static String armServo = "armServo";         // tape: “R Bucket”,    ch servo 0
