@@ -12,21 +12,22 @@ public class FConstants {
     static {
         FollowerConstants.localizers = Localizers.THREE_WHEEL_IMU;
 
-        FollowerConstants.leftFrontMotorName = CONFIG.FRONT_LEFT;
-        FollowerConstants.leftRearMotorName = CONFIG.BACK_LEFT;
-        FollowerConstants.rightFrontMotorName = CONFIG.FRONT_RIGHT;
-        FollowerConstants.rightRearMotorName = CONFIG.BACK_RIGHT;
+        // back of the robot has the vertical slides on it
+        FollowerConstants.leftFrontMotorName = CONFIG.FRONT_RIGHT;
+        FollowerConstants.leftRearMotorName = CONFIG.BACK_RIGHT;
+        FollowerConstants.rightFrontMotorName = CONFIG.FRONT_LEFT;
+        FollowerConstants.rightRearMotorName = CONFIG.BACK_LEFT;
 
-        FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
+        FollowerConstants.leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
         FollowerConstants.leftRearMotorDirection = DcMotorSimple.Direction.REVERSE;
         FollowerConstants.rightFrontMotorDirection = DcMotorSimple.Direction.FORWARD;
-        FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.REVERSE;
+        FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
 
-        // remember to update this
-        FollowerConstants.mass = 11.84;
+        // remember to update this (kg)
+        FollowerConstants.mass = 10.75; //11.84;
 
-        FollowerConstants.xMovement = 57.8741;
-        FollowerConstants.yMovement = 52.295;
+        FollowerConstants.xMovement = 66.9373113037985;
+        FollowerConstants.yMovement = 48.1538552818054;
 
         FollowerConstants.forwardZeroPowerAcceleration = -41.278;
         FollowerConstants.lateralZeroPowerAcceleration = -59.7819;
