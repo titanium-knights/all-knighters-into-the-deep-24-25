@@ -110,6 +110,9 @@ public class Teleop extends OpMode {
         // useful for debounce + rising/falling edge detection
         prevGamepad1.copy(gamepad1);
         prevGamepad2.copy(gamepad2);
+
+        telemetry.addData("scissor encoder pos:", subsystemManager.scissors.getEncoder());
+        telemetry.addData("scissors power: ", subsystemManager.scissors.getScissorsPower());
     }
 
     public static void setSlowMode(boolean slowMode) {
