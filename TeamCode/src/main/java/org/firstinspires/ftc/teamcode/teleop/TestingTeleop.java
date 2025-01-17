@@ -25,6 +25,6 @@ public class TestingTeleop extends OpMode {
             manager.topClaw.close();
             telemetry.addData("closed", true);
         }
-        telemetry.addData("scissors encoder value", manager.scissors.getEncoder());
+        telemetry.addData("scissors encoder value", manager.topClaw.getPosition());
     }
 }
