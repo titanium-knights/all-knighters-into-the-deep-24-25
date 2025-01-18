@@ -17,6 +17,7 @@ public class SubsystemManager {
     public Scissors scissors;
     public TopClaw topClaw;
     public Slides slides;
+    private HorizontalSlides horizontalSlides;
 
     public SubsystemManager(HardwareMap hmap) {
         // add util class initializations here
@@ -24,7 +25,9 @@ public class SubsystemManager {
         arm = new Arm(hmap);
         bottomClaw = new BottomClaw(hmap);
         scissors = new Scissors(hmap);
+        horizontalSlides = new HorizontalSlides(hmap);
         topClaw = new TopClaw(hmap);
         slides = new Slides(hmap);
     }
 }
+t
