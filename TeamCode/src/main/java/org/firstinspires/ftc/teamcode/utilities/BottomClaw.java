@@ -12,8 +12,8 @@ public class BottomClaw {
     public static final double CLOSE_CLAW_POSITION = 0.4;
 
     public static final double ORTHOGONAL_CLAW_ROTATOR_POSITION = 0.3;
-    public static final double NEUTRAL_CLAW_ROTATOR_POSITION = 0.0;
-    public static final double PICKUP_CLAW_ROTATOR_POSITION = 0.7;
+    public static final double NEUTRAL_CLAW_ROTATOR_POSITION = 0.68;
+    public static final double PICKUP_CLAW_ROTATOR_POSITION = 0.0;
 
     public static final double RIGHT_WRIST_UP_POSITION = 0.01;
     public static final double RIGHT_WRIST_DOWN_POSITION = 0.75;
