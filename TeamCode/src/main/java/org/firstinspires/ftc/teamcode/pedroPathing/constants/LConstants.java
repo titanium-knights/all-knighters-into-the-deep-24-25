@@ -19,9 +19,9 @@ public class LConstants {
         ThreeWheelIMUConstants.rightEncoder_HardwareMapName = CONFIG.BACK_RIGHT;
         ThreeWheelIMUConstants.strafeEncoder_HardwareMapName = CONFIG.FRONT_RIGHT;
 
-        ThreeWheelIMUConstants.leftEncoderDirection = Encoder.REVERSE;
-        ThreeWheelIMUConstants.rightEncoderDirection = Encoder.REVERSE;
-        ThreeWheelIMUConstants.strafeEncoderDirection = Encoder.REVERSE;
+        ThreeWheelIMUConstants.leftEncoderDirection = Encoder.FORWARD;
+        ThreeWheelIMUConstants.rightEncoderDirection = Encoder.FORWARD;
+        ThreeWheelIMUConstants.strafeEncoderDirection = Encoder.FORWARD;
 
         ThreeWheelIMUConstants.IMU_HardwareMapName = "imu";
         ThreeWheelIMUConstants.IMU_Orientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
