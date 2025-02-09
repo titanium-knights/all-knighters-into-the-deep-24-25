@@ -11,7 +11,8 @@ public class TestingTeleop extends OpMode {
 
 
     private SubsystemManager manager;
-
+    private boolean driveToggle = false;
+    private boolean driveFast = false;
 
     @Override
     public void init() {
@@ -22,24 +23,22 @@ public class TestingTeleop extends OpMode {
     @Override
     public void loop() {
 
-        if (gamepad1.x) {
-            manager.bottomClaw.openClaw();
-        } else if (gamepad1.y) {
-            manager.bottomClaw.closeClaw();
+        if (gamepad1.x || gamepad2.x) {
+            driveToggle = true;
+        } else if (gamepad1.y || gamepad2.y) {
+            driveToggle = false;
         }
 
-        if (gamepad1.dpad_left) {
-            manager.bottomClaw.neutralClawRotatorPosition();
-        } else if (gamepad1.dpad_right) {
-            manager.bottomClaw.orthogonalClawRotatorPosition();
+        if (gamepad1.a || gamepad2.a) {
+            driveFast = true;
+        } else if (gamepad1.b || gamepad2.b) {
+            driveFast = false;
         }
-//
-//        if (gamepad1.a) {
-//            manager.bottomClaw.rightWristUpPosition();
-//        } else if (gamepad1.b) {
-//            manager.bottomClaw.rightWristDownPosition();
-//        }
 
-        telemetry.addData("scissors encoder value", manager.scissors.getEncoder());
+        if (driveToggle) {
+            manager.drive.move(driveFast ? 0.8 : 0.3, 0,0);
+        } else {
+            manager.drive.move(0,0,0);
+        }
     }
 }
