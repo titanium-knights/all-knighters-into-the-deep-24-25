@@ -1,14 +1,12 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.utilities.ScissorsState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
-@TeleOp(name = "Testing Teleop", group = "User Control")
-public class TestingTeleop extends OpMode {
-
+@TeleOp(name="TEST-all wheels", group = "Tests")
+public class DriveWheelsTest extends OpMode {
 
     private SubsystemManager manager;
     private boolean driveToggle = false;
@@ -40,5 +38,10 @@ public class TestingTeleop extends OpMode {
         } else {
             manager.drive.move(0,0,0);
         }
+
+        telemetry.clearAll();
+        telemetry.addData("Drive Toggle", driveToggle ? "ON" : "OFF");
+        telemetry.addData("Drive Speed", driveFast ? "FAST" : "SLOW");
+        telemetry.update();
     }
 }
