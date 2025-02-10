@@ -35,7 +35,6 @@ public class HorizontalSlides {
     }
 
     public void resetSlideEncoder() {
-        horizontalSlidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
