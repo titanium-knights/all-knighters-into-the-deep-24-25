@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,7 +10,7 @@ public class HorizontalSlides {
     private static final double slideForwardPower = 1.0;
     private static final double slideBackPower = -1.0;
     private static final double idlePower = 0.0;
-    public final int maxForward= 2200;
+    public final int maxForward = 590;
     public final int minBack = 0;
     public final int BUFFER = 50;
     private final DcMotor horizontalSlidesMotor;
@@ -66,9 +65,9 @@ public class HorizontalSlides {
     private void updateSlidesPowerBasic(int targetEncoderValue) {
         int pos = horizontalSlidesMotor.getCurrentPosition();
         double distanceAway = targetEncoderValue - pos;
-        if (distanceAway > 0) { //forward
+        if (distanceAway > 0) { // forward
             horizontalSlidesMotor.setPower(slideForwardPower);
-        } else if (distanceAway < 0) { //back
+        } else if (distanceAway < 0) { // back
             horizontalSlidesMotor.setPower(slideBackPower);
         } else {
             horizontalSlidesMotor.setPower(idlePower);
@@ -87,6 +86,13 @@ public class HorizontalSlides {
         }
 
         horizontalSlidesMotor.setPower(power);
+    }
 
+    public void retract() {
+        slideToPosition(minBack);
+    }
+
+    public void goOut() {
+        slideToPosition(maxForward);
     }
 }
