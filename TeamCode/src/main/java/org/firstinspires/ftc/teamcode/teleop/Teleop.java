@@ -42,7 +42,7 @@ public class Teleop extends OpMode {
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap);
+        subsystemManager = new SubsystemManager(hardwareMap, telemetry);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
