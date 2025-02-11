@@ -17,8 +17,8 @@ public class CONFIG {
     public static String clawColorSensor = "color";
 
     // intake
-    public static String clawServoBottom = "clawB";      // tape: “L Servo (Intake)”, eh servo 1
-    public static String clawRotator = "clawR";          // tape: “R Servo (Intake)”, eh servo 0
+    public static String clawServoBottom = "clawB";      // tape: “bottomclaw”, eh servo 1
+    public static String clawRotator = "clawR";          // tape: “clawrotator”, eh servo 0
     public static String rightWristServo = "rightWrist"; // tape: “R Wrist”,          eh servo 3
 
     // outtake:
