@@ -39,6 +39,9 @@ public class Teleop extends OpMode {
     private static boolean slowMode = false;
     private static final double SLOW_MODE_MULTIPLIER = 0.3;
 
+    private static int increment = 0;
+    private final static int totalIncrement = 300;
+
     @Override
     public void init() {
         // instantiate all hardware util classes
@@ -65,10 +68,15 @@ public class Teleop extends OpMode {
 
         // drivetrain
         if (Teleop.slowMode) {
-            subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
+            subsystemManager.drive.move(
+                    compositeDriveTrainPowerEvaluator(gamepad1.left_stick_x) * SLOW_MODE_MULTIPLIER,
+                    compositeDriveTrainPowerEvaluator(gamepad1.left_stick_y) * SLOW_MODE_MULTIPLIER,
+                    compositeDriveTrainPowerEvaluator(gamepad2.right_stick_x) * SLOW_MODE_MULTIPLIER);
         } else {
             subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
         }
+
+        driveTrainFunctorStepper();
 
 
         // claw
@@ -117,6 +125,24 @@ public class Teleop extends OpMode {
 
     public static void setSlowMode(boolean slowMode) {
         Teleop.slowMode = slowMode;
+    }
+
+    public boolean isMoving() {
+        return Math.abs(gamepad1.left_stick_x) > .01 ||
+                Math.abs(gamepad1.left_stick_y) > .01 ||
+                Math.abs(gamepad2.right_stick_x) > .01;
+    }
+
+    public void driveTrainFunctorStepper() {
+        if (isMoving() && increment <= totalIncrement) {
+            increment++;
+        } else if (!isMoving() && increment >= 0) {
+            increment--;
+        }
+    }
+
+    public double compositeDriveTrainPowerEvaluator(double power) {
+        return power * increment / totalIncrement;
     }
 
     public void switchToState(TeleopState state) {
