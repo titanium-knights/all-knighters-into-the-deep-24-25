@@ -20,11 +20,11 @@ public class SubsystemManager {
 
     public SubsystemManager(HardwareMap hmap) {
         // add util class initializations here
-        drive = new SimpleMecanumDrive(hmap);
-        arm = new Arm(hmap);
-        bottomClaw = new BottomClaw(hmap);
-        scissors = new Scissors(hmap);
+//        drive = new SimpleMecanumDrive(hmap);
+//        arm = new Arm(hmap);
+//        bottomClaw = new BottomClaw(hmap);
+//        scissors = new Scissors(hmap);
         topClaw = new TopClaw(hmap);
-        slides = new Slides(hmap);
+//        slides = new Slides(hmap);
     }
 }

@@ -45,10 +45,10 @@ public class SequenceTester extends OpMode {
      * Lets assume the Robot is facing the human player and we want to score in the bucket */
 
     /** Start Pose of our robot */
-    private final Pose startPose = new Pose(12, 0, Math.toRadians(0));
+    private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
 
     /** Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle. */
-    private final Pose scorePose = new Pose(24, 0, Math.toRadians(0));
+    private final Pose scorePose = new Pose(48, 0, Math.toRadians(0));
 
     /** Lowest (First) Sample from the Spike Mark */
     private final Pose pickup1Pose = new Pose(0, 0, Math.toRadians(0));
@@ -111,7 +111,7 @@ public class SequenceTester extends OpMode {
                     /* Score Preload */
 
                     /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(scorePickup1,true);
+//                    follower.followPath(scorePickup1,true);
                     setPathState(2);
                 }
                 break;
