@@ -14,6 +14,7 @@ public abstract class AutonMethods extends LinearOpMode {
     public Slides slides;
     public TopClaw topClaw;
     public Scissors scissors;
+    public HorizontalSlides horizontalSlides;
 
 
     @Override
@@ -22,6 +23,7 @@ public abstract class AutonMethods extends LinearOpMode {
         slides = new Slides(hardwareMap);
         topClaw = new TopClaw(hardwareMap);
         scissors = new Scissors(hardwareMap);
+        horizontalSlides = new HorizontalSlides(hardwareMap);
     }
 
     public final double POWER = 0.5; //12.58 V

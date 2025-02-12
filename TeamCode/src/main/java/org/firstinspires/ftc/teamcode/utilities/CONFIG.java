@@ -12,6 +12,8 @@ public class CONFIG {
 
     // scissors
     public static String scissorsMotor = "scissorsMotor"; // tape: "scissorsMotor", eh motor 1
+    //horizontal slides
+    public static String horizontalSlidesMotor = "horizontalSlidesMotor";
     // misc
     public static String webcam = "Webcam 1";
     public static String clawColorSensor = "color";
