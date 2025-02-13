@@ -16,7 +16,8 @@ public class HorizontalSlides {
     private final DcMotor horizontalSlidesMotor;
 
     public HorizontalSlides(HardwareMap hmap) {
-        this.horizontalSlidesMotor = hardwareMap.dcMotor.get(CONFIG.horizontalSlidesMotor);
+        this.horizontalSlidesMotor = hmap.dcMotor.get(CONFIG.horizontalSlidesMotor);
+        //this.horizontalSlidesMotor = hardwareMap.dcMotor.get(CONFIG.horizontalSlidesMotor);
         horizontalSlidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         horizontalSlidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -38,7 +39,8 @@ public class HorizontalSlides {
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public boolean slideToPosition(int targetPosition) {
+    public boolean slideToPosition(HorizontalSlidesState state) {
+        int targetPosition = state.getEncoderValue();
         if (encoderValueWithinBufferOfTarget(targetPosition)) {
             stop();
             return true;
@@ -66,11 +68,11 @@ public class HorizontalSlides {
         horizontalSlidesMotor.setPower(slideForwardPower);
     }
 
-    public void retract() {
-        slideToPosition(minBack);
-    }
-
-    public void goOut() {
-        slideToPosition(maxForward);
-    }
+//    public void retract() {
+//        slideToPosition(minBack);
+//    }
+//
+//    public void goOut() {
+//        slideToPosition(maxForward);
+//    }
 }

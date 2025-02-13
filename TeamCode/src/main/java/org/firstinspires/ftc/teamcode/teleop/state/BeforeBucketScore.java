@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.firstinspires.ftc.teamcode.teleop.TeleopState;
-import org.firstinspires.ftc.teamcode.utilities.ScissorsState;
+import org.firstinspires.ftc.teamcode.utilities.HorizontalSlidesState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
@@ -18,7 +18,7 @@ public class BeforeBucketScore extends TeleopState {
         Teleop.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.TOP); // slides move to top
         subsystemManager.arm.toReceivingPos();
-        subsystemManager.scissors.scissorsToPosition(ScissorsState.IN);
+        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
     }

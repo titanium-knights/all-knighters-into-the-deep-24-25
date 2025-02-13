@@ -6,17 +6,15 @@ public class CONFIG {
 
     // drivetrain wheels
     public static String FRONT_LEFT = "fl";  // ch motor 0
+    public static String BACK_RIGHT = "br";  // ch motor 1
     public static String FRONT_RIGHT = "fr"; // ch motor 2
     public static String BACK_LEFT = "bl";   // ch motor 3
-    public static String BACK_RIGHT = "br";  // ch motor 1
 
-    // scissors
-    public static String scissorsMotor = "scissorsMotor"; // tape: "scissorsMotor", eh motor 1
-    //horizontal slides
-    public static String horizontalSlidesMotor = "horizontalSlidesMotor";
+    // horizontal slides
+    public static String horizontalSlidesMotor = "horizontalSlidesMotor"; // tape: "scissorsMotor", eh motor 0
+
     // misc
     public static String webcam = "Webcam 1";
-    public static String clawColorSensor = "color";
 
     // intake
     public static String clawServoBottom = "clawB";      // tape: “L Servo (Intake)”, eh servo 1

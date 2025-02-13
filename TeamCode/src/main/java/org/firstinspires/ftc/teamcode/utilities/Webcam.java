@@ -4,13 +4,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
-import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
+//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
 
 public class Webcam {
     OpenCvWebcam cam;
@@ -19,8 +19,8 @@ public class Webcam {
 
     public Webcam(HardwareMap hmap, Telemetry telemetry) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
-        this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, "webcam"), cameraMonitorViewId);
-        this.pipeline = new ConfidenceOrientationVectorPipeline(telemetry);
+        this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
+//        this.pipeline = new ConfidenceOrientationVectorPipeline(telemetry);
 
         cam.setPipeline(pipeline);
         cam.setMillisecondsPermissionTimeout(5000);
@@ -46,7 +46,7 @@ public class Webcam {
                  * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
                  * away from the user.
                  */
-                cam.startStreaming(720, 480, OpenCvCameraRotation.UPRIGHT);
+                cam.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -59,8 +59,8 @@ public class Webcam {
         });
     }
 
-    public DetectionResultScaledData bestDetectionCoordsAngle() {
+//    public DetectionResultScaledData bestDetectionCoordsAngle() {
         // casting this cause i mean generalizability is always sweet
-        return ((ConfidenceOrientationVectorPipeline)pipeline).bestDetectionCoordsAngle();
-    }
+//        return ((ConfidenceOrientationVectorPipeline)pipeline).bestDetectionCoordsAngle();
+//    }
 }
