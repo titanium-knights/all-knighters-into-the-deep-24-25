@@ -2,18 +2,18 @@ package org.firstinspires.ftc.teamcode.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.utilities.HorizontalSlides;
 import org.firstinspires.ftc.teamcode.utilities.SimpleMecanumDrive;
 import org.firstinspires.ftc.teamcode.utilities.Slides;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.TopClaw;
-import org.firstinspires.ftc.teamcode.utilities.Scissors;
 
 
 public abstract class AutonMethods extends LinearOpMode {
     public SimpleMecanumDrive drivetrain;
     public Slides slides;
     public TopClaw topClaw;
-    public Scissors scissors;
+    public HorizontalSlides horizontalSlides;
 
 
     @Override
@@ -21,7 +21,7 @@ public abstract class AutonMethods extends LinearOpMode {
         drivetrain = new SimpleMecanumDrive(hardwareMap);
         slides = new Slides(hardwareMap);
         topClaw = new TopClaw(hardwareMap);
-        scissors = new Scissors(hardwareMap);
+        horizontalSlides = new HorizontalSlides(hardwareMap);
     }
 
     public final double POWER = 0.5; //12.58 V

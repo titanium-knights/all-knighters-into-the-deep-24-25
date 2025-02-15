@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
@@ -45,7 +46,7 @@ public class Teleop extends OpMode {
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap);
+        subsystemManager = new SubsystemManager(hardwareMap, telemetry);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
@@ -119,9 +120,17 @@ public class Teleop extends OpMode {
         prevGamepad1.copy(gamepad1);
         prevGamepad2.copy(gamepad2);
 
-        telemetry.addData("scissor encoder pos:", subsystemManager.scissors.getEncoder());
-        telemetry.addData("scissors power: ", subsystemManager.scissors.getScissorsPower());
+        telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
+        telemetry.update();
     }
+
+//    public void extendToPickupPosition() {
+//        ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
+//        while (drsd.getY() < 240) {
+//            subsystemManager.horizontalSlides.manualForward(0.7);
+//        }
+//        subsystemManager.horizontalSlides.stop();
+//    }
 
     public static void setSlowMode(boolean slowMode) {
         Teleop.slowMode = slowMode;

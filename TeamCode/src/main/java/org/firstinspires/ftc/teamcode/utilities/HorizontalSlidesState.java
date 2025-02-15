@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-public enum ScissorsState {
+public enum HorizontalSlidesState {
     IN(0),
-    NEUTRAL(0),
-    OUT(-76);
+    NEUTRAL(-300),
+    OUT(-2250);
 
     private final int encoderValue;
 
-    ScissorsState(int encoderValue) {
+    HorizontalSlidesState(int encoderValue) {
         this.encoderValue = encoderValue;
     }
 
