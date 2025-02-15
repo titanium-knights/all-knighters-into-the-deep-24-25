@@ -35,3 +35,4 @@ public class TopClaw {
         return clawOpener.getPosition() / TopClaw.servoAngleModifier;
     }
 }
+

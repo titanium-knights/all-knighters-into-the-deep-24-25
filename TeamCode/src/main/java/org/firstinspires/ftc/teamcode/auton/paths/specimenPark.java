@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.auton.AutonMethods;
-import org.firstinspires.ftc.teamcode.utilities.ScissorsState;
+import org.firstinspires.ftc.teamcode.utilities.HorizontalSlidesState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 
 @Autonomous(name="specimenPark", group="Linear OpMode")
@@ -21,12 +21,12 @@ public class specimenPark extends AutonMethods {
 
         // initialize positions
         slides.slideToPosition(SlideState.BOTTOM);
-        scissors.scissorsToPosition(ScissorsState.IN);
+//        scissors.scissorsToPosition(ScissorsState.IN);
         topClaw.close();
         waitForStart();
         runtime.reset();
 
-        scissors.scissorsToPosition(ScissorsState.IN);
+//        scissors.scissorsToPosition(ScissorsState.IN);
         attachSpecimenToHigherBar();
         backOne();
         rightTwo();

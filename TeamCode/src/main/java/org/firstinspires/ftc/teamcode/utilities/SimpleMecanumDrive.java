@@ -20,9 +20,9 @@ public class SimpleMecanumDrive {
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        fl.setDirection(DcMotorSimple.Direction.FORWARD);
+        fl.setDirection(DcMotorSimple.Direction.FORWARD); // FORWARD
         bl.setDirection(DcMotorSimple.Direction.REVERSE);
-        fr.setDirection(DcMotorSimple.Direction.FORWARD);
+        fr.setDirection(DcMotorSimple.Direction.FORWARD); // FORWARD
         br.setDirection(DcMotorSimple.Direction.REVERSE);
 
         directions.put(fl, new double[]{1, 1});

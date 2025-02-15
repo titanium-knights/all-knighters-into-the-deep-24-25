@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.utilities.ScissorsState;
+import org.firstinspires.ftc.teamcode.utilities.HorizontalSlidesState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.auton.AutonMethods;
 
@@ -21,12 +21,12 @@ public class specimenPushSpecimen extends AutonMethods {
 
         // initialize positions
         slides.slideToPosition(SlideState.BOTTOM);
-        scissors.scissorsToPosition(ScissorsState.IN);
+//        scissors.scissorsToPosition(ScissorsState.IN);
         topClaw.close();
         waitForStart();
         runtime.reset();
 
-        scissors.scissorsToPosition(ScissorsState.IN);
+//        scissors.scissorsToPosition(ScissorsState.IN);
 
         // preloaded specimen scoring
 
