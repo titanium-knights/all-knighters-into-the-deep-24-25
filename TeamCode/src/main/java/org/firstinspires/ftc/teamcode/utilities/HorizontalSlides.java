@@ -7,13 +7,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class HorizontalSlides {
 
-    private static final double slideForwardPower = 0.5;
-    private static final double slideBackPower = -0.5;
+    private static final double slideForwardPower = 1;
+    private static final double slideBackPower = -1;
     private static final double idlePower = 0.0;
     public final int maxForward = 590;
     public final int minBack = 0;
     public final int BUFFER = 50;
+    private int pos;
     private final DcMotor horizontalSlidesMotor;
+
 
     public HorizontalSlides(HardwareMap hmap) {
         this.horizontalSlidesMotor = hmap.dcMotor.get(CONFIG.horizontalSlidesMotor);
@@ -36,7 +38,9 @@ public class HorizontalSlides {
     }
 
     public void resetSlideEncoder() {
-        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        horizontalSlidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        this.pos = 0;
     }
 
     public boolean slideToPosition(HorizontalSlidesState state) {
@@ -50,16 +54,15 @@ public class HorizontalSlides {
         }
     }
 
+
     public void manualForward(double power) {
-        horizontalSlidesMotor.setTargetPosition(horizontalSlidesMotor.getCurrentPosition() + 10);
-        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        horizontalSlidesMotor.setPower(Math.abs(power));
+        double adjustedPower = Math.abs(power); // Positive for downward movement
+        horizontalSlidesMotor.setPower(adjustedPower);
     }
 
     public void manualBack(double power) {
-        horizontalSlidesMotor.setTargetPosition(horizontalSlidesMotor.getCurrentPosition() - 10);
-        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        horizontalSlidesMotor.setPower(Math.abs(power));
+        double adjustedPower = -Math.abs(power); // Positive for downward movement
+        horizontalSlidesMotor.setPower(adjustedPower);
     }
 
     private void updateSlidesPower(int targetEncoderValue) {
