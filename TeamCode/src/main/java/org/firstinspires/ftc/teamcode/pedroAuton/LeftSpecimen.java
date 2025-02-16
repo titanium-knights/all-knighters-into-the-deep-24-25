@@ -15,21 +15,13 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 
-/**
- * This is an example auto that showcases movement and control of two servos autonomously.
- * It is a 0+4 (Specimen + Sample) bucket auto. It scores a neutral preload and then pickups 3 samples from the ground and scores them before parking.
- * There are examples of different ways to build paths.
- * A path progression method has been created and can advance based on time, position, or other factors.
- *
- * @author Baron Henderson - 20077 The Indubitables
- * @version 2.0, 11/28/2024
- */
-
-@Autonomous(name = "Test OoO", group = "Tests-Custom")
-public class SequenceTester extends OpMode {
-
+@Autonomous(name = "Left Specimen", group = "Pedro Autons")
+public class LeftSpecimen {
     private Follower follower;
+
     private Timer pathTimer, actionTimer, opmodeTimer;
+
+    private SubsystemManager subsystemManager;
 
     /** This is the variable where we store the state of our auto.
      * It is used by the pathUpdate method. */
@@ -42,20 +34,20 @@ public class SequenceTester extends OpMode {
      * Even though Pedro uses a different coordinate system than RR, you can convert any roadrunner pose by adding +72 both the x and y.
      * This visualizer is very easy to use to find and create paths/pathchains/poses: <https://pedro-path-generator.vercel.app/>
      * Lets assume our robot is 18 by 18 inches
-     * Lets assume the Robot is facing the human player and we want to score in the bucket */
+     * Lets assume the Robot is facing the human player and we want to score a specimen */
 
     /** Start Pose of our robot */
-    private final Pose startPose = new Pose(12, 0, Math.toRadians(0));
+    private final Pose startPose = new Pose(10, 74, Math.toRadians(0));
 
-    /** Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle. */
-    private final Pose scorePose = new Pose(24, 0, Math.toRadians(0));
+    private final Pose scorePreloadedSpeimenPose = new Pose(36, 74, Math.toRadians(0));
 
-    /** Lowest (First) Sample from the Spike Mark */
-    private final Pose pickup1Pose = new Pose(0, 0, Math.toRadians(0));
+    private final Pose parkAfterScoringSpecimenPose = new Pose(10, 16, Math.toRadians(0));
+
 
     /* These are our Paths and PathChains that we will define in buildPaths() */
-    private Path scorePreload;
-    private PathChain scorePickup1;
+    private PathChain scorePreloadedSpecimen, 
+                      backOffAfterScoring,
+                      parkAfterScoringSpecimen;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -76,17 +68,21 @@ public class SequenceTester extends OpMode {
          * PathChains hold Path(s) within it and are able to hold their end point, meaning that they will holdPoint until another path is followed.
          * Here is a explanation of the difference between Paths and PathChains <https://pedropathing.com/commonissues/pathtopathchain.html> */
 
-        /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
-        scorePreload = new Path(new BezierLine(new Point(startPose), new Point(scorePose)));
-        scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
-
-
         /* This is our scorePickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
-        scorePickup1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(pickup1Pose), new Point(scorePose)))
-                .setLinearHeadingInterpolation(pickup1Pose.getHeading(), scorePose.getHeading())
+        scorePreloadedSpecimen = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadedSpecimenPose)))
+                .setLinearHeadingInterpolation(startPose.getHeading(), scorePreloadedSpecimenPose.getHeading())
                 .build();
 
+        backOffAfterScoring = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(scorePreloadedSpecimenPose), new Point(startPose)))
+                .setLinearHeadingInterpolation(scorePreloadedSpecimenPose.getHeading(), startPose.getHeading())
+                .build();
+
+        parkAfterScoringSpecimen = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startPose), new Point(parkAfterScoringSpecimen)))
+                .setLinearHeadingInterpolation(startPose.getHeading(), parkAfterScoringSpecimen.getHeading())
+                .build();
     }
 
     /** This switch is called continuously and runs the pathing, at certain points, it triggers the action state.
@@ -95,33 +91,38 @@ public class SequenceTester extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                follower.followPath(scorePreload);
-                setPathState(1);
-                break;
-            case 1:
-
-                /* You could check for
-                - Follower State: "if(!follower.isBusy() {}"
-                - Time: "if(pathTimer.getElapsedTimeSeconds() > 1) {}"
-                - Robot Position: "if(follower.getPose().getX() > 36) {}"
-                */
-
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-                if(!follower.isBusy()) {
-                    /* Score Preload */
-
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-                    follower.followPath(scorePickup1,true);
-                    setPathState(2);
+                if (!follower.isBusy()) {
+                    follower.followPath(scorePreloadedSpecimen, true);
+                    if (actionTimer.getElapsedTimeSeconds() <= 1) {
+                        subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                    }
+                    if (actionTimer.getElapsedTimeSeconds() > 1) {
+                        subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
+                    }
+                    if (actionTimer.getElapsedTimeSeconds() > 1.5) {
+                        subsystemManager.topClaw.open();
+                    }
+                    if (actionTimer.getElapsedTimeSeconds() > 2) {
+                        setPathState(10);
+                    }
                 }
                 break;
-            case 8:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-                if(!follower.isBusy()) {
-                    /* Level 1 Ascent */
-
-                    /* Set the state to a Case we won't use or define, so it just stops running an new paths */
-                    setPathState(-1);
+            case 10:
+                if (!follower.isBusy()) {
+                    follower.followPath(goToPickupPositionAfterScoring, true);
+                    setPathState(20);
+                }
+                break;
+            case 20:
+                if (!follower.isBusy()) {
+                    follower.followPath(backOffAfterScoring, true);
+                    setPathState(30);
+                }
+                break;
+            case 30:
+                if (!follower.isBusy()) {
+                    follower.followPath(parkAfterScoringSpecimen, true);
+                    setPathState(40);
                 }
                 break;
         }
@@ -156,6 +157,8 @@ public class SequenceTester extends OpMode {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
+
+        subsystemManager = new SubsystemManager(hardwareMap, telemetry);
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
