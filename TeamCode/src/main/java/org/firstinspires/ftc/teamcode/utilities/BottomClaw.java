@@ -31,6 +31,11 @@ public class BottomClaw {
         this.rightWristServo = hmap.servo.get(CONFIG.rightWristServo);
     }
 
+    // rotates claw to position at theta radians
+    public void rotate(double theta) {
+        this.clawRotator.setPosition(theta * 0.68 / (2 * Math.PI));
+    }
+
     public double getClawOpenerPosition() {
         return clawOpener.getPosition();
     }

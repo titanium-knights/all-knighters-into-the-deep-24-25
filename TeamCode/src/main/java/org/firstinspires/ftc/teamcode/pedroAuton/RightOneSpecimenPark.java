@@ -14,6 +14,8 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.utilities.SlideState;
+import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 @Autonomous(name = "Right Park", group = "Pedro Autons")
 public class RightOneSpecimenPark extends OpMode {
@@ -39,7 +41,7 @@ public class RightOneSpecimenPark extends OpMode {
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(10, 62, Math.toRadians(0));
 
-    private final Pose scorePreloadedSpeimenPose = new Pose(36, 62, Math.toRadians(0));
+    private final Pose scorePreloadedSpecimenPose = new Pose(36, 62, Math.toRadians(0));
 
     private final Pose alignToPrepareForRetrieval1 = new Pose(10, 33, Math.toRadians(0));
 
@@ -100,13 +102,13 @@ public class RightOneSpecimenPark extends OpMode {
                 .build();
 
         goToPickupPositionAfterScoring = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scorePreloadedSpecimenPose), new Point(alignToPrepareForRetrieval)))
-                .setLinearHeadingInterpolation(scorePreloadedSpecimenPose.getHeading(), alignToPrepareForRetrieval.getHeading())
+                .addPath(new BezierLine(new Point(scorePreloadedSpecimenPose), new Point(alignToPrepareForRetrieval1)))
+                .setLinearHeadingInterpolation(scorePreloadedSpecimenPose.getHeading(), alignToPrepareForRetrieval1.getHeading())
                 .build();
 
         retrieveSpecimenMotion1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(alignToPrepareForRetrieval), new Point(retrieveSpecimenPose1_1)))
-                .setLinearHeadingInterpolation(alignToPrepareForRetrieval.getHeading(), retrieveSpecimenPose1_1.getHeading())
+                .addPath(new BezierLine(new Point(alignToPrepareForRetrieval1), new Point(retrieveSpecimenPose1_1)))
+                .setLinearHeadingInterpolation(alignToPrepareForRetrieval1.getHeading(), retrieveSpecimenPose1_1.getHeading())
                 .addPath(new BezierLine(new Point(retrieveSpecimenPose1_1), new Point(retrieveSpecimenPose1_2)))
                 .setLinearHeadingInterpolation(retrieveSpecimenPose1_1.getHeading(), retrieveSpecimenPose1_2.getHeading())
                 .addPath(new BezierLine(new Point(retrieveSpecimenPose1_2), new Point(retrieveSpecimenPose1_3)))
@@ -167,12 +169,6 @@ public class RightOneSpecimenPark extends OpMode {
             case 10:
                 if (!follower.isBusy()) {
                     follower.followPath(goToPickupPositionAfterScoring, true);
-                    setPathState(20);
-                }
-                break;
-            case 20:
-                if (!follower.isBusy()) {
-                    follower.followPath(alignToPrepareForRetrieval1, true);
                     setPathState(30);
                 }
                 break;

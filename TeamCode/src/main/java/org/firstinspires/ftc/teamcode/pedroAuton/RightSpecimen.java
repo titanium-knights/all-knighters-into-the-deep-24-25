@@ -12,13 +12,15 @@ import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 @Autonomous(name = "Right Specimen", group = "Pedro Autons")
-public class RightSpecimen {
+public class RightSpecimen extends OpMode {
     private Follower follower;
 
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -41,7 +43,7 @@ public class RightSpecimen {
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(10, 62, Math.toRadians(0));
 
-    private final Pose scorePreloadedSpeimenPose = new Pose(36, 62, Math.toRadians(0));
+    private final Pose scorePreloadedSpecimenPose = new Pose(36, 62, Math.toRadians(0));
 
     private final Pose alignToPrepareForRetrieval1 = new Pose(10, 33, Math.toRadians(0));
 
@@ -115,13 +117,13 @@ public class RightSpecimen {
                 .build();
 
         goToPickupPositionAfterScoring = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scorePreloadedSpecimenPose), new Point(alignToPrepareForRetrieval)))
-                .setLinearHeadingInterpolation(scorePreloadedSpecimenPose.getHeading(), alignToPrepareForRetrieval.getHeading())
+                .addPath(new BezierLine(new Point(scorePreloadedSpecimenPose), new Point(alignToPrepareForRetrieval1)))
+                .setLinearHeadingInterpolation(scorePreloadedSpecimenPose.getHeading(), alignToPrepareForRetrieval1.getHeading())
                 .build();
 
         retrieveSpecimenMotion1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(alignToPrepareForRetrieval), new Point(retrieveSpecimenPose1_1)))
-                .setLinearHeadingInterpolation(alignToPrepareForRetrieval.getHeading(), retrieveSpecimenPose1_1.getHeading())
+                .addPath(new BezierLine(new Point(alignToPrepareForRetrieval1), new Point(retrieveSpecimenPose1_1)))
+                .setLinearHeadingInterpolation(alignToPrepareForRetrieval1.getHeading(), retrieveSpecimenPose1_1.getHeading())
                 .addPath(new BezierLine(new Point(retrieveSpecimenPose1_1), new Point(retrieveSpecimenPose1_2)))
                 .setLinearHeadingInterpolation(retrieveSpecimenPose1_1.getHeading(), retrieveSpecimenPose1_2.getHeading())
                 .addPath(new BezierLine(new Point(retrieveSpecimenPose1_2), new Point(retrieveSpecimenPose1_3)))
@@ -157,23 +159,23 @@ public class RightSpecimen {
                 .build();
 
         prepareToLoadSpecimen = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(retrieveSpecimenPose3_3), new Point(prepareToLoadSpecimen)))
-                .setLinearHeadingInterpolation(retrieveSpecimenPose3_3.getHeading(), prepareToLoadSpecimen.getHeading())
+                .addPath(new BezierLine(new Point(retrieveSpecimenPose3_3), new Point(prepareToLoadSpecimenPose)))
+                .setLinearHeadingInterpolation(retrieveSpecimenPose3_3.getHeading(), prepareToLoadSpecimenPose.getHeading())
                 .build();
 
         pickupSpecimen = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(prepareToLoadSpecimen), new Point(pickupSpecimen)))
-                .setLinearHeadingInterpolation(prepareToLoadSpecimen.getHeading(), pickupSpecimen.getHeading())
+                .addPath(new BezierLine(new Point(prepareToLoadSpecimenPose), new Point(pickupSpecimenPose)))
+                .setLinearHeadingInterpolation(prepareToLoadSpecimenPose.getHeading(), pickupSpecimenPose.getHeading())
                 .build();
 
         goToScoringPositionAfterPickup = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(pickupSpecimen), new Point (goToScoringPositionAfterPickup)))
-                .setLinearHeadingInterpolation(pickupSpecimen.getHeading(), goToScoringPositionAfterPickup.getHeading())
+                .addPath(new BezierLine(new Point(pickupSpecimenPose), new Point (goToScoringPositionAfterPickupPose)))
+                .setLinearHeadingInterpolation(pickupSpecimenPose.getHeading(), goToScoringPositionAfterPickupPose.getHeading())
                 .build();
 
         parkAfterScoringSpecimen = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(goToScoringPositionAfterPickup), new Point(parkAfterScoringSpecimen)))
-                .setLinearHeadingInterpolation(goToScoringPositionAfterPickup.getHeading(), parkAfterScoringSpecimen.getHeading())
+                .addPath(new BezierLine(new Point(goToScoringPositionAfterPickupPose), new Point(parkAfterScoringSpecimenPose)))
+                .setLinearHeadingInterpolation(goToScoringPositionAfterPickupPose.getHeading(), parkAfterScoringSpecimenPose.getHeading())
                 .build();
     }
 
@@ -202,12 +204,6 @@ public class RightSpecimen {
             case 10:
                 if (!follower.isBusy()) {
                     follower.followPath(goToPickupPositionAfterScoring, true);
-                    setPathState(20);
-                }
-                break;
-            case 20:
-                if (!follower.isBusy()) {
-                    follower.followPath(alignToPrepareForRetrieval1, true);
                     setPathState(30);
                 }
                 break;
@@ -291,7 +287,7 @@ public class RightSpecimen {
     }
 
     /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
-    @Override
+
     public void loop() {
 
         // These loop the movements of the robot

@@ -4,33 +4,29 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
-import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
-import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
-import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupAutomated;
-import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
-import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
-import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
-import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeBucketScore;
-import org.firstinspires.ftc.teamcode.teleop.state.BucketScore;
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
-import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
+import org.firstinspires.ftc.teamcode.teleop.state.BucketScore;
 import org.firstinspires.ftc.teamcode.teleop.state.Init;
-
+import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
+import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
+import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
+import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import java.util.Arrays;
 
-@TeleOp(name = "Automated Driver Teleop", group = "User Control")
-public class Teleop extends OpMode {
+@TeleOp(name = "Driver Teleop", group = "User Control")
+public class TeleopManual extends OpMode {
     public static TeleopState currentState;
     private final Gamepad prevGamepad1 = new Gamepad();
     private final Gamepad prevGamepad2 = new Gamepad();
     private SubsystemManager subsystemManager;
     // instance variables for all potential states
     private Neutral neutralState;
-    private BeforeSamplePickupAutomated beforeSamplePickupAutomatedState;
+    private BeforeSamplePickup beforeSamplePickupState;
     private SamplePickup samplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
     private SampleTransfer sampleTransferState;
@@ -50,9 +46,9 @@ public class Teleop extends OpMode {
         subsystemManager = new SubsystemManager(hardwareMap, telemetry);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
-        beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager);
+        beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
-        samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupAutomatedState, beforeSamplePickupTwist90State});
+        samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupState, beforeSamplePickupTwist90State});
         sampleTransferState = new SampleTransfer(subsystemManager);
         beforeBucketScoreState = new BeforeBucketScore(subsystemManager);
         bucketScoreState = new BucketScore(subsystemManager, new TeleopState[] {beforeBucketScoreState});
@@ -69,7 +65,7 @@ public class Teleop extends OpMode {
         // non-state based logic
 
         // drivetrain
-        if (Teleop.slowMode) {
+        if (TeleopManual.slowMode) {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
         } else {
             subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
@@ -89,7 +85,7 @@ public class Teleop extends OpMode {
         if (gamepad1.dpad_left) {
             switchToState(neutralState);
         } else if (gamepad1.dpad_right) {
-            switchToState(beforeSamplePickupAutomatedState);
+            switchToState(beforeSamplePickupState);
         } else if (gamepad1.x) {
             switchToState(samplePickupState);
         } else if (gamepad1.y) {
@@ -108,16 +104,7 @@ public class Teleop extends OpMode {
             switchToState(initState);
         }
 
-        // run the current state
-        if (currentState == beforeSamplePickupAutomatedState) {
-            if (!beforePickup) {
-                currentState.runState(gamepad1, gamepad2);
-                beforePickup = true;
-            }
-        } else {
-            beforePickup = false;
-            currentState.runState(gamepad1, gamepad2);
-        }
+        currentState.runState(gamepad1, gamepad2);
 
 
         // save the state of the game controllers for the next loop
@@ -133,7 +120,7 @@ public class Teleop extends OpMode {
 
 
     public static void setSlowMode(boolean slowMode) {
-        Teleop.slowMode = slowMode;
+        TeleopManual.slowMode = slowMode;
     }
 
     public void switchToState(TeleopState state) {
@@ -141,9 +128,9 @@ public class Teleop extends OpMode {
         // them, don't move
         if (
                 state.getDependencyStates().length == 0
-                || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)
+                || Arrays.asList(state.getDependencyStates()).contains(TeleopManual.currentState)
         ) {
-            Teleop.slowMode = false;
+            TeleopManual.slowMode = false;
             currentState = state;
         }
     }
