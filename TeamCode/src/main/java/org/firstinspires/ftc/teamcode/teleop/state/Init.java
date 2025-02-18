@@ -20,7 +20,7 @@ public class Init extends TeleopState {
         subsystemManager.bottomClaw.openClaw();
         subsystemManager.topClaw.open();
 
-        if (gamepad1.right_stick_y > 0.1) { // Stick pushed down
+        if (gamepad1.right_stick_y > 0.1f) { // Stick pushed down
             subsystemManager.slides.manualDown(0.5);
             subsystemManager.horizontalSlides.manualForward(0.5);
         }
