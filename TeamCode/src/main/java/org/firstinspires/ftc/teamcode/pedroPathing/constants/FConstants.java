@@ -45,15 +45,15 @@ public class FConstants {
         FollowerConstants.zeroPowerAccelerationMultiplier = 5;
         FollowerConstants.centripetalScaling = 0.0007;
 
-        FollowerConstants.pathEndTimeoutConstraint = 500;
+        FollowerConstants.pathEndTimeoutConstraint = 100;
         FollowerConstants.pathEndTValueConstraint = 0.990; // from 0 to 1
-        FollowerConstants.pathEndVelocityConstraint = 0.1;
-        FollowerConstants.pathEndTranslationalConstraint = 0.3;
+        FollowerConstants.pathEndVelocityConstraint = 0.06;
+        FollowerConstants.pathEndTranslationalConstraint = 0.1;
         FollowerConstants.pathEndHeadingConstraint = 0.007;
 
          FollowerConstants.automaticHoldEnd = true;
 
          FollowerConstants.holdPointHeadingScaling = .12; // default is .35
-        FollowerConstants.holdPointTranslationalScaling = .5; // default is .45
+        FollowerConstants.holdPointTranslationalScaling = .2; // default is .45
     }
 }

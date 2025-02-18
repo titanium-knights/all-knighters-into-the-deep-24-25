@@ -18,10 +18,10 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     // Starting pose of the robot.
     public static final Pose START_POSE = new Pose(10, 62, Math.toRadians(0));
 
-    public static final Pose BEFORE_SCORE_SPECIMEN_POSE = new Pose(33, 62, Math.toRadians(0));
+    public static final Pose BEFORE_SCORE_SPECIMEN_POSE = new Pose(35, 62, Math.toRadians(0));
 
     // Pose for scoring the preloaded specimen (drives the robot closer to the bar).
-    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(37, 62, Math.toRadians(0));
+    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(39, 62, Math.toRadians(0));
 
     // Pose for aligning before specimen retrieval.
     public static final Pose ALIGN_TO_PREPARE_FOR_RETRIEVAL = new Pose(20, 36, Math.toRadians(0));
@@ -134,6 +134,7 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor("CLOSE_CLAW"),                         // Ensure claw is closed.
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
             new AutonStepDescriptor("SLIDE_MEDIUM_SCORE", SCORING_SLIDES_WAIT_SECONDS),          // Adjust slides.
+            new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
             new AutonStepDescriptor("OPEN_CLAW"),                            // Open claw to release specimen.
             new AutonStepDescriptor("SLIDE_BOTTOM", SCORING_RETRACT_WAIT_SECONDS), // Retract slides.
             new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE, ALIGN_TO_PREPARE_FOR_RETRIEVAL), // Drive to pickup alignment.
