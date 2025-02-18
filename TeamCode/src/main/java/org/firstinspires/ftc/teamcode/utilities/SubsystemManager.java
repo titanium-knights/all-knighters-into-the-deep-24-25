@@ -22,7 +22,7 @@ public class SubsystemManager {
     public HorizontalSlides horizontalSlides;
     public Webcam webcam;
     public Telemetry telemetry;
-    public double yCoord;
+    public double yCoord, angle, rotationTheta;
 
     public SubsystemManager(HardwareMap hmap, Telemetry telemetry) {
         // add util class initializations here
@@ -37,13 +37,13 @@ public class SubsystemManager {
     }
 
     public void extendToPickupPosition() {
-        DetectionResultScaledData drsd;
+        DetectionResultScaledData drsd = webcam.bestDetectionCoordsAngle();
         yCoord = -1;
         telemetry.addLine("y coordinate: " + yCoord);
         telemetry.addLine("horizontal slides: " + Math.abs(horizontalSlides.getEncoder()));
 
         while (yCoord < 120 && Math.abs(horizontalSlides.getEncoder()) <= horizontalSlides.maxForward - 20) {
-            telemetry.addLine("y coordinate: " + drsd.getY());
+            telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(horizontalSlides.getEncoder()));
             telemetry.update();
             horizontalSlides.manualBack(1.0);
@@ -55,12 +55,11 @@ public class SubsystemManager {
         }
         horizontalSlides.stop();
         yCoord = drsd.getY();
-        double angle = drsd.getTheta() % 360;
+        angle = drsd.getTheta() % 360;
         if (angle > 180) {
             angle -= 180;
         }
-        double rotation = (angle + 90) % 180;
-        double rotationTheta = (rotation * 180.0) / Math.PI;
+        rotationTheta = (angle * Math.PI) / 180;
         bottomClaw.rotate(rotationTheta);
     }
 }

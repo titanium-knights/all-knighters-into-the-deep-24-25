@@ -76,7 +76,7 @@ public class Teleop extends OpMode {
         }
 
 
-        // claw (realistically shouldn't be needed idt this works, but keeping it cause idk)
+        // claw
         if (gamepad1.left_bumper) {
             subsystemManager.bottomClaw.openClaw();
             subsystemManager.topClaw.open();
@@ -127,6 +127,9 @@ public class Teleop extends OpMode {
 
         telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
         telemetry.addData("y coord: ", subsystemManager.yCoord);
+        telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
+        telemetry.addData("angle: ", subsystemManager.angle);
+        telemetry.addData("theta: ", subsystemManager.rotationTheta);
         telemetry.update();
     }
 

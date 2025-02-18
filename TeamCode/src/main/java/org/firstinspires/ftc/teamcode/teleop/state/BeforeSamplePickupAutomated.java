@@ -16,7 +16,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         Teleop.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-        subsystemManager.bottomClaw.pickUpClawRotatorPosition();
+        subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristDownPosition(); // claw is rotated down
         subsystemManager.bottomClaw.openClaw();
 
