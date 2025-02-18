@@ -37,7 +37,7 @@ public class SubsystemManager {
     }
 
     public void extendToPickupPosition() {
-        DetectionResultScaledData drsd;
+        DetectionResultScaledData drsd = null;
         yCoord = -1;
         telemetry.addLine("y coordinate: " + yCoord);
         telemetry.addLine("horizontal slides: " + Math.abs(horizontalSlides.getEncoder()));
