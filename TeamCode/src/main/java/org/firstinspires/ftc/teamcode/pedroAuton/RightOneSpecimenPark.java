@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.pedroAuton;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.localization.Pose;
-import com.pedropathing.pathgen.BezierCurve;
 import com.pedropathing.pathgen.BezierLine;
-import com.pedropathing.pathgen.Path;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
@@ -41,7 +39,9 @@ public class RightOneSpecimenPark extends OpMode {
     /** Start Pose of our robot */
     private final Pose startPose = new Pose(10, 62, Math.toRadians(0));
 
-    private final Pose scorePreloadedSpecimenPose = new Pose(36, 62, Math.toRadians(0));
+    private final Pose moveToPrepToScorePreloadedSpecimenPose = new Pose(36, 62, Math.toRadians(0));
+
+    private final Pose scorePreloadedSpecimenPose = new Pose(40, 62, Math.toRadians(0));
 
     private final Pose alignToPrepareForRetrieval1 = new Pose(10, 33, Math.toRadians(0));
 
@@ -68,7 +68,7 @@ public class RightOneSpecimenPark extends OpMode {
     private final Pose retrieveSpecimenPose3_3 = new Pose(10, 8, Math.toRadians(0));
 
     /* These are our Paths and PathChains that we will define in buildPaths() */
-    private PathChain scorePreloadedSpecimen, 
+    private PathChain moveToPrepToScorePreloadedSpecimen, scorePreloadedSpecimen,
                       goToPickupPositionAfterScoring, 
                       retrieveSpecimenMotion1, 
                       offsetPositionRight1, 
@@ -96,14 +96,19 @@ public class RightOneSpecimenPark extends OpMode {
          * Here is a explanation of the difference between Paths and PathChains <https://pedropathing.com/commonissues/pathtopathchain.html> */
 
         /* This is our scorePickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
+        moveToPrepToScorePreloadedSpecimen = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(startPose), new Point(moveToPrepToScorePreloadedSpecimenPose)))
+                .setLinearHeadingInterpolation(startPose.getHeading(), moveToPrepToScorePreloadedSpecimenPose.getHeading())
+                .build();
+
         scorePreloadedSpecimen = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadedSpecimenPose)))
                 .setLinearHeadingInterpolation(startPose.getHeading(), scorePreloadedSpecimenPose.getHeading())
                 .build();
 
         goToPickupPositionAfterScoring = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(scorePreloadedSpecimenPose), new Point(alignToPrepareForRetrieval1)))
-                .setLinearHeadingInterpolation(scorePreloadedSpecimenPose.getHeading(), alignToPrepareForRetrieval1.getHeading())
+                .addPath(new BezierLine(new Point(moveToPrepToScorePreloadedSpecimenPose), new Point(alignToPrepareForRetrieval1)))
+                .setLinearHeadingInterpolation(moveToPrepToScorePreloadedSpecimenPose.getHeading(), alignToPrepareForRetrieval1.getHeading())
                 .build();
 
         retrieveSpecimenMotion1 = follower.pathBuilder()
@@ -152,19 +157,44 @@ public class RightOneSpecimenPark extends OpMode {
             case 0:
                 if (!follower.isBusy()) {
                     follower.followPath(scorePreloadedSpecimen, true);
-                    if (actionTimer.getElapsedTimeSeconds() <= 1) {
-                        subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                    subsystemManager.topClaw.close();
+                    subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                    boolean slidesAtPosition = false;
+                    while (!slidesAtPosition) {
+                        slidesAtPosition = subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                        subsystemManager.topClaw.close();
                     }
-                    if (actionTimer.getElapsedTimeSeconds() > 1) {
+                }
+                if (actionTimer.getElapsedTimeSeconds() > 5) {
+                    setPathState(1);
+                }
+                telemetry.addLine("case 0");
+                break;
+            case 1:
+                if (!follower.isBusy()) {
+                    //follower.followPath(scorePreloadedSpecimen, true);
+                    subsystemManager.topClaw.close();
+                    if (actionTimer.getElapsedTimeSeconds() > 2) {
                         subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
+                        boolean slidesAtPosition = false;
+                        while (!slidesAtPosition) {
+                            slidesAtPosition = subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
+                            subsystemManager.topClaw.close();
+                        }
                     }
-                    if (actionTimer.getElapsedTimeSeconds() > 1.5) {
+                    if (actionTimer.getElapsedTimeSeconds() > 3) {
                         subsystemManager.topClaw.open();
                     }
-                    if (actionTimer.getElapsedTimeSeconds() > 2) {
+                    if (actionTimer.getElapsedTimeSeconds() > 5) {
+                        subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
+                        boolean slidesAtPosition = false;
+                        while (!slidesAtPosition) {
+                            slidesAtPosition = subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
+                        }
                         setPathState(10);
                     }
                 }
+                telemetry.addLine("ONEEEEEEEEEEE");
                 break;
             case 10:
                 if (!follower.isBusy()) {
@@ -233,9 +263,13 @@ public class RightOneSpecimenPark extends OpMode {
     public void init() {
         pathTimer = new Timer();
         opmodeTimer = new Timer();
+        actionTimer = new Timer();
         opmodeTimer.resetTimer();
 
         subsystemManager = new SubsystemManager(hardwareMap, telemetry);
+
+        subsystemManager.arm.toInitPos();
+        subsystemManager.topClaw.close();
 
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
