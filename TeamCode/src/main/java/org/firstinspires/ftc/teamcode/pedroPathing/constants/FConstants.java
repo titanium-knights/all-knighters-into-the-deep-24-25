@@ -52,5 +52,8 @@ public class FConstants {
         FollowerConstants.pathEndHeadingConstraint = 0.007;
 
          FollowerConstants.automaticHoldEnd = true;
+
+         FollowerConstants.holdPointHeadingScaling = .12; // default is .35
+        FollowerConstants.holdPointTranslationalScaling = .5; // default is .45
     }
 }

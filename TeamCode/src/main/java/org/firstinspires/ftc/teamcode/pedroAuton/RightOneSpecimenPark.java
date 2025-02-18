@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.pedroAuton;
 
 import com.pedropathing.follower.Follower;
@@ -8,7 +9,7 @@ import com.pedropathing.pathgen.Point;
 import com.pedropathing.util.Constants;
 import com.pedropathing.util.Timer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
@@ -17,248 +18,399 @@ import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 @Autonomous(name = "Right Park", group = "Pedro Autons")
 public class RightOneSpecimenPark extends OpMode {
+
+    // Sleep time between segments (reduced from 1500ms to 500ms)
+    private static final int SLEEP_TIME_MS = 500;
+
     private Follower follower;
-
     private Timer pathTimer, actionTimer, opmodeTimer;
-
     private SubsystemManager subsystemManager;
 
-    /** This is the variable where we store the state of our auto.
-     * It is used by the pathUpdate method. */
+    /** Current state of the autonomous state machine */
     private int pathState;
 
-    /* Create and Define Poses + Paths
-     * Poses are built with three constructors: x, y, and heading (in Radians).
-     * Pedro uses 0 - 144 for x and y, with 0, 0 being on the bottom left.
-     * (For Into the Deep, this would be Blue Observation Zone (0,0) to Red Observation Zone (144,144).)
-     * Even though Pedro uses a different coordinate system than RR, you can convert any roadrunner pose by adding +72 both the x and y.
-     * This visualizer is very easy to use to find and create paths/pathchains/poses: <https://pedro-path-generator.vercel.app/>
-     * Lets assume our robot is 18 by 18 inches
-     * Lets assume the Robot is facing the human player and we want to score a specimen */
-
-    /** Start Pose of our robot */
+    /* Poses for the robot's key positions on the field */
     private final Pose startPose = new Pose(10, 62, Math.toRadians(0));
+    private final Pose scorePreloadedSpecimenPose = new Pose(39, 62, Math.toRadians(0));
+    private final Pose alignToPrepareForRetrieval1 = new Pose(20, 36, Math.toRadians(0));
+    private final Pose retrieveSpecimenPose1_1 = new Pose(60, 36, Math.toRadians(0));
+    private final Pose retrieveSpecimenPose1_2 = new Pose(60, 27, Math.toRadians(0));
+    private final Pose endingPoint1 = new Pose(20, 27, Math.toRadians(0));
+    private final Pose retrieveSpecimenPose2_1 = new Pose(60, 27, Math.toRadians(0));
+    private final Pose retrieveSpecimenPose2_2 = new Pose(60, 20, Math.toRadians(0));
+    private final Pose endingPoint2 = new Pose(20, 20, Math.toRadians(0));
+    private final Pose retrieveSpecimenPose3_1 = new Pose(60, 20, Math.toRadians(0));
+    private final Pose retrieveSpecimenPose3_2 = new Pose(60, 13, Math.toRadians(0));
+    private final Pose endingPoint3 = new Pose(20, 13, Math.toRadians(0));
 
-    private final Pose moveToPrepToScorePreloadedSpecimenPose = new Pose(36, 62, Math.toRadians(0));
+    /* PathChain objects for each motion segment.
+     * Note: Multi-segment motions have been split into separate path chains.
+     */
+    private PathChain scorePreloadedSpecimen;
+    private PathChain goToPickupPositionAfterScoring;
+    private PathChain retrieveSpecimenMotion1_1;
+    private PathChain retrieveSpecimenMotion1_2A;
+    private PathChain retrieveSpecimenMotion1_2B;
+    private PathChain retrieveSpecimenMotion2_1;
+    private PathChain retrieveSpecimenMotion2_2A;
+    private PathChain retrieveSpecimenMotion2_2B;
+    private PathChain retrieveSpecimenMotion3_1;
+    private PathChain retrieveSpecimenMotion3_2;
+    private PathChain retrieveSpecimenMotion3_3;
 
-    private final Pose scorePreloadedSpecimenPose = new Pose(40, 62, Math.toRadians(0));
-
-    private final Pose alignToPrepareForRetrieval1 = new Pose(10, 33, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose1_1 = new Pose(62, 33, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose1_2 = new Pose(62, 27, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose1_3 = new Pose(10, 27, Math.toRadians(0));
-
-    private final Pose alignToPrepareForRetrieval2 = new Pose(10, 20, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose2_1 = new Pose(62, 20, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose2_2 = new Pose(62, 14, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose2_3 = new Pose(10, 14, Math.toRadians(0));
-
-    private final Pose alignToPrepareForRetrieval3 = new Pose(10, 10, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose3_1 = new Pose(62, 10, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose3_2 = new Pose(62, 8, Math.toRadians(0));
-
-    private final Pose retrieveSpecimenPose3_3 = new Pose(10, 8, Math.toRadians(0));
-
-    /* These are our Paths and PathChains that we will define in buildPaths() */
-    private PathChain moveToPrepToScorePreloadedSpecimen, scorePreloadedSpecimen,
-                      goToPickupPositionAfterScoring, 
-                      retrieveSpecimenMotion1, 
-                      offsetPositionRight1, 
-                      retrieveSpecimenMotion2, 
-                      offsetPositionRight2, 
-                      retrieveSpecimenMotion3;
-
-    /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
-     * It is necessary to do this so that all the paths are built before the auto starts. **/
+    /**
+     * Constructs all motion paths for the autonomous routine.
+     * Each path chain is built using a BezierLine with linear heading interpolation.
+     */
     public void buildPaths() {
-
-        /* There are two major types of paths components: BezierCurves and BezierLines.
-         *    * BezierCurves are curved, and require >= 3 points. There are the start and end points, and the control points.
-         *    - Control points manipulate the curve between the start and end points.
-         *    - A good visualizer for this is [this](https://pedro-path-generator.vercel.app/).
-         *    * BezierLines are straight, and require 2 points. There are the start and end points.
-         * Paths have can have heading interpolation: Constant, Linear, or Tangential
-         *    * Linear heading interpolation:
-         *    - Pedro will slowly change the heading of the robot from the startHeading to the endHeading over the course of the entire path.
-         *    * Constant Heading Interpolation:
-         *    - Pedro will maintain one heading throughout the entire path.
-         *    * Tangential Heading Interpolation:
-         *    - Pedro will follows the angle of the path such that the robot is always driving forward when it follows the path.
-         * PathChains hold Path(s) within it and are able to hold their end point, meaning that they will holdPoint until another path is followed.
-         * Here is a explanation of the difference between Paths and PathChains <https://pedropathing.com/commonissues/pathtopathchain.html> */
-
-        /* This is our scorePickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
-        moveToPrepToScorePreloadedSpecimen = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(startPose), new Point(moveToPrepToScorePreloadedSpecimenPose)))
-                .setLinearHeadingInterpolation(startPose.getHeading(), moveToPrepToScorePreloadedSpecimenPose.getHeading())
-                .build();
-
+        // Path from start to scoring position.
         scorePreloadedSpecimen = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(scorePreloadedSpecimenPose)))
                 .setLinearHeadingInterpolation(startPose.getHeading(), scorePreloadedSpecimenPose.getHeading())
                 .build();
 
+        // Path from scoring position to the alignment pose for retrieval.
         goToPickupPositionAfterScoring = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(moveToPrepToScorePreloadedSpecimenPose), new Point(alignToPrepareForRetrieval1)))
-                .setLinearHeadingInterpolation(moveToPrepToScorePreloadedSpecimenPose.getHeading(), alignToPrepareForRetrieval1.getHeading())
+                .addPath(new BezierLine(new Point(scorePreloadedSpecimenPose), new Point(alignToPrepareForRetrieval1)))
+                .setLinearHeadingInterpolation(scorePreloadedSpecimenPose.getHeading(), alignToPrepareForRetrieval1.getHeading())
                 .build();
 
-        retrieveSpecimenMotion1 = follower.pathBuilder()
+        // First retrieval motion: move from alignment to the first pickup position.
+        retrieveSpecimenMotion1_1 = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(alignToPrepareForRetrieval1), new Point(retrieveSpecimenPose1_1)))
                 .setLinearHeadingInterpolation(alignToPrepareForRetrieval1.getHeading(), retrieveSpecimenPose1_1.getHeading())
+                .build();
+
+        // Second retrieval motion: split into two segments.
+        retrieveSpecimenMotion1_2A = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(retrieveSpecimenPose1_1), new Point(retrieveSpecimenPose1_2)))
                 .setLinearHeadingInterpolation(retrieveSpecimenPose1_1.getHeading(), retrieveSpecimenPose1_2.getHeading())
-                .addPath(new BezierLine(new Point(retrieveSpecimenPose1_2), new Point(retrieveSpecimenPose1_3)))
-                .setLinearHeadingInterpolation(retrieveSpecimenPose1_2.getHeading(), retrieveSpecimenPose1_3.getHeading())
                 .build();
 
-        offsetPositionRight1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(retrieveSpecimenPose1_3), new Point(alignToPrepareForRetrieval2)))
-                .setLinearHeadingInterpolation(retrieveSpecimenPose1_3.getHeading(), alignToPrepareForRetrieval2.getHeading())
+        retrieveSpecimenMotion1_2B = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(retrieveSpecimenPose1_2), new Point(endingPoint1)))
+                .setLinearHeadingInterpolation(retrieveSpecimenPose1_2.getHeading(), endingPoint1.getHeading())
                 .build();
 
-        retrieveSpecimenMotion2 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(alignToPrepareForRetrieval2), new Point(retrieveSpecimenPose2_1)))
-                .setLinearHeadingInterpolation(alignToPrepareForRetrieval2.getHeading(), retrieveSpecimenPose2_1.getHeading())
+        // Third retrieval motion: move from the first ending point to the second pickup position.
+        retrieveSpecimenMotion2_1 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(endingPoint1), new Point(retrieveSpecimenPose2_1)))
+                .setLinearHeadingInterpolation(endingPoint1.getHeading(), retrieveSpecimenPose2_1.getHeading())
+                .build();
+
+        // Fourth retrieval motion: split into two segments.
+        retrieveSpecimenMotion2_2A = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(retrieveSpecimenPose2_1), new Point(retrieveSpecimenPose2_2)))
                 .setLinearHeadingInterpolation(retrieveSpecimenPose2_1.getHeading(), retrieveSpecimenPose2_2.getHeading())
-                .addPath(new BezierLine(new Point(retrieveSpecimenPose2_2), new Point(retrieveSpecimenPose2_3)))
-                .setLinearHeadingInterpolation(retrieveSpecimenPose2_2.getHeading(), retrieveSpecimenPose2_3.getHeading())
                 .build();
 
-        offsetPositionRight2 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(retrieveSpecimenPose2_3), new Point(alignToPrepareForRetrieval3)))
-                .setLinearHeadingInterpolation(retrieveSpecimenPose2_3.getHeading(), alignToPrepareForRetrieval3.getHeading())
+        retrieveSpecimenMotion2_2B = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(retrieveSpecimenPose2_2), new Point(endingPoint2)))
+                .setLinearHeadingInterpolation(retrieveSpecimenPose2_2.getHeading(), endingPoint2.getHeading())
                 .build();
 
-        retrieveSpecimenMotion3 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(alignToPrepareForRetrieval3), new Point(retrieveSpecimenPose3_1)))
-                .setLinearHeadingInterpolation(alignToPrepareForRetrieval3.getHeading(), retrieveSpecimenPose3_1.getHeading())
+        // Fifth retrieval motion: split into three segments.
+        retrieveSpecimenMotion3_1 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(endingPoint2), new Point(retrieveSpecimenPose3_1)))
+                .setLinearHeadingInterpolation(endingPoint2.getHeading(), retrieveSpecimenPose3_1.getHeading())
+                .build();
+
+        retrieveSpecimenMotion3_2 = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(retrieveSpecimenPose3_1), new Point(retrieveSpecimenPose3_2)))
                 .setLinearHeadingInterpolation(retrieveSpecimenPose3_1.getHeading(), retrieveSpecimenPose3_2.getHeading())
-                .addPath(new BezierLine(new Point(retrieveSpecimenPose3_2), new Point(retrieveSpecimenPose3_3)))
-                .setLinearHeadingInterpolation(retrieveSpecimenPose3_2.getHeading(), retrieveSpecimenPose3_3.getHeading())
+                .build();
+
+        retrieveSpecimenMotion3_3 = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(retrieveSpecimenPose3_2), new Point(endingPoint3)))
+                .setLinearHeadingInterpolation(retrieveSpecimenPose3_2.getHeading(), endingPoint3.getHeading())
                 .build();
     }
 
-    /** This switch is called continuously and runs the pathing, at certain points, it triggers the action state.
-     * Everytime the switch changes case, it will reset the timer. (This is because of the setPathState() method)
-     * The followPath() function sets the follower to run the specific path, but does NOT wait for it to finish before moving on. */
+    /**
+     * Autonomous state machine update.
+     * Each case corresponds to a motion segment or mechanism action.
+     */
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
+                // Begin scoring: follow the path and set scoring mechanism positions.
                 if (!follower.isBusy()) {
                     follower.followPath(scorePreloadedSpecimen, true);
                     subsystemManager.topClaw.close();
                     subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
-                    boolean slidesAtPosition = false;
-                    while (!slidesAtPosition) {
-                        slidesAtPosition = subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
-                        subsystemManager.topClaw.close();
-                    }
+                    waitForSlidePosition(SlideState.MEDIUM);
                 }
                 if (actionTimer.getElapsedTimeSeconds() > 5) {
                     setPathState(1);
                 }
-                telemetry.addLine("case 0");
+                telemetry.addLine("State 0: Scoring Preloaded Specimen");
                 break;
+
             case 1:
+                // Score actions: adjust slides, operate claw, then retract slides.
                 if (!follower.isBusy()) {
-                    //follower.followPath(scorePreloadedSpecimen, true);
-                    subsystemManager.topClaw.close();
                     if (actionTimer.getElapsedTimeSeconds() > 2) {
                         subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
-                        boolean slidesAtPosition = false;
-                        while (!slidesAtPosition) {
-                            slidesAtPosition = subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
-                            subsystemManager.topClaw.close();
-                        }
+                        waitForSlidePosition(SlideState.MEDIUM_SCORE);
                     }
                     if (actionTimer.getElapsedTimeSeconds() > 3) {
                         subsystemManager.topClaw.open();
                     }
                     if (actionTimer.getElapsedTimeSeconds() > 5) {
                         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-                        boolean slidesAtPosition = false;
-                        while (!slidesAtPosition) {
-                            slidesAtPosition = subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-                        }
+                        waitForSlidePosition(SlideState.BOTTOM);
                         setPathState(10);
                     }
                 }
-                telemetry.addLine("ONEEEEEEEEEEE");
+                telemetry.addLine("State 1: Scoring Actions");
                 break;
+
             case 10:
+                // Move from scoring to pickup alignment.
                 if (!follower.isBusy()) {
                     follower.followPath(goToPickupPositionAfterScoring, true);
+                    setPathState(20);
+                }
+                telemetry.addLine("State 10: Moving to Pickup Position");
+                break;
+
+            case 20:
+                // Brief pause before starting retrieval motion 1.
+                if (!follower.isBusy()) {
+                    sleepSegment();
                     setPathState(30);
                 }
+                telemetry.addLine("State 20: Pause");
                 break;
+
             case 30:
+                // Move to the first retrieval pickup position.
                 if (!follower.isBusy()) {
-                    follower.followPath(retrieveSpecimenMotion1, true);
+                    follower.followPath(retrieveSpecimenMotion1_1, true);
+                    setPathState(33);
+                }
+                telemetry.addLine("State 30: Moving to Retrieval Position 1");
+                break;
+
+            case 33:
+                // Pause before next segment.
+                if (!follower.isBusy()) {
+                    sleepSegment();
+                    setPathState(37);
+                }
+                telemetry.addLine("State 33: Pause");
+                break;
+
+            case 37:
+                // Follow first segment of the split retrieval motion.
+                if (!follower.isBusy()) {
+                    follower.followPath(retrieveSpecimenMotion1_2A, true);
+                    setPathState(38);
+                }
+                telemetry.addLine("State 37: Retrieval Motion 1_2 Part A");
+                break;
+
+            case 38:
+                // Short pause between segments.
+                if (!follower.isBusy()) {
+                    sleepSegment();
+                    setPathState(39);
+                }
+                telemetry.addLine("State 38: Pause");
+                break;
+
+            case 39:
+                // Follow the second segment of the split retrieval motion.
+                if (!follower.isBusy()) {
+                    follower.followPath(retrieveSpecimenMotion1_2B, true);
                     setPathState(40);
                 }
+                telemetry.addLine("State 39: Retrieval Motion 1_2 Part B");
                 break;
+
             case 40:
+                // Pause before starting the next retrieval motion.
                 if (!follower.isBusy()) {
-                    follower.followPath(offsetPositionRight1, true);
+                    sleepSegment();
                     setPathState(50);
                 }
+                telemetry.addLine("State 40: Pause");
                 break;
+
             case 50:
+                // Move to the second retrieval pickup position.
                 if (!follower.isBusy()) {
-                    follower.followPath(retrieveSpecimenMotion2, true);
+                    follower.followPath(retrieveSpecimenMotion2_1, true);
+                    setPathState(53);
+                }
+                telemetry.addLine("State 50: Retrieval Motion 2_1");
+                break;
+
+            case 53:
+                // Pause before the next split segment.
+                if (!follower.isBusy()) {
+                    sleepSegment();
+                    setPathState(57);
+                }
+                telemetry.addLine("State 53: Pause");
+                break;
+
+            case 57:
+                // Follow the first segment of the second split retrieval motion.
+                if (!follower.isBusy()) {
+                    follower.followPath(retrieveSpecimenMotion2_2A, true);
+                    setPathState(58);
+                }
+                telemetry.addLine("State 57: Retrieval Motion 2_2 Part A");
+                break;
+
+            case 58:
+                // Short pause between segments.
+                if (!follower.isBusy()) {
+                    sleepSegment();
+                    setPathState(59);
+                }
+                telemetry.addLine("State 58: Pause");
+                break;
+
+            case 59:
+                // Follow the second segment of the second split retrieval motion.
+                if (!follower.isBusy()) {
+                    follower.followPath(retrieveSpecimenMotion2_2B, true);
                     setPathState(60);
                 }
+                telemetry.addLine("State 59: Retrieval Motion 2_2 Part B");
                 break;
+
             case 60:
+                // Pause before beginning the final retrieval motion.
                 if (!follower.isBusy()) {
-                    follower.followPath(offsetPositionRight2, true);
+                    sleepSegment();
                     setPathState(70);
                 }
-                break; 
+                telemetry.addLine("State 60: Pause");
+                break;
+
             case 70:
+                // Follow the first segment of the third (three-part) retrieval motion.
                 if (!follower.isBusy()) {
-                    follower.followPath(retrieveSpecimenMotion3, true);
-                    setPathState(80);
+                    follower.followPath(retrieveSpecimenMotion3_1, true);
+                    setPathState(71);
                 }
+                telemetry.addLine("State 70: Retrieval Motion 3_1");
+                break;
+
+            case 71:
+                // Pause before the next segment.
+                if (!follower.isBusy()) {
+                    sleepSegment();
+                    setPathState(72);
+                }
+                telemetry.addLine("State 71: Pause");
+                break;
+
+            case 72:
+                // Follow the second segment of the third retrieval motion.
+                if (!follower.isBusy()) {
+                    follower.followPath(retrieveSpecimenMotion3_2, true);
+                    setPathState(73);
+                }
+                telemetry.addLine("State 72: Retrieval Motion 3_2");
+                break;
+
+            case 73:
+                // Pause before the final segment.
+                if (!follower.isBusy()) {
+                    sleepSegment();
+                    setPathState(74);
+                }
+                telemetry.addLine("State 73: Pause");
+                break;
+
+            case 74:
+                // Follow the final segment of the third retrieval motion.
+                if (!follower.isBusy()) {
+                    follower.followPath(retrieveSpecimenMotion3_3, true);
+                    setPathState(75);
+                }
+                telemetry.addLine("State 74: Retrieval Motion 3_3");
+                break;
+
+            case 75:
+                // Final pause to conclude the routine.
+                if (!follower.isBusy()) {
+                    sleepSegment();
+                    setPathState(77);
+                }
+                telemetry.addLine("State 75: Final Pause");
+                break;
+
+            case 77:
+                // Autonomous routine complete.
+                telemetry.addLine("State 77: Routine Completed");
+                break;
+
+            default:
+                telemetry.addLine("Unknown State");
                 break;
         }
     }
 
-    /** These change the states of the paths and actions
-     * It will also reset the timers of the individual switches **/
-    public void setPathState(int pState) {
-        pathState = pState;
+    /**
+     * Updates the state and resets timers.
+     *
+     * @param newState The new state to transition into.
+     */
+    public void setPathState(int newState) {
+        pathState = newState;
         pathTimer.resetTimer();
+        actionTimer.resetTimer();
     }
 
-    /** This is the main loop of the OpMode, it will run repeatedly after clicking "Play". **/
+    /**
+     * Blocks until the slide mechanism reaches the desired position.
+     *
+     * @param target The target slide state.
+     */
+    private void waitForSlidePosition(SlideState target) {
+        while (!subsystemManager.slides.slideToPosition(target)) {
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    /**
+     * Sleeps for a short duration between motion segments.
+     */
+    private void sleepSegment() {
+        try {
+            Thread.sleep(SLEEP_TIME_MS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    /**
+     * Main loop: updates path following and state machine, then provides telemetry.
+     */
     @Override
     public void loop() {
-
-        // These loop the movements of the robot
         follower.update();
         autonomousPathUpdate();
 
-        // Feedback to Driver Hub
-        telemetry.addData("path state", pathState);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
+        telemetry.addData("Path State", pathState);
+        telemetry.addData("X", follower.getPose().getX());
+        telemetry.addData("Y", follower.getPose().getY());
+        telemetry.addData("Heading", follower.getPose().getHeading());
         telemetry.update();
     }
 
-    /** This method is called once at the init of the OpMode. **/
+    /**
+     * Initializes timers, subsystems, starting pose, and builds all paths.
+     */
     @Override
     public void init() {
         pathTimer = new Timer();
@@ -267,7 +419,6 @@ public class RightOneSpecimenPark extends OpMode {
         opmodeTimer.resetTimer();
 
         subsystemManager = new SubsystemManager(hardwareMap, telemetry);
-
         subsystemManager.arm.toInitPos();
         subsystemManager.topClaw.close();
 
@@ -277,20 +428,18 @@ public class RightOneSpecimenPark extends OpMode {
         buildPaths();
     }
 
-    /** This method is called continuously after Init while waiting for "play". **/
     @Override
     public void init_loop() {}
 
-    /** This method is called once at the start of the OpMode.
-     * It runs all the setup actions, including building paths and starting the path system **/
+    /**
+     * Resets the opmode timer and state when starting.
+     */
     @Override
     public void start() {
         opmodeTimer.resetTimer();
         setPathState(0);
     }
 
-    /** We do not use this because everything should automatically disable **/
     @Override
-    public void stop() {
-    }
+    public void stop() {}
 }
