@@ -32,7 +32,7 @@ public class AutonStepDescriptor {
     public double timeout; // seconds
 
     // Constructor for PATH steps.
-    public AutonStepDescriptor(Pose autonStateCode, Pose endPose) {
+    public AutonStepDescriptor(Pose startPose, Pose endPose) {
         this.type = StepType.PATH;
         this.startPose = startPose;
         this.endPose = endPose;

@@ -129,7 +129,6 @@ public class AutonCompiler {
 
         @Override
         public boolean update() {
-            AutonState state;
             switch (actionCode) {
                 case "BOTTOM_CLOSED":
                     return new SlidesBottomClawClosed(subsystemManager).update();
