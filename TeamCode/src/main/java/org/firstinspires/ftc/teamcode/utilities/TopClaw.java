@@ -10,8 +10,8 @@ public class TopClaw {
     private final static double servoAngleModifier = (double) 360 / 300;
     private boolean open = true;
 
-    public static double openPos = 0.7;
-    public static double closePos = 0.9;
+    public static double openPos = 1.0;
+    public static double closePos = 0.65;
 
     public TopClaw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.topClawServo);

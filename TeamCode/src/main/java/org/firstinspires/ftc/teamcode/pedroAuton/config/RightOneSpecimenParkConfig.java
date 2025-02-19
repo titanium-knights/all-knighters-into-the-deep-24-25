@@ -21,7 +21,7 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     public static final Pose BEFORE_SCORE_SPECIMEN_POSE = new Pose(35, 62, Math.toRadians(0));
 
     // Pose for scoring the preloaded specimen (drives the robot closer to the bar).
-    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(39, 62, Math.toRadians(0));
+    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(41, 62, Math.toRadians(0));
 
     // Pose for aligning before specimen retrieval.
     public static final Pose ALIGN_TO_PREPARE_FOR_RETRIEVAL = new Pose(20, 36, Math.toRadians(0));
@@ -38,13 +38,13 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
 
     // Poses for the third retrieval motion.
     public static final Pose RETRIEVE_SPECIMEN_POSE3_1 = new Pose(60, 20, Math.toRadians(0));
-    public static final Pose RETRIEVE_SPECIMEN_POSE3_2 = new Pose(60, 9.5, Math.toRadians(0));
-    public static final Pose ENDING_POINT3 = new Pose(20, 9.5, Math.toRadians(0));
+    public static final Pose RETRIEVE_SPECIMEN_POSE3_2 = new Pose(60, 9, Math.toRadians(0));
+    public static final Pose ENDING_POINT3 = new Pose(20, 9.9, Math.toRadians(0));
 
     // ===== Timing Parameters (in seconds) =====
 
-    public static final double SCORING_INITIAL_WAIT_SECONDS = 3.0;
-    public static final double SCORING_SLIDES_WAIT_SECONDS = 2.5;
+    public static final double SCORING_INITIAL_WAIT_SECONDS = 0.5; //3.0
+    public static final double SCORING_SLIDES_WAIT_SECONDS = 0.5; //2.0
     public static final double SCORING_CLAW_WAIT_SECONDS = 3.0;
     public static final double SCORING_RETRACT_WAIT_SECONDS = 2.0;
 
