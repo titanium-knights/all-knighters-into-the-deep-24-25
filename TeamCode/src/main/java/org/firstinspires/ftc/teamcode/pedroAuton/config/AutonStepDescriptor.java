@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroAuton.config;
+import com.pedropathing.localization.Pose;
 
-public static class AutonStepDescriptor {
+public class AutonStepDescriptor {
     
     // ===== Step Script Definitions =====
 
