@@ -13,6 +13,12 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.InitAuton;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumClawClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumScoreClawClosed;
+
 /**
  * RightOneSpecimenPark is an autonomous OpMode.
  * It imports the AutonCompiler (from the config layer) and the unique config
@@ -25,6 +31,8 @@ public class RightOneSpecimenPark extends OpMode {
     private Follower follower;
     private SubsystemManager subsystemManager;
     private Timer opmodeTimer;
+
+    private AutonState autonState;
 
     // The unique configuration for this auton.
     private IAutonConfig config;
@@ -53,6 +61,9 @@ public class RightOneSpecimenPark extends OpMode {
         // Set the starting pose.
         follower.setStartingPose(config.getStartPose());
 
+        autonState = new InitAuton();
+        autonState.update(); // can telemetry that this is done if needed
+
         // Use the compiler utility to compile the config into executable steps.
         steps = AutonCompiler.compile(config);
     }
@@ -74,7 +85,7 @@ public class RightOneSpecimenPark extends OpMode {
         // Process the current step.
         if (currentStepIndex < steps.size()) {
             IAutonStep currentStep = steps.get(currentStepIndex);
-            if (currentStep.update()) {  // If the current step is complete...
+            if (currentStep.update()) {  // If the current step is complete... (step types are in AutonCompiler, and the choices made are in RightOneSpecimenParkConfig)
                 currentStepIndex++;
                 if (currentStepIndex < steps.size()) {
                     steps.get(currentStepIndex).init(follower, subsystemManager);

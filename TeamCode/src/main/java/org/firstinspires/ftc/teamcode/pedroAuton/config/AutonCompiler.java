@@ -10,6 +10,10 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 import com.pedropathing.util.Constants;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumScoreClawClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumClawClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawOpen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,12 +62,10 @@ public class AutonCompiler {
         switch (desc.type) {
             case PATH:
                 return new PathStep(desc.startPose, desc.endPose);
-            case ACTION:
+            case STATE:
                 return new ActionStep(desc.actionCode, desc.timeout);
             case SLEEP:
                 return new SleepStep(desc.duration);
-            case PARALLEL:
-                return new ParallelStep(desc.subSteps);
             default:
                 return null;
         }
@@ -128,26 +130,15 @@ public class AutonCompiler {
 
         @Override
         public boolean update() {
-            long elapsedMs = System.currentTimeMillis() - startTimeMs;
-            if (timeout > 0 && elapsedMs >= timeout * 1000) {
-                return true;
-            }
-
             switch (actionCode) {
-                case "CLOSE_CLAW":
-                    subsystemManager.topClaw.close();
-                    return true;
-                case "OPEN_CLAW":
-                    subsystemManager.topClaw.open();
-                    return true;
-                case "SLIDE_MEDIUM":
-                    return subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
-                case "SLIDE_MEDIUM_SCORE":
-                    return subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
-                case "SLIDE_BOTTOM":
-                    return subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-                default:
-                    return true;
+                case "BOTTOM_CLOSED":
+                    return SlidesBottomClawClosed().update();
+                case "MEDIUM_CLOSED":
+                    return SlidesMediumClawClosed().update();
+                case "MEDIUM_SCORE_CLOSED":
+                    return SlidesMediumScoreClawClosed().update();
+                case "BOTTOM_OPEN":
+                    return SlidesBottomClawOpen().update();
             }
         }
     }
@@ -171,41 +162,6 @@ public class AutonCompiler {
         @Override
         public boolean update() {
             return (System.currentTimeMillis() - startTimeMs) >= durationSeconds * 1000;
-        }
-    }
-
-    /**
-     * ParallelStep executes a list of sub-steps concurrently.
-     * It completes only when all sub-steps have finished.
-     */
-    private static class ParallelStep implements IAutonStep {
-        private List<IAutonStep> parallelSteps = new ArrayList<>();
-
-        public ParallelStep(List<RightOneSpecimenParkConfig.AutonStepDescriptor> subDescriptors) {
-            for (RightOneSpecimenParkConfig.AutonStepDescriptor desc : subDescriptors) {
-                IAutonStep step = createStepFromDescriptor(desc);
-                if (step != null) {
-                    parallelSteps.add(step);
-                }
-            }
-        }
-
-        @Override
-        public void init(Follower follower, SubsystemManager subsystemManager) {
-            for (IAutonStep step : parallelSteps) {
-                step.init(follower, subsystemManager);
-            }
-        }
-
-        @Override
-        public boolean update() {
-            boolean allComplete = true;
-            for (IAutonStep step : parallelSteps) {
-                if (!step.update()) {
-                    allComplete = false;
-                }
-            }
-            return allComplete;
         }
     }
 }
