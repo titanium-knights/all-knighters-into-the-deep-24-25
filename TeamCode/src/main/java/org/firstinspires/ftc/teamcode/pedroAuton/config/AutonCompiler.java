@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumScore
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonStepDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class AutonCompiler {
      */
     public static List<IAutonStep> compile(IAutonConfig config) {
         List<IAutonStep> steps = new ArrayList<>();
-        for (RightOneSpecimenParkConfig.AutonStepDescriptor desc : config.getRoutine()) {
+        for (AutonStepDescriptor desc : config.getRoutine()) {
             IAutonStep step = createStepFromDescriptor(desc);
             if (step != null) {
                 steps.add(step);
@@ -58,7 +59,7 @@ public class AutonCompiler {
     /**
      * Recursively creates an IAutonStep from a descriptor.
      */
-    private static IAutonStep createStepFromDescriptor(RightOneSpecimenParkConfig.AutonStepDescriptor desc) {
+    private static IAutonStep createStepFromDescriptor(AutonStepDescriptor desc) {
         switch (desc.type) {
             case PATH:
                 return new PathStep(desc.startPose, desc.endPose);
