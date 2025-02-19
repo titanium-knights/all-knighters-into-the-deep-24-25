@@ -7,14 +7,12 @@ import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
-import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 import com.pedropathing.util.Constants;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumScoreClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawOpen;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonStepDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +62,7 @@ public class AutonCompiler {
             case PATH:
                 return new PathStep(desc.startPose, desc.endPose);
             case STATE:
-                return new ActionStep(desc.actionCode, desc.timeout);
+                return new ActionStep(desc.autonStateCode, desc.timeout);
             case SLEEP:
                 return new SleepStep(desc.duration);
             default:
@@ -131,15 +129,18 @@ public class AutonCompiler {
 
         @Override
         public boolean update() {
+            AutonState state;
             switch (actionCode) {
                 case "BOTTOM_CLOSED":
-                    return SlidesBottomClawClosed().update();
+                    return new SlidesBottomClawClosed(subsystemManager).update();
                 case "MEDIUM_CLOSED":
-                    return SlidesMediumClawClosed().update();
+                    return new SlidesMediumClawClosed(subsystemManager).update();
                 case "MEDIUM_SCORE_CLOSED":
-                    return SlidesMediumScoreClawClosed().update();
+                    return new SlidesMediumScoreClawClosed(subsystemManager).update();
                 case "BOTTOM_OPEN":
-                    return SlidesBottomClawOpen().update();
+                    return new SlidesBottomClawOpen(subsystemManager).update();
+                default:
+                    return true;
             }
         }
     }
