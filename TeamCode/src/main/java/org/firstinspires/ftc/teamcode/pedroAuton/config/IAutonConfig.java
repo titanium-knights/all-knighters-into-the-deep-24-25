@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroAuton.config;
 
 import com.pedropathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonStepDescriptor;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ public interface IAutonConfig {
     /**
      * @return the ordered list of step descriptors for the autonomous routine.
      */
-    List<RightOneSpecimenParkConfig.AutonStepDescriptor> getRoutine();
+    List<AutonStepDescriptor> getRoutine();
 
     /**
      * @return the pause time (in milliseconds) to wait between motion segments.
