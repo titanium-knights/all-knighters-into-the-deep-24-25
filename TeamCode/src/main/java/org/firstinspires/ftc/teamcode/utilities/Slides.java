@@ -16,6 +16,7 @@ public class Slides {
     public final int minHeight = 0;
     public final int BUFFER = 50;
     private final DcMotor slidesMotor;
+    private SlideState currentState;
 
     // On the physical robot, the more negative the value, the higher it is
     // store the current position of the slides
@@ -54,6 +55,7 @@ public class Slides {
 
     // Exists to switch between target encoder values
     public boolean slideToPosition(SlideState state) {
+        currentState = state;
         if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
             stop();
             return true;
@@ -61,6 +63,10 @@ public class Slides {
             updateSlidesPowerBasic(state.getEncoderValue());
             return false;
         }
+    }
+
+    public SlideState getSlidesState() {
+        return currentState;
     }
 
     // Manual control methods accepting controller values
