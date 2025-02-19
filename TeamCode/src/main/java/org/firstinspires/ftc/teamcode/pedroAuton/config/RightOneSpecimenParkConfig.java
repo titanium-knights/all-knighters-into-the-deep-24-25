@@ -102,8 +102,8 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
 
             // --- Get the specimen from wall ---
             new AutonStepDescriptor(TURNING_POSE4_2, GET_SPECIMEN_POSE),    // Move to be flush against wall
-            //new AutonStepDescriptor("CLOSE_CLAW"),                          // Close claw
-            //new AutonStepDescriptor("SLIDE_MEDIUM"),                    // Raise slides todo: change to maxwell's updated
+            new AutonStepDescriptor("CLOSE_CLAW"),                          // Close claw
+            new AutonStepDescriptor("SLIDE_MEDIUM"),                    // Raise slides todo: change to maxwell's updated
 
             // --- Move to scoring specimen position ---
             new AutonStepDescriptor(GET_SPECIMEN_POSE, TURNING_POSE4_2),        // move back from wall
@@ -111,12 +111,12 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor(TURNING_POSE4_1, SCORE_SPECIMEN_BAR_POSE),  // Move to the submersible
 
             // --- Score specimen ---
-            //new AutonStepDescriptor("CLOSE_CLAW"),                         // Ensure claw is closed.
+            new AutonStepDescriptor("CLOSE_CLAW"),                         // Ensure claw is closed.
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
-            //new AutonStepDescriptor("SLIDE_MEDIUM_SCORE", SCORING_SLIDES_WAIT_SECONDS),          // Adjust slides.
+            new AutonStepDescriptor("SLIDE_MEDIUM_SCORE", SCORING_SLIDES_WAIT_SECONDS),          // Adjust slides.
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
-            //new AutonStepDescriptor("OPEN_CLAW"),                            // Open claw to release specimen.
-            //new AutonStepDescriptor("SLIDE_BOTTOM", SCORING_RETRACT_WAIT_SECONDS), // Retract slides.
+            new AutonStepDescriptor("OPEN_CLAW"),                            // Open claw to release specimen.
+            new AutonStepDescriptor("SLIDE_BOTTOM", SCORING_RETRACT_WAIT_SECONDS), // Retract slides.
 
             // --- Re-align to get specimen again ---
             new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE, TURNING_POSE4_1),  // Drive to pickup alignment.

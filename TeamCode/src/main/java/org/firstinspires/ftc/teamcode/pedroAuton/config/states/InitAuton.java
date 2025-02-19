@@ -18,7 +18,7 @@ public class InitAuton extends AutonState {
         subsystemManager.topClaw.close();
         // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
 
-        if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM && subsystemManager.topClaw.getOpenStatus()) {
+        if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM && !subsystemManager.topClaw.getOpenStatus()) {
             return true;
         } else {
             return false;
