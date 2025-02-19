@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawO
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumScoreClawClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonState;
 
 /**
  * RightOneSpecimenPark is an autonomous OpMode.
@@ -61,7 +62,7 @@ public class RightOneSpecimenPark extends OpMode {
         // Set the starting pose.
         follower.setStartingPose(config.getStartPose());
 
-        autonState = new InitAuton();
+        autonState = new InitAuton(subsystemManager);
         autonState.update(); // can telemetry that this is done if needed
 
         // Use the compiler utility to compile the config into executable steps.
