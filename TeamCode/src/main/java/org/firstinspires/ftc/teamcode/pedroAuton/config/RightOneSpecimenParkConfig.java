@@ -38,8 +38,13 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
 
     // Poses for the third retrieval motion.
     public static final Pose RETRIEVE_SPECIMEN_POSE3_1 = new Pose(60, 20, Math.toRadians(0));
-    public static final Pose RETRIEVE_SPECIMEN_POSE3_2 = new Pose(60, 9, Math.toRadians(0));
-    public static final Pose ENDING_POINT3 = new Pose(20, 9.9, Math.toRadians(0));
+    public static final Pose RETRIEVE_SPECIMEN_POSE3_2 = new Pose(60, 9.2, Math.toRadians(0));
+    public static final Pose ENDING_POINT3 = new Pose(20, 9.2, Math.toRadians(0));
+
+    // Poses for scoring additional specimen.
+    public static final Pose TURNING_POSE4_1 = new Pose(20, 36, Math.toRadians(0));
+    public static final Pose TURNING_POSE4_2 = new Pose(20, 36, Math.toRadians(180));
+    public static final Pose GET_SPECIMEN_POSE = new Pose(10, 36, Math.toRadians(180));
 
     // ===== Timing Parameters (in seconds) =====
 
@@ -89,6 +94,33 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
             new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3_1, RETRIEVE_SPECIMEN_POSE3_2),
             new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3_2, ENDING_POINT3),
+            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
+
+            // --- Align to get specimen from wall ---
+            new AutonStepDescriptor(ENDING_POINT3, TURNING_POSE4_1),        // Move from the sample pushed previously
+            new AutonStepDescriptor(TURNING_POSE4_1, TURNING_POSE4_2),      // Turn to have top claw face wall
+
+            // --- Get the specimen from wall ---
+            new AutonStepDescriptor(TURNING_POSE4_2, GET_SPECIMEN_POSE),    // Move to be flush against wall
+            //new AutonStepDescriptor("CLOSE_CLAW"),                          // Close claw
+            //new AutonStepDescriptor("SLIDE_MEDIUM"),                    // Raise slides todo: change to maxwell's updated
+
+            // --- Move to scoring specimen position ---
+            new AutonStepDescriptor(GET_SPECIMEN_POSE, TURNING_POSE4_2),        // move back from wall
+            new AutonStepDescriptor(TURNING_POSE4_2, TURNING_POSE4_1),          // Turn to have top claw face submersible
+            new AutonStepDescriptor(TURNING_POSE4_1, SCORE_SPECIMEN_BAR_POSE),  // Move to the submersible
+
+            // --- Score specimen ---
+            //new AutonStepDescriptor("CLOSE_CLAW"),                         // Ensure claw is closed.
+            new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
+            //new AutonStepDescriptor("SLIDE_MEDIUM_SCORE", SCORING_SLIDES_WAIT_SECONDS),          // Adjust slides.
+            new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
+            //new AutonStepDescriptor("OPEN_CLAW"),                            // Open claw to release specimen.
+            //new AutonStepDescriptor("SLIDE_BOTTOM", SCORING_RETRACT_WAIT_SECONDS), // Retract slides.
+
+            // --- Re-align to get specimen again ---
+            new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE, TURNING_POSE4_1),  // Drive to pickup alignment.
+            new AutonStepDescriptor(TURNING_POSE4_1, TURNING_POSE4_2),          // Turn to have top claw face wall
             new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0)
     ));
 
