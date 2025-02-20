@@ -34,6 +34,8 @@ public class AutonStepDescriptor {
     // For STATE steps, a timeout after which the step is forced complete.
     public double timeout; // seconds
 
+    public List<AutonStepDescriptor> steps;
+
     // Constructor for PATH steps.
     public AutonStepDescriptor(Pose startPose, Pose endPose) {
         this.type = StepType.PATH;
