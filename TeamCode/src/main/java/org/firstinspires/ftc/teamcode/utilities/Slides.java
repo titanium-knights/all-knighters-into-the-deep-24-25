@@ -66,7 +66,7 @@ public class Slides {
     }
 
     public SlideState getSlidesState() {
-        return currentState;
+        return currentState && slidesMotor.getPower() == 0;
     }
 
     // Manual control methods accepting controller values
