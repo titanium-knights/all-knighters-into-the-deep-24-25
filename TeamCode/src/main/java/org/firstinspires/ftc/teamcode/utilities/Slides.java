@@ -66,7 +66,11 @@ public class Slides {
     }
 
     public SlideState getSlidesState() {
-        return currentState && slidesMotor.getPower() == idlePower;
+        return currentState;
+    }
+
+    public boolean isIdle() {
+        return slidesMotor.getPower() == idlePower;
     }
 
     // Manual control methods accepting controller values
