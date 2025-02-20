@@ -1,4 +1,6 @@
 package org.firstinspires.ftc.teamcode.pedroAuton.config;
+import java.util.List;
+
 import com.pedropathing.localization.Pose;
 
 public class AutonStepDescriptor {
@@ -12,6 +14,7 @@ public class AutonStepDescriptor {
         PATH,      // A path between two poses.
         STATE,    // A mechanism action.
         SLEEP,     // A pause (sleep).   // A composite step running multiple sub-steps concurrently.
+        PARALLEL,
     }
 
     /**
@@ -55,5 +58,10 @@ public class AutonStepDescriptor {
     public AutonStepDescriptor(double duration) {
         this.type = StepType.SLEEP;
         this.duration = duration;
+    }
+
+    public AutonStepDescriptor(List<AutonStepDescriptor> steps) {
+        this.type = StepType.PARALLEL;
+        this.steps = steps;
     }
 }
