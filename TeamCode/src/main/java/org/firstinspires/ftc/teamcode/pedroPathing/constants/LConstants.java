@@ -10,7 +10,14 @@ public class LConstants {
     static {
         ThreeWheelIMUConstants.forwardTicksToInches = 0.0005285356789805085;
         ThreeWheelIMUConstants.strafeTicksToInches = 0.0005330987731201786;
-        ThreeWheelIMUConstants.turnTicksToInches = 0.001998322827427511;
+        ThreeWheelIMUConstants.turnTicksToInches = 0.00345396830067402;
+        // before: 0.001998322827427511
+        // before: 0.00200977183130706
+        // 0.0034439643852543964
+        // 0.00344915278048366
+        // 0.003456964791976623
+        // 0.003519727204886374
+
 
         ThreeWheelIMUConstants.leftY = 14.208125;
         ThreeWheelIMUConstants.rightY = -15.08125;
