@@ -10,7 +10,7 @@ public class HorizontalSlides {
     private static final double slideForwardPower = 1;
     private static final double slideBackPower = -1;
     private static final double idlePower = 0.0;
-    public final int maxForward = 590;
+    public final int maxForward = 2150;
     public final int minBack = 0;
     public final int BUFFER = 50;
     private int pos;

@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
  */
 
 @Autonomous(name = "Test OoO", group = "Tests-Custom")
-public class SequenceTester extends OpMode {
+public class TestingAuton extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
