@@ -65,9 +65,12 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor("MEDIUM_CLOSED", SCORING_SLIDES_WAIT_SECONDS), // Move slides to medium.
             new AutonStepDescriptor(START_POSE, BEFORE_SCORE_SPECIMEN_POSE),  // Drive toward the bar.
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),
-            new AutonStepDescriptor(BEFORE_SCORE_SPECIMEN_POSE, SCORE_SPECIMEN_BAR_POSE),  // Drive toward the bar.                        // Ensure claw is closed.
-            new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
-            new AutonStepDescriptor("MEDIUM_SCORE_CLOSED", SCORING_SLIDES_WAIT_SECONDS),          // Adjust slides.
+            new AutonStepDescriptor(
+                new AutonStepDescriptor[] {
+                    new AutonStepDescriptor(BEFORE_SCORE_SPECIMEN_POSE, SCORE_SPECIMEN_BAR_POSE),  // Drive toward the bar.                        // Ensure claw is closed.        // Wait for initial positioning.
+                    new AutonStepDescriptor("MEDIUM_SCORE_CLOSED", SCORING_SLIDES_WAIT_SECONDS),          // Adjust slides.
+                }
+            ),
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
             new AutonStepDescriptor("BOTTOM_OPEN"),                            // Open claw to release specimen.
             new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE, ALIGN_TO_PREPARE_FOR_RETRIEVAL), // Drive to pickup alignment.

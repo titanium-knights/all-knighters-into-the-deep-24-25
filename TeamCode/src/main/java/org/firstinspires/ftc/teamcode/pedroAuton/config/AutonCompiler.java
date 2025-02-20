@@ -65,6 +65,8 @@ public class AutonCompiler {
                 return new ActionStep(desc.autonStateCode, desc.timeout);
             case SLEEP:
                 return new SleepStep(desc.duration);
+            case PARALLEL:
+                return new ParallelStep(desc.steps);
             default:
                 return null;
         }
@@ -163,6 +165,40 @@ public class AutonCompiler {
         @Override
         public boolean update() {
             return (System.currentTimeMillis() - startTimeMs) >= durationSeconds * 1000;
+        }
+    }
+
+    /**
+     * ParallelStep executes a list of steps in parallel.
+     * The step completes when all sub-steps are complete.
+     */
+    private static class ParallelStep implements IAutonStep {
+        private List<IAutonStep> steps;
+
+        public ParallelStep(List<AutonStepDescriptor> descriptors) {
+            steps = new ArrayList<>();
+            for (AutonStepDescriptor desc : descriptors) {
+                IAutonStep step = createStepFromDescriptor(desc);
+                if (step != null) {
+                    steps.add(step);
+                }
+            }
+        }
+
+        @Override
+        public void init(Follower follower, SubsystemManager subsystemManager) {
+            for (IAutonStep step : steps) {
+                step.init(follower, subsystemManager);
+            }
+        }
+
+        @Override
+        public boolean update() {
+            boolean allComplete = true;
+            for (IAutonStep step : steps) {
+                allComplete &= step.update();
+            }
+            return allComplete;
         }
     }
 }
