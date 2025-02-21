@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.utilities.TopClaw;
  * @author Mudasir Ali
  * @version 12/29/2024
  */
-@Autonomous(name = "SpecimenP", group = "Pedro Auton")
+@Autonomous(name = "SpecimenP", group = "Pedro Autons")
 public class Specimen extends LinearOpMode {
 
     @Override

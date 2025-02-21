@@ -16,7 +16,7 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     // ===== Pose Definitions (angles in radians) =====
 
     // Starting pose of the robot.
-    public static final Pose START_POSE = new Pose(10, 62, Math.toRadians(90));
+    public static final Pose START_POSE = new Pose(10, 62, Math.toRadians(0));
 
     public static final Pose BEFORE_SCORE_SPECIMEN_POSE = new Pose(35, 62, Math.toRadians(0));
 
