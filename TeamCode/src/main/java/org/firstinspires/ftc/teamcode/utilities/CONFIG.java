@@ -23,8 +23,8 @@ public class CONFIG {
 
     // outtake:
     public static String slidesMotor = "slidesMotor";   // tape: “SlidesMotor”, eh motor 3
-    public static String armServo = "armServo";         // tape: “R Bucket”,    ch servo 5
-    public static String topClawServo = "claw";         // tape: "Claw",        ch servo 3
+    public static String armServo = "armServo";         // tape: “R Bucket”,    ch servo 3
+    public static String topClawServo = "claw";         // tape: "Claw",        ch servo 5
 
     //NOTE: ch servo 4 is bad, do not use it until further investigation
 }
