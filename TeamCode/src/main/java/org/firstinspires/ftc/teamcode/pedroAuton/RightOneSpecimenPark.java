@@ -48,7 +48,7 @@ public class RightOneSpecimenPark extends OpMode {
 
         // Initialize hardware subsystems.
         subsystemManager = new SubsystemManager(hardwareMap, telemetry);
-        subsystemManager.arm.toInitPos();
+        subsystemManager.arm.toReceivingPos();
         subsystemManager.topClaw.close();
 
         Constants.setConstants(FConstants.class, LConstants.class);

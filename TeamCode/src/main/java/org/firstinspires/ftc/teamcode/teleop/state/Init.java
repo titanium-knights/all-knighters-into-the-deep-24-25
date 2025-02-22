@@ -13,7 +13,7 @@ public class Init extends TeleopState {
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) { // everything in init position
 
-        subsystemManager.arm.toInitPos();
+        subsystemManager.arm.toReceivingPos();
 
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristInitPosition();

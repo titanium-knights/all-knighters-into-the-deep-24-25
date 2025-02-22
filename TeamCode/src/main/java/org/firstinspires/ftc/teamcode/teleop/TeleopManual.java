@@ -35,7 +35,7 @@ public class TeleopManual extends OpMode {
     private BeforeSpecimenScore beforeSpecimenScoreState;
     private SpecimenScore specimenScoreState;
     private Init initState;
-    private static boolean slowMode = false;
+    private static boolean slowMode = true;
     private static final double SLOW_MODE_MULTIPLIER = 0.3;
 
     private boolean beforePickup = false;
