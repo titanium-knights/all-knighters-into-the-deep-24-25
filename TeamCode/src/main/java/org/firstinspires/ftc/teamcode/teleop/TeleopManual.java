@@ -89,9 +89,9 @@ public class TeleopManual extends OpMode {
         } else if (gamepad1.x) {
             switchToState(samplePickupState);
         } else if (gamepad1.y) {
-            switchToState(beforeSamplePickupTwist90State);
-        } else if (gamepad1.b) {
             switchToState(sampleTransferState);
+        } else if (gamepad1.b) {
+            switchToState(beforeSamplePickupTwist90State);
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
         } else if (gamepad1.right_trigger > 0.01f) {
