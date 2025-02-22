@@ -32,7 +32,7 @@ public class SubsystemManager {
         horizontalSlides = new HorizontalSlides(hmap);
         topClaw = new TopClaw(hmap);
         slides = new Slides(hmap);
-        webcam = new Webcam(hmap, telemetry);
+//        webcam = new Webcam(hmap, telemetry);
         this.telemetry = telemetry;
     }
 
