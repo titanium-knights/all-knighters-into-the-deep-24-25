@@ -52,19 +52,23 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         while (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - 20) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
+            telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.update();
             subsystemManager.horizontalSlides.manualBack(0.7);
 
+
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
+                telemetry.addLine("we got here!");
+                telemetry.update();
                 drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
                 yCoord = drsd.getY();
             }
         }
+        telemetry.addLine("out of the loop!");
         subsystemManager.horizontalSlides.stop();
-        yCoord = drsd.getY();
-        angle = drsd.getTheta() % 360;
-        if (angle > 180) {
-            angle -= 180;
+        angle = drsd.getTheta() % 180;
+        if (angle < 0) {
+            angle += 180;
         }
         rotationTheta = (angle * Math.PI) / 180;
         subsystemManager.bottomClaw.rotate(rotationTheta);

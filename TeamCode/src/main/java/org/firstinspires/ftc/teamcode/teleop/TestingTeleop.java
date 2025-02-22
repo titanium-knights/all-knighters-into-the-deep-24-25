@@ -28,6 +28,12 @@ public class TestingTeleop extends OpMode {
             //manager.bottomClaw.closeClaw();
             //manager.bottomClaw.orthogonalClawRotatorPosition();
             telemetry.addData("closed", true);
+        } else if (gamepad1.a) {
+            manager.horizontalSlides.manualForward(0.7);
+        } else if (gamepad1.b) {
+            manager.horizontalSlides.manualBack(0.7);
+        } else {
+            manager.horizontalSlides.stop();
         }
         telemetry.addData("scissors encoder value", manager.horizontalSlides.getEncoder());
     }

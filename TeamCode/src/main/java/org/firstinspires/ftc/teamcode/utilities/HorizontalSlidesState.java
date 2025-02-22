@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.utilities;
 
 public enum HorizontalSlidesState {
     IN(0),
-    NEUTRAL(-250),
+    NEUTRAL(-200),
     OUT(-2350),
     TRANSFER(-800);
 

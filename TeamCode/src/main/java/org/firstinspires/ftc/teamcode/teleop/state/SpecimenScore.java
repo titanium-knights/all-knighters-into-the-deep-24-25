@@ -19,5 +19,6 @@ public class SpecimenScore extends TeleopState{
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
+        subsystemManager.topClaw.open();
     }
 }

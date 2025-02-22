@@ -33,7 +33,7 @@ public class BottomClaw {
 
     // rotates claw to position at theta radians
     public void rotate(double theta) {
-        this.clawRotator.setPosition(theta * 0.68 / (2 * Math.PI));
+        this.clawRotator.setPosition(theta * 0.68 / (Math.PI));
     }
 
     public double getClawOpenerPosition() {

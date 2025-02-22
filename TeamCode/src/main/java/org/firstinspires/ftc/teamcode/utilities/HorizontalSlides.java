@@ -38,7 +38,7 @@ public class HorizontalSlides {
 
     public void resetSlideEncoder() {
         horizontalSlidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.pos = 0;
     }
 
@@ -53,14 +53,19 @@ public class HorizontalSlides {
         }
     }
 
+    public double getPower() {
+        return horizontalSlidesMotor.getPower();
+    }
 
     public void manualForward(double power) {
-        double adjustedPower = Math.abs(power); // Positive for downward movement
+        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double adjustedPower = Math.abs(power); // Positive for backward movement
         horizontalSlidesMotor.setPower(adjustedPower);
     }
 
     public void manualBack(double power) {
-        double adjustedPower = -Math.abs(power); // Positive for downward movement
+        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double adjustedPower = -Math.abs(power); // Positive for forward movement
         horizontalSlidesMotor.setPower(adjustedPower);
     }
 
