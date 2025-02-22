@@ -15,7 +15,7 @@ public class DriveWheelsTest extends OpMode {
     @Override
     public void init() {
 
-        manager = new SubsystemManager(hardwareMap, telemetry);
+        manager = new SubsystemManager(hardwareMap);
     }
 
     @Override

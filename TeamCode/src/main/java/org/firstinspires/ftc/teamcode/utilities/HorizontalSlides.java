@@ -19,7 +19,6 @@ public class HorizontalSlides {
 
     public HorizontalSlides(HardwareMap hmap) {
         this.horizontalSlidesMotor = hmap.dcMotor.get(CONFIG.horizontalSlidesMotor);
-        //this.horizontalSlidesMotor = hardwareMap.dcMotor.get(CONFIG.horizontalSlidesMotor);
         horizontalSlidesMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         horizontalSlidesMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

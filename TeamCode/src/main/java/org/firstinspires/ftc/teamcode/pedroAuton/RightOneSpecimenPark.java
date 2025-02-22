@@ -47,7 +47,7 @@ public class RightOneSpecimenPark extends OpMode {
         opmodeTimer = new Timer();
 
         // Initialize hardware subsystems.
-        subsystemManager = new SubsystemManager(hardwareMap, telemetry);
+        subsystemManager = new SubsystemManager(hardwareMap);
         subsystemManager.arm.toReceivingPos();
         subsystemManager.topClaw.close();
 

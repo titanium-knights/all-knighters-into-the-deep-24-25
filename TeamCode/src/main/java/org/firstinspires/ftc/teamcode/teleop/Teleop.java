@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeBucketScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BucketScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
+import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
 import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
 import org.firstinspires.ftc.teamcode.teleop.state.Init;
 
@@ -33,7 +34,7 @@ public class Teleop extends OpMode {
     private BeforeSamplePickupAutomated beforeSamplePickupAutomatedState;
     private SamplePickup samplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
-    private SampleTransfer sampleTransferState;
+    private SampleTransferAutomated sampleTransferAutomatedState;
     private BeforeBucketScore beforeBucketScoreState;
     private BucketScore bucketScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
@@ -47,13 +48,13 @@ public class Teleop extends OpMode {
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap, telemetry);
+        subsystemManager = new SubsystemManager(hardwareMap);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
-        beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager);
+        beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupAutomatedState, beforeSamplePickupTwist90State});
-        sampleTransferState = new SampleTransfer(subsystemManager);
+        sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
         beforeBucketScoreState = new BeforeBucketScore(subsystemManager);
         bucketScoreState = new BucketScore(subsystemManager, new TeleopState[] {beforeBucketScoreState});
         beforeSpecimenScoreState = new BeforeSpecimenScore(subsystemManager);
@@ -95,7 +96,7 @@ public class Teleop extends OpMode {
         } else if (gamepad1.y) {
             switchToState(beforeSamplePickupTwist90State);
         } else if (gamepad1.b) {
-            switchToState(sampleTransferState);
+            switchToState(sampleTransferAutomatedState);
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
         } else if (gamepad1.right_trigger > 0.01f) {
@@ -126,10 +127,7 @@ public class Teleop extends OpMode {
         prevGamepad2.copy(gamepad2);
 
         telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
-        telemetry.addData("y coord: ", subsystemManager.yCoord);
         telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
-        telemetry.addData("angle: ", subsystemManager.angle);
-        telemetry.addData("theta: ", subsystemManager.rotationTheta);
         telemetry.update();
     }
 

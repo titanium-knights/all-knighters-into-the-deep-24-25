@@ -19,10 +19,10 @@ public class Webcam {
     OpenCvPipeline pipeline; // daniel plainview would be proud
     int cameraMonitorViewId;
 
-    public Webcam(HardwareMap hmap, Telemetry telemetry) {
+    public Webcam(HardwareMap hmap) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
-        this.pipeline = new ConfidenceOrientationVectorPipeline(telemetry);
+        this.pipeline = new ConfidenceOrientationVectorPipeline();
         FtcDashboard.getInstance().startCameraStream(cam, 0);
 
         cam.setPipeline(pipeline);

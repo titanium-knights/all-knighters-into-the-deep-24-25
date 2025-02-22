@@ -22,9 +22,6 @@ import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.fastBoxBlur;
  *  5) Sorts by confidence, draws the top 5 bounding boxes on the *original* image scale
  */
 public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
-
-    private final Telemetry telemetry;
-
     // You can tweak these
     public static final double SCALE_FACTOR = 0.5; // Downscale 50%
     public static final int BLUR_RADIUS = 1;       // Radius=1 => 3x3 kernel
@@ -33,6 +30,14 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     // Define the yellow color range in HSV
     public static final Scalar LOWER_YELLOW = new Scalar(14, 141, 215);
     public static final Scalar UPPER_YELLOW = new Scalar(35, 252, 255);
+
+    // Define the blue color range in HSV
+    public static final Scalar LOWER_BLUE = new Scalar(27, 5, 59);
+    public static final Scalar UPPER_BLUE = new Scalar(115, 255, 248);
+
+    // Define the red color range in HSV
+//    public static final Scalar LOWER_RED = new Scalar();
+//    public static final Scalar UPPER_RED = new Scalar();
 
     // Class to hold the result of each detection: bounding box + confidence
     public static class DetectionResult {
@@ -60,9 +65,11 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     private int frameCount = 0;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline(Telemetry telemetry) {
-        this.telemetry = telemetry;
+    public ConfidenceOrientationVectorPipeline() {
     }
+
+    Mat canvas, down, processed, hsvImage, mask, hierarchy;
+
 
     @Override
     public Mat processFrame(Mat input) {
@@ -74,13 +81,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         bestDetectionResult = null;
 
         // 1) Make a copy of the original for final drawing
-        Mat canvas = input.clone();
+        canvas = input.clone();
 
         // 2) Downscale for faster processing
-        Mat down = downscale(input, SCALE_FACTOR);
+        down = downscale(input, SCALE_FACTOR);
 
         // 3) Denoise only on every SKIP_FRAMES-th frame
-        Mat processed;
         if (frameCount % SKIP_FRAMES == 0) {
             processed = fastBoxBlur(down, BLUR_RADIUS);
         } else {
@@ -88,21 +94,19 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         }
 
         // 4) Convert (processed) image to HSV color space
-        Mat hsvImage = new Mat();
+        hsvImage = new Mat();
         Imgproc.cvtColor(processed, hsvImage, Imgproc.COLOR_RGB2HSV);
 
         // 5) Threshold for yellow
-        Mat mask = new Mat();
+        mask = new Mat();
         Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, mask);
 
         // 6) Find contours in downscaled space
         List<MatOfPoint> contours = new ArrayList<>();
-        Mat hierarchy = new Mat();
+        hierarchy = new Mat();
         Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         if (contours.isEmpty()) {
-            telemetry.addLine("No contours found! Adjust color range or blur params.");
-            telemetry.update();
             return canvas;
         }
 
@@ -171,18 +175,8 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
                 );
                 Imgproc.line(canvas, center, end, new Scalar(255,0,0), 2);
 
-                // Telemetry
-                telemetry.addData("Orientation " + i,
-                        "Center:(%.1f,%.1f) Angle:%.1f Conf:%.2f",
-                        center.x, center.y, angle, confidence);
             }
         }
-
-        if (detectionResults.size() > 1) {
-            telemetry.addData("Skipped Detections", detectionResults.size() - 1);
-        }
-
-        telemetry.update();
 
         // Return the annotated original image
         return canvas;
@@ -234,8 +228,6 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
     @Override
     public void init(Mat input) {
-        telemetry.addLine("Pipeline initialized");
-        telemetry.update();
     }
 
     /**
