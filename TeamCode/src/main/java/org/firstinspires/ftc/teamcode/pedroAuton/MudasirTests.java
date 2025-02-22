@@ -87,7 +87,6 @@ public class MudasirTests extends OpMode {
                 .setTangentHeadingInterpolation()
                 .addParametricCallback(0.1, ()->{
                     subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
-
                 })
                 .addPath(
                         // Line 2
@@ -198,6 +197,7 @@ public class MudasirTests extends OpMode {
     public void start() {
         opmodeTimer.resetTimer();
         setPathState(0);
+        subsystemManager.slides.slideToPosition(SlideState.TOP);
     }
 
     /** We do not use this because everything should automatically disable **/
