@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -72,10 +73,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     }
 
     private Color color;
+    private Teleop.Strategy strategy;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline(Color color) {
+    public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
         this.color = color;
+        this.strategy = strategy;
     }
 
     Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
@@ -110,7 +113,9 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
         // 5a) Threshold for yellow
         yellow_mask = new Mat();
-        Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
+        if (strategy == Teleop.Strategy.SAMPLE) { // on if collecting samples, off if specimen-focused
+            Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
+        }
 
         // 5b) Threshold for specified color
         color_mask = new Mat();
