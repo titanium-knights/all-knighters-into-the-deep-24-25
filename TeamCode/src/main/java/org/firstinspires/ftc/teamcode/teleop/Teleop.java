@@ -157,6 +157,7 @@ public class Teleop extends OpMode {
         // run the current state
         if (currentState == beforeSamplePickupAutomatedState) {
             if (!beforePickup) {
+                currentState.runState(gamepad1, gamepad2);
                 beforePickup = true;
             }
             telemetry.addData("og angle: ", ((BeforeSamplePickupAutomated)currentState).ogAngle);
@@ -180,9 +181,8 @@ public class Teleop extends OpMode {
             }
         } else {
             beforePickup = false;
-            beforeSamplePickupAutomatedState.yCoord = -1;
+            currentState.runState(gamepad1, gamepad2);
         }
-        currentState.runState(gamepad1, gamepad2);
 
 
         // save the state of the game controllers for the next loop
