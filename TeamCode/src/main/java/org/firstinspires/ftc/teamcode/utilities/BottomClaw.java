@@ -75,6 +75,9 @@ public class BottomClaw {
         return getRightWristServoPosition() == RIGHT_WRIST_DOWN_POSITION
                 && getClawOpenerPosition() == CLOSE_CLAW_POSITION;
     }
+    public boolean inOrthoPos() {
+        return getClawOpenerPosition() == ORTHOGONAL_CLAW_ROTATOR_POSITION;
+    }
 
     public boolean inTransferPosition() {
         return getRightWristServoPosition() == RIGHT_WRIST_UP_POSITION;

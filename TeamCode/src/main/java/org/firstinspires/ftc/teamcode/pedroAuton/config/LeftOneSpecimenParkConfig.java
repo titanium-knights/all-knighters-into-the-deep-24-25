@@ -22,20 +22,20 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
     public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(40.3, 82, Math.toRadians(0));
 
     // Poses for the first retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(20, 130, Math.toRadians(140));
+    public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(22, 128, Math.toRadians(155));
 
     // Poses for the second retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(20, 130, Math.toRadians(180));
+    public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(20, 128, Math.toRadians(180));
 
     // Poses for the third retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(20, 130, Math.toRadians(220));
+    public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(45, 120, Math.toRadians(270));
 
     // Poses for scoring additional specimen.
-    public static final Pose SCORE_BUCKET_POSE = new Pose(15, 135, Math.toRadians(135));
+    public static final Pose SCORE_BUCKET_POSE = new Pose(15, 128, Math.toRadians(125));
 
     // Parking Pose
     public static final Pose PARK_POSE1 = new Pose(60, 110, Math.toRadians(0));
-    public static final Pose PARK_POSE2 = new Pose(70, 100, Math.toRadians(270));
+    public static final Pose PARK_POSE2 = new Pose(70, 95, Math.toRadians(270));
 
     // ===== Timing Parameters (in seconds) =====
 
@@ -44,6 +44,7 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
 
     // Sleep time (in milliseconds) between segments.
     public static final int SEGMENT_SLEEP_TIME_MS = 50;
+    public static final int WAIT_PLS = 2000;
 
     public static final int GRAB_SPECIMEN_WAIT_MS = 500;
 
@@ -71,42 +72,51 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
             // --- Score Motion 1 ---
             new AutonStepDescriptor("HORI_OUT_OPEN"),
             new AutonStepDescriptor("HORI_OUT_CLOSED"),
+            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
             new AutonStepDescriptor("HORI_TRANSFER_CLOSED"),
             new AutonStepDescriptor("HORI_TRANSFER_OPEN"),
+            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
             new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
             new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
-            new AutonStepDescriptor("HORI_TRANSFER_CLOSED"), // just to make sure we're folded in
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
             new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
             new AutonStepDescriptor(SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE2),
+            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
+            new AutonStepDescriptor("HORI_TRANSFER_CLOSED"), // just to make sure we're folded in
+
 
             // --- Score Motion 2 ---
             new AutonStepDescriptor("HORI_OUT_OPEN"),
             new AutonStepDescriptor("HORI_OUT_CLOSED"),
+            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
             new AutonStepDescriptor("HORI_TRANSFER_CLOSED"),
             new AutonStepDescriptor("HORI_TRANSFER_OPEN"),
+            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
             new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
             new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
-            new AutonStepDescriptor("HORI_TRANSFER_CLOSED"), // just to make sure we're folded in
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE2, SCORE_BUCKET_POSE),
             new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
             new AutonStepDescriptor(SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE3),
+            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
+            new AutonStepDescriptor("HORI_TRANSFER_CLOSED"), // just to make sure we're folded in
+
 
             // --- Score Motion 3 ---
-            new AutonStepDescriptor("HORI_OUT_OPEN"),
-            new AutonStepDescriptor("HORI_OUT_CLOSED"),
-            new AutonStepDescriptor("HORI_TRANSFER_CLOSED"),
-            new AutonStepDescriptor("HORI_TRANSFER_OPEN"),
-            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
-            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
-            new AutonStepDescriptor("HORI_TRANSFER_CLOSED"), // just to make sure we're folded in
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE2, SCORE_BUCKET_POSE),
-            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
-            new AutonStepDescriptor(SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE3),
+//            new AutonStepDescriptor("HORI_OUT_OPEN_TWIST"),
+//            new AutonStepDescriptor("HORI_OUT_CLOSED_TWIST"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_CLOSED"),
+//            new AutonStepDescriptor("HORI_TRANSFER_OPEN"),
+//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
+//            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
+//            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
+//            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
+//            new AutonStepDescriptor(SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE3),
+//            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_CLOSED"), // just to make sure we're folded in
 
             // Park ("Hang")
             new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3, PARK_POSE1),
             new AutonStepDescriptor(PARK_POSE1, PARK_POSE2)
+            //new AutonStepDescriptor("LOW_HANG")
     ));
 
     // ===== IAutonConfig Interface Methods =====

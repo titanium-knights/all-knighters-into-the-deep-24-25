@@ -32,6 +32,12 @@ public class Arm {
     public boolean inScoredPosition() {
         return armServo.getPosition() == SCORE_BUCKET_POSITION;
     }
+    public boolean inPreScorePosition() {
+        return armServo.getPosition() == RAISING_SLIDES_POSITION;
+    }
+    public boolean inReceivingPosition() {
+        return armServo.getPosition() == RECEIVING_POSITION;
+    }
 
     /**
      * Slowly move the arm up
