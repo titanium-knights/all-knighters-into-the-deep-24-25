@@ -19,19 +19,19 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
     public static final Pose START_POSE = new Pose(10, 82, Math.toRadians(0));
 
     // Pose for scoring the preloaded specimen (drives the robot closer to the bar).
-    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(40.3, 62, Math.toRadians(0));
+    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(40.3, 82, Math.toRadians(0));
 
     // Poses for the first retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(20, 110, Math.toRadians(320));
+    public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(20, 130, Math.toRadians(140));
 
     // Poses for the second retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(20, 110, Math.toRadians(0));
+    public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(20, 130, Math.toRadians(180));
 
     // Poses for the third retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(20, 110, Math.toRadians(40));
+    public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(20, 130, Math.toRadians(220));
 
     // Poses for scoring additional specimen.
-    public static final Pose SCORE_BUCKET_POSE = new Pose(15, 120, Math.toRadians(135));
+    public static final Pose SCORE_BUCKET_POSE = new Pose(15, 135, Math.toRadians(135));
 
     // Parking Pose
     public static final Pose PARK_POSE1 = new Pose(60, 110, Math.toRadians(0));
