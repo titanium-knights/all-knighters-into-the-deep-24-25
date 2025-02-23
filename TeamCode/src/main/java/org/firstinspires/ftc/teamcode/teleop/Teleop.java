@@ -56,6 +56,19 @@ public class Teleop extends OpMode {
     }
     private Strategy strategy = Strategy.SAMPLE;
 
+    enum ButtonPressState {
+        PRESSED_GOOD, // the first time we see the button
+        DEPRESSED, // you haven't let go
+        UNPRESSED // it's not pressed
+    }
+
+    private ButtonPressState rotatorButton = ButtonPressState.UNPRESSED;
+    enum ClawPosition {
+        HORIZONTAL,
+        ORTHOGONAL
+    }
+    private ClawPosition clawPosition = ClawPosition.HORIZONTAL;
+
     @Override
     public void init() {
         // instantiate all hardware util classes
@@ -121,7 +134,7 @@ public class Teleop extends OpMode {
             switchToState(samplePickupState);
         } else if (gamepad1.y) {
             switchToState(sampleTransfer);
-        } else if (gamepad1.b) {
+        } else if (gamepad1.a) {
             switchToState(sampleTransferAutomatedState);
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
@@ -145,6 +158,21 @@ public class Teleop extends OpMode {
             telemetry.addData("angle: ", ((BeforeSamplePickupAutomated)currentState).angle);
             telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
             telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
+
+            if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
+                rotatorButton = ButtonPressState.PRESSED_GOOD;
+                if (clawPosition == ClawPosition.HORIZONTAL) {
+                    subsystemManager.bottomClaw.orthogonalClawRotatorPosition();
+                    clawPosition = ClawPosition.ORTHOGONAL;
+                } else {
+                    subsystemManager.bottomClaw.neutralClawRotatorPosition();
+                    clawPosition = ClawPosition.HORIZONTAL;
+                }
+            } else if (gamepad1.b && rotatorButton == ButtonPressState.PRESSED_GOOD) {
+                rotatorButton = ButtonPressState.DEPRESSED;
+            } else if (!gamepad1.b) {
+                rotatorButton = ButtonPressState.UNPRESSED;
+            }
         } else {
             beforePickup = false;
             currentState.runState(gamepad1, gamepad2);
