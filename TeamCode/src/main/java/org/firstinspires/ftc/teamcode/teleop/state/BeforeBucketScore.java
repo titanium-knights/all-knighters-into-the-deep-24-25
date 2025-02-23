@@ -19,7 +19,7 @@ public class BeforeBucketScore extends TeleopState {
         Teleop.setSlowMode(true);
         TeleopManual.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.TOP); // slides move to top
-        subsystemManager.arm.toReceivingPos();
+        subsystemManager.arm.raisinPos();
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket

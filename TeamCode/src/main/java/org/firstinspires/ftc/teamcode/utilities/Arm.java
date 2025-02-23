@@ -9,6 +9,7 @@ public class Arm {
     private static final double INIT_POSITION = 0.3;
     private static final double RECEIVING_POSITION = 0.03;
     private static final double SCORE_BUCKET_POSITION = 0.65;
+    private static final double RAISING_SLIDES_POSITION = 0.3;
     private static final double ARM_SPEED = 0.005;
 
     public Arm(HardwareMap hmap) {
@@ -26,6 +27,7 @@ public class Arm {
     public void toScoreBucketPos() {
         armServo.setPosition(SCORE_BUCKET_POSITION);
     }
+    public void raisinPos() {armServo.setPosition(RAISING_SLIDES_POSITION);}
 
     /**
      * Slowly move the arm up

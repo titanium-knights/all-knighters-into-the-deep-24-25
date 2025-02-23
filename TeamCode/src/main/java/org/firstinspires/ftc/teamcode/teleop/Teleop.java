@@ -42,7 +42,7 @@ public class Teleop extends OpMode {
     private SampleTransfer sampleTransfer;
     private Init initState;
     private static boolean slowMode = false;
-    private static final double SLOW_MODE_MULTIPLIER = 0.3;
+    private static final double SLOW_MODE_MULTIPLIER = 0.5;
 
     private boolean beforePickup = false;
 
