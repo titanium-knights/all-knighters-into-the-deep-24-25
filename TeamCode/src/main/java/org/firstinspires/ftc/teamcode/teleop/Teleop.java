@@ -63,6 +63,7 @@ public class Teleop extends OpMode {
     }
 
     private ButtonPressState rotatorButton = ButtonPressState.UNPRESSED;
+    private ButtonPressState manualButton = ButtonPressState.UNPRESSED;
     enum ClawPosition {
         HORIZONTAL,
         ORTHOGONAL
@@ -78,7 +79,7 @@ public class Teleop extends OpMode {
         beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
-        samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupAutomatedState, beforeSamplePickupTwist90State});
+        samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupAutomatedState, beforeSamplePickupTwist90State, beforeSamplePickupState});
         sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
         sampleTransfer = new SampleTransfer(subsystemManager);
         beforeBucketScoreState = new BeforeBucketScore(subsystemManager);
@@ -96,8 +97,13 @@ public class Teleop extends OpMode {
         // non-state based logic
 
         // manual mode
-        if (gamepad2.y) {
-            manualMode = true;
+        if (gamepad2.y && manualButton == ButtonPressState.UNPRESSED) {
+            manualButton = ButtonPressState.PRESSED_GOOD;
+            manualMode = !manualMode;
+        } else if (gamepad2.y && manualButton == ButtonPressState.PRESSED_GOOD) {
+            manualButton = ButtonPressState.DEPRESSED;
+        } else if (!gamepad2.y) {
+            manualButton = ButtonPressState.UNPRESSED;
         }
 
         // drivetrain
