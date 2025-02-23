@@ -29,6 +29,10 @@ public class Arm {
     }
     public void raisinPos() {armServo.setPosition(RAISING_SLIDES_POSITION);}
 
+    public boolean inScoredPosition() {
+        return armServo.getPosition() == SCORE_BUCKET_POSITION;
+    }
+
     /**
      * Slowly move the arm up
      * @param power double in the range [0.0, 1.0]

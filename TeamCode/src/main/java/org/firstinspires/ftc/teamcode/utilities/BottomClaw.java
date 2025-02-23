@@ -71,6 +71,19 @@ public class BottomClaw {
         neutralClawRotatorPosition();
     }
 
+    public boolean isLoweredAndClosed() {
+        return getRightWristServoPosition() == RIGHT_WRIST_DOWN_POSITION
+                && getClawOpenerPosition() == CLOSE_CLAW_POSITION;
+    }
+
+    public boolean inTransferPosition() {
+        return getRightWristServoPosition() == RIGHT_WRIST_UP_POSITION;
+    }
+
+    public boolean isClosed() {
+        return getClawOpenerPosition() == CLOSE_CLAW_POSITION;
+    }
+
     public void orthogonalClawRotatorPosition() {
         clawRotator.setPosition(ORTHOGONAL_CLAW_ROTATOR_POSITION);
     }

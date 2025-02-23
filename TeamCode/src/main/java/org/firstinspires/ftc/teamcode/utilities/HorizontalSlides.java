@@ -15,6 +15,7 @@ public class HorizontalSlides {
     public final int BUFFER = 50;
     private int pos;
     private final DcMotor horizontalSlidesMotor;
+    private HorizontalSlidesState currentState;
 
 
     public HorizontalSlides(HardwareMap hmap) {
@@ -43,6 +44,7 @@ public class HorizontalSlides {
     }
 
     public boolean slideToPosition(HorizontalSlidesState state) {
+        currentState = state;
         int targetPosition = state.getEncoderValue();
         if (encoderValueWithinBufferOfTarget(targetPosition)) {
             stop();
@@ -55,6 +57,14 @@ public class HorizontalSlides {
 
     public double getPower() {
         return horizontalSlidesMotor.getPower();
+    }
+
+    public HorizontalSlidesState getSlidesState() {
+        return currentState;
+    }
+
+    public boolean isIdle() {
+        return horizontalSlidesMotor.getPower() == idlePower;
     }
 
     public void manualForward(double power) {
