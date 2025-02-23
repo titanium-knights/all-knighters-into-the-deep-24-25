@@ -72,18 +72,22 @@ public class Teleop extends OpMode {
         // drivetrain
         if (Teleop.slowMode) {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
+            if (gamepad1.left_bumper) {
+                subsystemManager.bottomClaw.openClaw();
+                subsystemManager.topClaw.open();
+            } else if (gamepad1.right_bumper) {
+                subsystemManager.bottomClaw.closeClaw();
+                subsystemManager.topClaw.close();
+            }
         } else {
             subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
-        }
-
-
-        // claw
-        if (gamepad1.left_bumper) {
-            subsystemManager.bottomClaw.openClaw();
-            subsystemManager.topClaw.open();
-        } else if (gamepad1.right_bumper) {
-            subsystemManager.bottomClaw.closeClaw();
-            subsystemManager.topClaw.close();
+            if (gamepad1.left_bumper) {
+                subsystemManager.bottomClaw.openClawHalf();
+                subsystemManager.topClaw.open();
+            } else if (gamepad1.right_bumper) {
+                subsystemManager.bottomClaw.closeClaw();
+                subsystemManager.topClaw.close();
+            }
         }
 
         // logic to run to states
