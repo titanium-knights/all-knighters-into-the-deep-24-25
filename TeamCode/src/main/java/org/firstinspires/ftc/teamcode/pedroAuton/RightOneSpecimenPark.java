@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.IAutonConfig;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.RightOneSpecimenParkConfig;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.InitAuton;
@@ -47,7 +48,7 @@ public class RightOneSpecimenPark extends OpMode {
         opmodeTimer = new Timer();
 
         // Initialize hardware subsystems.
-        subsystemManager = new SubsystemManager(hardwareMap);
+        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED);
         subsystemManager.arm.toReceivingPos();
         subsystemManager.topClaw.close();
 

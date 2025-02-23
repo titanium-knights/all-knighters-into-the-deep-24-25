@@ -32,12 +32,14 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public static final Scalar UPPER_YELLOW = new Scalar(35, 252, 255);
 
     // Define the blue color range in HSV
-    public static final Scalar LOWER_BLUE = new Scalar(27, 5, 59);
-    public static final Scalar UPPER_BLUE = new Scalar(115, 255, 248);
+    public static final Scalar LOWER_BLUE = new Scalar(111, 79, 59);
+    public static final Scalar UPPER_BLUE = new Scalar(115, 255, 255);
 
     // Define the red color range in HSV
-//    public static final Scalar LOWER_RED = new Scalar();
-//    public static final Scalar UPPER_RED = new Scalar();
+    public static final Scalar LOWER_RED_1 = new Scalar(0,119,113);
+    public static final Scalar UPPER_RED_1 = new Scalar(5, 244, 255);
+    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 0);
+    public static final Scalar UPPER_RED_2 = new Scalar(179, 255, 255);
 
     // Class to hold the result of each detection: bounding box + confidence
     public static class DetectionResult {
@@ -64,11 +66,19 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     // Keep track of frames to decide when to denoise
     private int frameCount = 0;
 
-    // Constructor
-    public ConfidenceOrientationVectorPipeline() {
+    public enum Color {
+        RED,
+        BLUE
     }
 
-    Mat canvas, down, processed, hsvImage, mask, hierarchy;
+    private Color color;
+
+    // Constructor
+    public ConfidenceOrientationVectorPipeline(Color color) {
+        this.color = color;
+    }
+
+    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
 
 
     @Override
@@ -98,9 +108,24 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         hsvImage = new Mat();
         Imgproc.cvtColor(processed, hsvImage, Imgproc.COLOR_RGB2HSV);
 
-        // 5) Threshold for yellow
+        // 5a) Threshold for yellow
+        yellow_mask = new Mat();
+        Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
+
+        // 5b) Threshold for specified color
+        color_mask = new Mat();
+        if (color == Color.RED) {
+            red_mask_1 = new Mat();
+            red_mask_2 = new Mat();
+            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
+            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
+            Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
+        } else {
+            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
+        }
+
         mask = new Mat();
-        Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, mask);
+        Core.bitwise_or(yellow_mask, color_mask, mask);
 
         // 6) Find contours in downscaled space
         List<MatOfPoint> contours = new ArrayList<>();

@@ -14,6 +14,7 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
@@ -182,7 +183,7 @@ public class MudasirTests extends OpMode {
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-         subsystemManager = new SubsystemManager(hardwareMap);
+         subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED);
 
         buildPaths();
     }

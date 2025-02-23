@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.utilities.BottomClaw;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
@@ -14,7 +15,7 @@ public class TestingTeleop extends OpMode {
 
     @Override
     public void init() {
-        manager = new SubsystemManager(hardwareMap);
+        manager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED);
     }
 
     @Override

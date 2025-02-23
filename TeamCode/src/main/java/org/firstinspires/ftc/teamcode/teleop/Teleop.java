@@ -45,10 +45,14 @@ public class Teleop extends OpMode {
 
     private boolean beforePickup = false;
 
+    private ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.RED;
+
+    public Teleop(ConfidenceOrientationVectorPipeline.Color color) { this.color = color; }
+
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap);
+        subsystemManager = new SubsystemManager(hardwareMap, color);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);

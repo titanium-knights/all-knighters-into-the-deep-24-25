@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utilities;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
 
 /**
@@ -22,7 +23,7 @@ public class SubsystemManager {
     public HorizontalSlides horizontalSlides;
     public Webcam webcam;
 
-    public SubsystemManager(HardwareMap hmap) {
+    public SubsystemManager(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color) {
         // add util class initializations here
         drive = new SimpleMecanumDrive(hmap);
         arm = new Arm(hmap);
@@ -30,6 +31,6 @@ public class SubsystemManager {
         horizontalSlides = new HorizontalSlides(hmap);
         topClaw = new TopClaw(hmap);
         slides = new Slides(hmap);
-        webcam = new Webcam(hmap);
+        webcam = new Webcam(hmap, color);
     }
 }
