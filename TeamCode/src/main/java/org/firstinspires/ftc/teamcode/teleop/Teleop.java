@@ -32,6 +32,7 @@ public class Teleop extends OpMode {
     // instance variables for all potential states
     private Neutral neutralState;
     private BeforeSamplePickupAutomated beforeSamplePickupAutomatedState;
+    private BeforeSamplePickup beforeSamplePickupState;
     private SamplePickup samplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
     private SampleTransferAutomated sampleTransferAutomatedState;
@@ -42,21 +43,40 @@ public class Teleop extends OpMode {
     private SampleTransfer sampleTransfer;
     private Init initState;
     private static boolean slowMode = false;
-    private static final double SLOW_MODE_MULTIPLIER = 0.3;
+    public static final double SLOW_MODE_MULTIPLIER = 0.5;
 
     private boolean beforePickup = false;
 
+    private boolean manualMode = false;
     private ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.RED;
 
-    public Teleop(ConfidenceOrientationVectorPipeline.Color color) { this.color = color; }
+    public enum Strategy {
+        SAMPLE,
+        SPECIMEN
+    }
+    private Strategy strategy = Strategy.SAMPLE;
+
+    enum ButtonPressState {
+        PRESSED_GOOD, // the first time we see the button
+        DEPRESSED, // you haven't let go
+        UNPRESSED // it's not pressed
+    }
+
+    private ButtonPressState rotatorButton = ButtonPressState.UNPRESSED;
+    enum ClawPosition {
+        HORIZONTAL,
+        ORTHOGONAL
+    }
+    private ClawPosition clawPosition = ClawPosition.HORIZONTAL;
 
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap, color);
+        subsystemManager = new SubsystemManager(hardwareMap, color, strategy);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);
+        beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupAutomatedState, beforeSamplePickupTwist90State});
         sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
@@ -74,6 +94,11 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         // non-state based logic
+
+        // manual mode
+        if (gamepad2.y) {
+            manualMode = true;
+        }
 
         // drivetrain
         if (Teleop.slowMode) {
@@ -100,12 +125,16 @@ public class Teleop extends OpMode {
         if (gamepad1.dpad_left) {
             switchToState(neutralState);
         } else if (gamepad1.dpad_right) {
-            switchToState(beforeSamplePickupAutomatedState);
+            if (manualMode) {
+                switchToState(beforeSamplePickupState);
+            } else {
+                switchToState(beforeSamplePickupAutomatedState);
+            }
         } else if (gamepad1.x) {
             switchToState(samplePickupState);
         } else if (gamepad1.y) {
             switchToState(sampleTransfer);
-        } else if (gamepad1.b) {
+        } else if (gamepad1.a) {
             switchToState(sampleTransferAutomatedState);
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
@@ -129,6 +158,21 @@ public class Teleop extends OpMode {
             telemetry.addData("angle: ", ((BeforeSamplePickupAutomated)currentState).angle);
             telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
             telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
+
+            if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
+                rotatorButton = ButtonPressState.PRESSED_GOOD;
+                if (clawPosition == ClawPosition.HORIZONTAL) {
+                    subsystemManager.bottomClaw.orthogonalClawRotatorPosition();
+                    clawPosition = ClawPosition.ORTHOGONAL;
+                } else {
+                    subsystemManager.bottomClaw.neutralClawRotatorPosition();
+                    clawPosition = ClawPosition.HORIZONTAL;
+                }
+            } else if (gamepad1.b && rotatorButton == ButtonPressState.PRESSED_GOOD) {
+                rotatorButton = ButtonPressState.DEPRESSED;
+            } else if (!gamepad1.b) {
+                rotatorButton = ButtonPressState.UNPRESSED;
+            }
         } else {
             beforePickup = false;
             currentState.runState(gamepad1, gamepad2);
@@ -156,7 +200,7 @@ public class Teleop extends OpMode {
         // them, don't move
         if (
                 state.getDependencyStates().length == 0
-                || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)
+                        || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)
         ) {
             Teleop.slowMode = false;
             currentState = state;
