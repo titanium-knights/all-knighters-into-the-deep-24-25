@@ -46,6 +46,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         extendToPickupPosition();
     }
 
+    // It is done. My legacy.
     public void extendToPickupPosition() {
         double yCoord;
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
