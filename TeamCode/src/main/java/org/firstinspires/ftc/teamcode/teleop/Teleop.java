@@ -39,6 +39,7 @@ public class Teleop extends OpMode {
     private BucketScore bucketScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
     private SpecimenScore specimenScoreState;
+    private SampleTransfer sampleTransfer;
     private Init initState;
     private static boolean slowMode = false;
     private static final double SLOW_MODE_MULTIPLIER = 0.3;
@@ -59,6 +60,7 @@ public class Teleop extends OpMode {
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupAutomatedState, beforeSamplePickupTwist90State});
         sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
+        sampleTransfer = new SampleTransfer(subsystemManager);
         beforeBucketScoreState = new BeforeBucketScore(subsystemManager);
         bucketScoreState = new BucketScore(subsystemManager, new TeleopState[] {beforeBucketScoreState});
         beforeSpecimenScoreState = new BeforeSpecimenScore(subsystemManager);
@@ -76,18 +78,22 @@ public class Teleop extends OpMode {
         // drivetrain
         if (Teleop.slowMode) {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
+            if (gamepad1.left_bumper) {
+                subsystemManager.bottomClaw.openClaw();
+                subsystemManager.topClaw.open();
+            } else if (gamepad1.right_bumper) {
+                subsystemManager.bottomClaw.closeClaw();
+                subsystemManager.topClaw.close();
+            }
         } else {
             subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
-        }
-
-
-        // claw
-        if (gamepad1.left_bumper) {
-            subsystemManager.bottomClaw.openClaw();
-            subsystemManager.topClaw.open();
-        } else if (gamepad1.right_bumper) {
-            subsystemManager.bottomClaw.closeClaw();
-            subsystemManager.topClaw.close();
+            if (gamepad1.left_bumper) {
+                subsystemManager.bottomClaw.openClawHalf();
+                subsystemManager.topClaw.open();
+            } else if (gamepad1.right_bumper) {
+                subsystemManager.bottomClaw.closeClaw();
+                subsystemManager.topClaw.close();
+            }
         }
 
         // logic to run to states
@@ -98,7 +104,7 @@ public class Teleop extends OpMode {
         } else if (gamepad1.x) {
             switchToState(samplePickupState);
         } else if (gamepad1.y) {
-            switchToState(beforeSamplePickupTwist90State);
+            switchToState(sampleTransfer);
         } else if (gamepad1.b) {
             switchToState(sampleTransferAutomatedState);
         } else if (gamepad1.left_trigger > 0.01f) {
