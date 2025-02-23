@@ -12,9 +12,15 @@ import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 import org.firstinspires.ftc.teamcode.utilities.Webcam;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 public class BeforeSamplePickupAutomated extends TeleopState {
     HardwareMap hmap;
     Telemetry telemetry;
+    public double ogAngle, angle, rotationAngle, rotationTheta;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -41,7 +47,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     }
 
     public void extendToPickupPosition() {
-        double yCoord, angle, rotationTheta;
+        double yCoord;
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
         yCoord = -1;
         telemetry.addLine("y coordinate: " + yCoord);
@@ -49,12 +55,14 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         telemetry.addLine("condition true?" + (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - 20));
         telemetry.update();
 
-        while (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - 20) {
+        ArrayList<Double> thetas = new ArrayList<>();
+
+        while (yCoord < 240 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - 20) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.update();
-            subsystemManager.horizontalSlides.manualBack(0.7);
+            subsystemManager.horizontalSlides.manualBack(0.5);
 
 
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
@@ -63,14 +71,35 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
                 yCoord = drsd.getY();
             }
+
+            if (yCoord != -1) {
+                thetas.add(drsd.getTheta());
+            }
         }
         telemetry.addLine("out of the loop!");
         subsystemManager.horizontalSlides.stop();
-        angle = drsd.getTheta() % 180;
+        if (thetas.isEmpty()) {
+            return;
+        }
+
+        ogAngle = thetas.get(thetas.size() / 2);
+        angle = ogAngle % 180;
         if (angle < 0) {
             angle += 180;
         }
-        rotationTheta = (angle * Math.PI) / 180;
+        angle = 180 - angle;
+        telemetry.addData("angle: ", angle);
+
+
+        rotationAngle = (angle + 90) % 180;
+        telemetry.addData("rotation angle: ", rotationAngle);
+
+        rotationTheta = ((rotationAngle * Math.PI) / 180) + Math.PI;
+        if (rotationTheta > 2 * Math.PI) {
+            rotationTheta -= 2 * Math.PI;
+        }
+        telemetry.addData("rotationTheta: ", rotationTheta);
+        telemetry.update();
         subsystemManager.bottomClaw.rotate(rotationTheta);
     }
 }

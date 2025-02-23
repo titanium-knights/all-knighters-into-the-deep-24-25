@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.utilities.BottomClaw;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 @TeleOp(name = "Testing Teleop", group = "User Control")
@@ -29,12 +30,10 @@ public class TestingTeleop extends OpMode {
             //manager.bottomClaw.orthogonalClawRotatorPosition();
             telemetry.addData("closed", true);
         } else if (gamepad1.a) {
-            manager.horizontalSlides.manualForward(0.7);
-        } else if (gamepad1.b) {
-            manager.horizontalSlides.manualBack(0.7);
-        } else {
-            manager.horizontalSlides.stop();
+            manager.bottomClaw.rotate(BottomClaw.TESTING_THETA);
         }
         telemetry.addData("scissors encoder value", manager.horizontalSlides.getEncoder());
+        telemetry.addData("claw rotation value", manager.bottomClaw.getClawRotatorPosition());
+        telemetry.update();
     }
 }

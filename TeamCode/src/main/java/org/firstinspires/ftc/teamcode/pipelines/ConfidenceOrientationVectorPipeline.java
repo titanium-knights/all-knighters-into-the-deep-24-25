@@ -87,8 +87,9 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         down = downscale(input, SCALE_FACTOR);
 
         // 3) Denoise only on every SKIP_FRAMES-th frame
+        processed = new Mat();
         if (frameCount % SKIP_FRAMES == 0) {
-            processed = fastBoxBlur(down, BLUR_RADIUS);
+            Imgproc.GaussianBlur(down, processed, new Size(3, 3), 0, 0);
         } else {
             processed = down;
         }

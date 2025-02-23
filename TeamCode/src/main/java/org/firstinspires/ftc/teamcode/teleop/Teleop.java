@@ -115,6 +115,10 @@ public class Teleop extends OpMode {
                 currentState.runState(gamepad1, gamepad2);
                 beforePickup = true;
             }
+            telemetry.addData("og angle: ", ((BeforeSamplePickupAutomated)currentState).ogAngle);
+            telemetry.addData("angle: ", ((BeforeSamplePickupAutomated)currentState).angle);
+            telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
+            telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
         } else {
             beforePickup = false;
             currentState.runState(gamepad1, gamepad2);
