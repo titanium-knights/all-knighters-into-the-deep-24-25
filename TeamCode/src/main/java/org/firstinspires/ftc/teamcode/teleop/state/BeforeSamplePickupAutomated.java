@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class BeforeSamplePickupAutomated extends TeleopState {
     HardwareMap hmap;
@@ -68,7 +69,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.update();
-            subsystemManager.horizontalSlides.manualBack(0.5);
+            subsystemManager.horizontalSlides.manualBack(0.35);
 
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
 
@@ -84,6 +85,9 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 thetas.add(drsd.getTheta());
             }
         }
+
+        thetas = (ArrayList<Double>)thetas.stream().filter(d -> d!=180.0).collect(Collectors.toList());
+
         telemetry.addLine("out of the loop!");
         subsystemManager.horizontalSlides.stop();
         if (thetas.isEmpty()) {

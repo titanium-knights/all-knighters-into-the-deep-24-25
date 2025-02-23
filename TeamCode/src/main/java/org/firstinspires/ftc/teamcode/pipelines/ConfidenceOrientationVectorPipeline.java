@@ -81,7 +81,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         this.strategy = strategy;
     }
 
-    Mat hierarchy;
+    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
 
 
     @Override
@@ -94,57 +94,48 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         bestDetectionResult = null;
 
         // 1) Make a copy of the original for final drawing
-        Mat canvas = input.clone();
+        canvas = input.clone();
 
         // 2) Downscale for faster processing
-        Mat down = downscale(input, SCALE_FACTOR);
+        down = downscale(input, SCALE_FACTOR);
 
         // 3) Denoise only on every SKIP_FRAMES-th frame
-        Mat processed = new Mat();
+        processed = new Mat();
         if (frameCount % SKIP_FRAMES == 0) {
             Imgproc.GaussianBlur(down, processed, new Size(3, 3), 0, 0);
         } else {
             processed = down;
         }
-        down.release();
 
         // 4) Convert (processed) image to HSV color space
-        Mat hsvImage = new Mat();
+        hsvImage = new Mat();
         Imgproc.cvtColor(processed, hsvImage, Imgproc.COLOR_RGB2HSV);
-        processed.release();
 
         // 5a) Threshold for yellow
-        Mat yellow_mask = new Mat();
+        yellow_mask = new Mat();
         if (strategy == Teleop.Strategy.SAMPLE) { // on if collecting samples, off if specimen-focused
             Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
         }
 
         // 5b) Threshold for specified color
-        Mat color_mask = new Mat();
+        color_mask = new Mat();
         if (color == Color.RED) {
-            Mat red_mask_1 = new Mat();
-            Mat red_mask_2 = new Mat();
+            red_mask_1 = new Mat();
+            red_mask_2 = new Mat();
             Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
             Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
             Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
-            red_mask_1.release();
-            red_mask_2.release();
         } else {
             Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
         }
-        hsvImage.release();
 
-        Mat mask = new Mat();
+        mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
-        yellow_mask.release();
-        color_mask.release();
 
         // 6) Find contours in downscaled space
         List<MatOfPoint> contours = new ArrayList<>();
-        Mat hierarchy = new Mat();
+        hierarchy = new Mat();
         Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
-        mask.release();
-        hierarchy.release();
 
         if (contours.isEmpty()) {
             return canvas;

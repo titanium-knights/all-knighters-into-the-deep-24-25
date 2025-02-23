@@ -21,9 +21,9 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     public static final Pose BEFORE_SCORE_SPECIMEN_POSE = new Pose(35, 62, Math.toRadians(0));
 
     // Pose for scoring the preloaded specimen (drives the robot closer to the bar).
-    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(40.3, 62, Math.toRadians(0));
-    public static final Pose SCORE_SPECIMEN_BAR_POSE_1 = new Pose(40.3, 64, Math.toRadians(0));
-    public static final Pose SCORE_SPECIMEN_BAR_POSE_2 = new Pose(40.3, 66, Math.toRadians(0));
+    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(40.5, 62, Math.toRadians(0));
+    public static final Pose SCORE_SPECIMEN_BAR_POSE_1 = new Pose(40.5, 64, Math.toRadians(0));
+    public static final Pose SCORE_SPECIMEN_BAR_POSE_2 = new Pose(40.5, 66, Math.toRadians(0));
 
     // Pose for aligning before specimen retrieval.
     public static final Pose ALIGN_TO_PREPARE_FOR_RETRIEVAL = new Pose(30, 36, Math.toRadians(0));
@@ -46,7 +46,8 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     // Poses for scoring additional specimen.
     public static final Pose TURNING_POSE4_1 = new Pose(20, 25, Math.toRadians(180));
     public static final Pose TURNING_POSE4_2 = new Pose(20, 25, Math.toRadians(180));
-    public static final Pose GET_SPECIMEN_POSE = new Pose(12, 27, Math.toRadians(180));
+    public static final Pose BEFORE_SPECIMEN_POSE = new Pose(14, 27, Math.toRadians(180));
+    public static final Pose GET_SPECIMEN_POSE = new Pose(12.2, 27, Math.toRadians(180));
 
     // ===== Timing Parameters (in seconds) =====
 
@@ -108,6 +109,7 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
 
             // --- Get the specimen from wall ---
             new AutonStepDescriptor(TURNING_POSE4_2, GET_SPECIMEN_POSE),    // Move to be flush against wall
+            //new AutonStepDescriptor(BEFORE_SPECIMEN_POSE, ),
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),
             new AutonStepDescriptor("BOTTOM_CLOSED"),   // Close claw
             new AutonStepDescriptor(GRAB_SPECIMEN_WAIT_MS / 1000.0),
@@ -134,8 +136,9 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
 
             // --- Get the specimen from wall ---
             new AutonStepDescriptor(TURNING_POSE4_2, GET_SPECIMEN_POSE),    // Move to be flush against wall
+            //new AutonStepDescriptor(BEFORE_SPECIMEN_POSE, ),
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),
-            new AutonStepDescriptor("BOTTOM_CLOSED"),                          // Close claw
+            new AutonStepDescriptor("BOTTOM_CLOSED"),   // Close claw
             new AutonStepDescriptor(GRAB_SPECIMEN_WAIT_MS / 1000.0),
             new AutonStepDescriptor("MEDIUM_CLOSED", SCORING_SLIDES_WAIT_SECONDS),   // Raise slides
 

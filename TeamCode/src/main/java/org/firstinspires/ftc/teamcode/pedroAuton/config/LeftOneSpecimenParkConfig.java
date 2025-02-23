@@ -16,16 +16,16 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
     // ===== Pose Definitions (angles in radians) =====
 
     // Starting pose of the robot.
-    public static final Pose START_POSE = new Pose(10, 82, Math.toRadians(0));
+    public static final Pose START_POSE = new Pose(10, 82, Math.toRadians(0)); // changed
 
     // Pose for scoring the preloaded specimen (drives the robot closer to the bar).
-    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(40.3, 82, Math.toRadians(0));
+    public static final Pose SCORE_SPECIMEN_BAR_POSE = new Pose(41, 82, Math.toRadians(0));
 
     // Poses for the first retrieval motion.
     public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(22, 128, Math.toRadians(155));
 
     // Poses for the second retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(20, 128, Math.toRadians(180));
+    public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(19.9, 128, Math.toRadians(180));
 
     // Poses for the third retrieval motion.
     public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(45, 120, Math.toRadians(270));
@@ -65,7 +65,7 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),           // Wait for initial positioning.
             new AutonStepDescriptor("BOTTOM_OPEN"),                            // Open claw to release specimen.
 
-            // --- Transition ---
+//            // --- Transition ---
             new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE, RETRIEVE_SPECIMEN_POSE1), // Drive to pickup alignment.
             new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0), // Short pause.
 

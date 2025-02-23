@@ -107,7 +107,7 @@ public class AutonCompiler {
                     .addPath(new BezierLine(new Point(startPose), new Point(endPose)))
                     .setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading())
                     .build();
-            follower.followPath(pathChain, true);
+            follower.followPath(pathChain, false);
         }
 
         @Override

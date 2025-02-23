@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.Init;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
 import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
+import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
 import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
