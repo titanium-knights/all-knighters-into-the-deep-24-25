@@ -31,7 +31,7 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
     public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(45, 120, Math.toRadians(270));
 
     // Poses for scoring additional specimen.
-    public static final Pose SCORE_BUCKET_POSE = new Pose(15, 128, Math.toRadians(125));
+    public static final Pose SCORE_BUCKET_POSE = new Pose(17, 128, Math.toRadians(125));
 
     // Parking Pose
     public static final Pose PARK_POSE1 = new Pose(60, 110, Math.toRadians(0));
