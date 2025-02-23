@@ -46,7 +46,7 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     // Poses for scoring additional specimen.
     public static final Pose TURNING_POSE4_1 = new Pose(20, 25, Math.toRadians(180));
     public static final Pose TURNING_POSE4_2 = new Pose(20, 25, Math.toRadians(180));
-    public static final Pose GET_SPECIMEN_POSE = new Pose(11.5, 27, Math.toRadians(180));
+    public static final Pose GET_SPECIMEN_POSE = new Pose(12, 27, Math.toRadians(180));
 
     // ===== Timing Parameters (in seconds) =====
 

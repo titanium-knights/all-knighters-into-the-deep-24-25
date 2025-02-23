@@ -16,7 +16,7 @@ public class Init extends TeleopState {
         subsystemManager.arm.toReceivingPos();
 
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
-        subsystemManager.bottomClaw.rightWristInitPosition();
+        subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.openClaw();
         subsystemManager.topClaw.open();
 
