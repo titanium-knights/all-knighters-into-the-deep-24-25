@@ -32,6 +32,7 @@ public class Teleop extends OpMode {
     // instance variables for all potential states
     private Neutral neutralState;
     private BeforeSamplePickupAutomated beforeSamplePickupAutomatedState;
+    private BeforeSamplePickup beforeSamplePickupState;
     private SamplePickup samplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
     private SampleTransferAutomated sampleTransferAutomatedState;
@@ -42,21 +43,27 @@ public class Teleop extends OpMode {
     private SampleTransfer sampleTransfer;
     private Init initState;
     private static boolean slowMode = false;
-    private static final double SLOW_MODE_MULTIPLIER = 0.3;
+    public static final double SLOW_MODE_MULTIPLIER = 0.3;
 
     private boolean beforePickup = false;
 
+    private boolean manualMode = false;
     private ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.RED;
 
-    public Teleop(ConfidenceOrientationVectorPipeline.Color color) { this.color = color; }
+    public enum Strategy {
+        SAMPLE,
+        SPECIMEN
+    }
+    private Strategy strategy = Strategy.SAMPLE;
 
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap, color);
+        subsystemManager = new SubsystemManager(hardwareMap, color, strategy);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);
+        beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupAutomatedState, beforeSamplePickupTwist90State});
         sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
@@ -74,6 +81,11 @@ public class Teleop extends OpMode {
     @Override
     public void loop() {
         // non-state based logic
+
+        // manual mode
+        if (gamepad2.y) {
+            manualMode = true;
+        }
 
         // drivetrain
         if (Teleop.slowMode) {
@@ -100,7 +112,11 @@ public class Teleop extends OpMode {
         if (gamepad1.dpad_left) {
             switchToState(neutralState);
         } else if (gamepad1.dpad_right) {
-            switchToState(beforeSamplePickupAutomatedState);
+            if (manualMode) {
+                switchToState(beforeSamplePickupState);
+            } else {
+                switchToState(beforeSamplePickupAutomatedState);
+            }
         } else if (gamepad1.x) {
             switchToState(samplePickupState);
         } else if (gamepad1.y) {

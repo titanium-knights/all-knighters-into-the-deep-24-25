@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop.state;
 
+import static org.firstinspires.ftc.teamcode.teleop.Teleop.SLOW_MODE_MULTIPLIER;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -43,11 +45,11 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             return;
         }
 
-        extendToPickupPosition();
+        extendToPickupPosition(gamepad1, gamepad2);
     }
 
     // It is done. My legacy.
-    public void extendToPickupPosition() {
+    public void extendToPickupPosition(Gamepad gamepad1, Gamepad gamepad2) {
         double yCoord;
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
         yCoord = -1;
@@ -65,6 +67,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             telemetry.update();
             subsystemManager.horizontalSlides.manualBack(0.5);
 
+            subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
 
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
                 telemetry.addLine("we got here!");
