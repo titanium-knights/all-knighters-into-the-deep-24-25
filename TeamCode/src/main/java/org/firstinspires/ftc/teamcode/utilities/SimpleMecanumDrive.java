@@ -106,4 +106,35 @@ public class SimpleMecanumDrive {
     public double dot(double[] a, double[] b) {
         return a[0] * b[0] + a[1] * b[1];
     }
+    public void moveFL(double power) {
+        fl.setPower(power);
+    }
+
+    public void stopFL() {
+        fl.setPower(0);
+    }
+
+    public void moveFR(double power) {
+        fr.setPower(power);
+    }
+
+    public void stopFR() {
+        fr.setPower(0);
+    }
+
+    public void moveBL(double power) {
+        bl.setPower(power);
+    }
+
+    public void stopBL() {
+        bl.setPower(0);
+    }
+
+    public void moveBR(double power) {
+        br.setPower(power);
+    }
+
+    public void stopBR() {
+        br.setPower(0);
+    }
 }
