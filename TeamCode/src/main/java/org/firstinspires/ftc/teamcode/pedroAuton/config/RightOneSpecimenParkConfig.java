@@ -31,12 +31,12 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     // Poses for the first retrieval motion.
     public static final Pose RETRIEVE_SPECIMEN_POSE1_1 = new Pose(60, 36, Math.toRadians(0));
     public static final Pose RETRIEVE_SPECIMEN_POSE1_2 = new Pose(60, 27, Math.toRadians(0));
-    public static final Pose ENDING_POINT1 = new Pose(25, 27, Math.toRadians(0));
+    public static final Pose ENDING_POINT1 = new Pose(20, 27, Math.toRadians(0));
 
     // Poses for the second retrieval motion.
     public static final Pose RETRIEVE_SPECIMEN_POSE2_1 = new Pose(60, 27, Math.toRadians(0));
     public static final Pose RETRIEVE_SPECIMEN_POSE2_2 = new Pose(60, 20, Math.toRadians(0));
-    public static final Pose ENDING_POINT2 = new Pose(25, 20, Math.toRadians(0));
+    public static final Pose ENDING_POINT2 = new Pose(20, 20, Math.toRadians(0));
 
     // Poses for the third retrieval motion.
     public static final Pose RETRIEVE_SPECIMEN_POSE3_1 = new Pose(60, 20, Math.toRadians(0));
@@ -46,7 +46,7 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     // Poses for scoring additional specimen.
     public static final Pose TURNING_POSE4_1 = new Pose(20, 25, Math.toRadians(180));
     public static final Pose TURNING_POSE4_2 = new Pose(20, 25, Math.toRadians(180));
-    public static final Pose GET_SPECIMEN_POSE = new Pose(12, 24, Math.toRadians(180));
+    public static final Pose GET_SPECIMEN_POSE = new Pose(11.5, 27, Math.toRadians(180));
 
     // ===== Timing Parameters (in seconds) =====
 
