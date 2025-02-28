@@ -12,9 +12,11 @@ public class DenoiseUtils {
      *
      * @param src          The source Mat (e.g. RGBA or RGB).
      * @param scaleFactor  The factor by which to shrink the image (e.g. 0.5 for half-size).
-     * @return             A new Mat that is downscaled.
+     * @param dst         The destination Mat to store the modified image
+     *
+     * @return             The destination Mat that is downscaled.
      */
-    public static Mat downscale(Mat src, double scaleFactor) {
+    public static Mat downscale(Mat src, double scaleFactor, Mat dst) {
         int srcRows = src.rows();
         int srcCols = src.cols();
         int channels = src.channels();
@@ -22,8 +24,6 @@ public class DenoiseUtils {
         // Compute target size
         int dstRows = (int) Math.round(srcRows * scaleFactor);
         int dstCols = (int) Math.round(srcCols * scaleFactor);
-
-        Mat dst = new Mat(dstRows, dstCols, src.type());
 
         // Get data arrays
         byte[] srcData = new byte[srcRows * srcCols * channels];
@@ -58,9 +58,11 @@ public class DenoiseUtils {
      *
      * @param src     The source Mat (assumed 8UC3 or 8UC4, but method works similarly).
      * @param radius  The "radius" of the blur kernel. A radius of 1 => 3x3 kernel.
+     * @param dst     The destination Mat to store the modified image
+     *
      * @return        A new Mat that is blurred.
      */
-    public static Mat fastBoxBlur(Mat src, int radius) {
+    public static Mat fastBoxBlur(Mat src, int radius, Mat dst) {
         // 1) Convert to array
         int rows = src.rows();
         int cols = src.cols();
@@ -81,7 +83,6 @@ public class DenoiseUtils {
         verticalPass(tmpData, dstData, rows, cols, channels, radius);
 
         // 5) Put data back into a Mat
-        Mat dst = new Mat(rows, cols, src.type());
         dst.put(0, 0, dstData);
         return dst;
     }
