@@ -1,22 +1,27 @@
 package org.firstinspires.ftc.teamcode.teleop.state;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.teleop.Teleop;
+import org.firstinspires.ftc.teamcode.teleop.TeleopManual;
 import org.firstinspires.ftc.teamcode.teleop.TeleopState;
 import org.firstinspires.ftc.teamcode.utilities.HorizontalSlidesState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
-public class BucketScore extends TeleopState{
-    public BucketScore(SubsystemManager subsystemManager, TeleopState[] dependencies) {
-        super(subsystemManager, dependencies);
+public class BeforeSampleScore extends TeleopState {
+    public BeforeSampleScore(SubsystemManager subsystemManager) {
+        super(subsystemManager);
     }
 
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
-        subsystemManager.slides.slideToPosition(SlideState.TOP);
-        subsystemManager.arm.toScoreBucketPos(); // arm rotates to empty bucket + score
+        Teleop.setSlowMode(true);
+        TeleopManual.setSlowMode(true);
+        subsystemManager.slides.slideToPosition(SlideState.TOP); // slides move to top
+        subsystemManager.arm.toScorePos();
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
-        subsystemManager.bottomClaw.rightWristUpPosition();
+        // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
     }
 }

@@ -17,7 +17,7 @@ public class SampleTransfer extends TeleopState {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toReceivingPos();
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.TRANSFER);
-        subsystemManager.bottomClaw.rightWristUpPosition();
+        subsystemManager.bottomClaw.rightWristDownPosition();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.openClaw();
     }

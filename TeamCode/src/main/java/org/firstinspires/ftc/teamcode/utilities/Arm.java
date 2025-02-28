@@ -8,7 +8,7 @@ public class Arm {
 
     private static final double INIT_POSITION = 0.3;
     private static final double RECEIVING_POSITION = 0.03;
-    private static final double SCORE_BUCKET_POSITION = 0.65;
+    private static final double SCORE_POSITION = 0.65;
     private static final double LOW_HANG_POSITION = 0.8;
     private static final double RAISING_SLIDES_POSITION = 0.2;
     private static final double ARM_SPEED = 0.005;
@@ -25,8 +25,8 @@ public class Arm {
         armServo.setPosition(INIT_POSITION);
     }
 
-    public void toScoreBucketPos() {
-        armServo.setPosition(SCORE_BUCKET_POSITION);
+    public void toScorePos() {
+        armServo.setPosition(SCORE_POSITION);
     }
 
     public void toHangPosition() {
@@ -35,7 +35,7 @@ public class Arm {
     public void raisinPos() {armServo.setPosition(RAISING_SLIDES_POSITION);}
 
     public boolean inScoredPosition() {
-        return armServo.getPosition() == SCORE_BUCKET_POSITION;
+        return armServo.getPosition() == SCORE_POSITION;
     }
     public boolean inPreScorePosition() {
         return armServo.getPosition() == RAISING_SLIDES_POSITION;
