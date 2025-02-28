@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.utilities.BottomClaw;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 @TeleOp(name = "Testing Teleop", group = "User Control")
@@ -13,7 +15,7 @@ public class TestingTeleop extends OpMode {
 
     @Override
     public void init() {
-        manager = new SubsystemManager(hardwareMap, telemetry);
+        manager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
     }
 
     @Override
@@ -28,7 +30,11 @@ public class TestingTeleop extends OpMode {
             //manager.bottomClaw.closeClaw();
             //manager.bottomClaw.orthogonalClawRotatorPosition();
             telemetry.addData("closed", true);
+        } else if (gamepad1.a) {
+            manager.bottomClaw.rotate(BottomClaw.TESTING_THETA);
         }
         telemetry.addData("scissors encoder value", manager.horizontalSlides.getEncoder());
+        telemetry.addData("claw rotation value", manager.bottomClaw.getClawRotatorPosition());
+        telemetry.update();
     }
 }

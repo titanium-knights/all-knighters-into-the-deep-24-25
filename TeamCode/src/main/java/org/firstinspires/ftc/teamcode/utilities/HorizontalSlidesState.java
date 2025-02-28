@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode.utilities;
 
 public enum HorizontalSlidesState {
     IN(0),
-    NEUTRAL(-300),
-    OUT(-2250);
+    NEUTRAL(-150),
+    OUT(-2350),
+    TRANSFER(-800);
 
     private final int encoderValue;
 

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.utilities.CONFIG;
 
 public class FConstants {
     static {
-        FollowerConstants.localizers = Localizers.THREE_WHEEL_IMU;
+        FollowerConstants.localizers = Localizers.THREE_WHEEL;
 
         // back of the robot has the vertical slides on it
         FollowerConstants.leftFrontMotorName = CONFIG.BACK_LEFT;
@@ -22,35 +22,40 @@ public class FConstants {
         FollowerConstants.rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
 
         // remember to update this (kg)
-        FollowerConstants.mass = 9.63; //10.75; //11.84;
+        FollowerConstants.mass = 12.1; //10.75; //11.84; //12.1 // previously 9.63
 
-        FollowerConstants.xMovement = 66.14857687058154;
-        FollowerConstants.yMovement = 52.546002199434454;
+        FollowerConstants.xMovement = 59.07727; // now: 59.07727, 62.428, 57.5, 60.07, 64. Before: 66.14857687058154
+        FollowerConstants.yMovement = 52.546002199434454; // now: 55.2, 52.86, 54
 
-        FollowerConstants.forwardZeroPowerAcceleration = -39.623173380073275;
-        FollowerConstants.lateralZeroPowerAcceleration = -71.09840593627987;
+        FollowerConstants.forwardZeroPowerAcceleration = -45; // now: -46, -49, -43, -48, -42 before: -39.623173380073275
+        FollowerConstants.lateralZeroPowerAcceleration = -95;  // before: 71.09840593627987
+        // @60 in/sec: -77, -93, -95, -92, -91, -89, -121
+        // @30 in/sec: -80, -73, -81, -105, -79, -78, -122, -73, -103, -88
 
         FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.2,0.00002,0.003,0.00);
         FollowerConstants.useSecondaryTranslationalPID = false;
-        FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0); // Not being used, @see useSecondaryTranslationalPID
+//        FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0); // Not being used, @see useSecondaryTranslationalPID
 
-        FollowerConstants.headingPIDFCoefficients.setCoefficients(0.3,0.00,0.002,0.00);
+        FollowerConstants.headingPIDFCoefficients.setCoefficients(3,0.00,0.2,0);
         FollowerConstants.useSecondaryHeadingPID = false;
-        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(0,0,0.1,0); // Not being used, @see useSecondaryHeadingPID
+//        FollowerConstants.secondaryHeadingPIDFCoefficients.setCoefficients(0,0,0.1,0); // Not being used, @see useSecondaryHeadingPID
 
         FollowerConstants.drivePIDFCoefficients.setCoefficients(0.01,0,0.000001,0.6,0);
         FollowerConstants.useSecondaryDrivePID = false;
-        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.1,0,0,0.6,0); // Not being used, @see useSecondaryDrivePID
+//        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.1,0,0,0.6,0); // Not being used, @see useSecondaryDrivePID
 
         FollowerConstants.zeroPowerAccelerationMultiplier = 5;
-        FollowerConstants.centripetalScaling = 0.0007;
+        FollowerConstants.centripetalScaling = 0.0005; // used to be .0007
 
-        FollowerConstants.pathEndTimeoutConstraint = 500;
+        FollowerConstants.pathEndTimeoutConstraint = 100;
         FollowerConstants.pathEndTValueConstraint = 0.990; // from 0 to 1
-        FollowerConstants.pathEndVelocityConstraint = 0.1;
-        FollowerConstants.pathEndTranslationalConstraint = 0.3;
+        FollowerConstants.pathEndVelocityConstraint = 0.06;
+        FollowerConstants.pathEndTranslationalConstraint = 0.1;
         FollowerConstants.pathEndHeadingConstraint = 0.007;
 
          FollowerConstants.automaticHoldEnd = true;
+
+         FollowerConstants.holdPointHeadingScaling = .12; // default is .35
+        FollowerConstants.holdPointTranslationalScaling = .2; // default is .45
     }
 }

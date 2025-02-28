@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.utilities;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
+import org.firstinspires.ftc.teamcode.teleop.Teleop;
 
 /**
  * This class is used to encapsulate all utility classes for subsystems.
@@ -17,12 +19,12 @@ public class SubsystemManager {
     public SimpleMecanumDrive drive;
     public Arm arm;
     public BottomClaw bottomClaw;
-    public HorizontalSlides horizontalSlides;
     public TopClaw topClaw;
     public Slides slides;
+    public HorizontalSlides horizontalSlides;
     public Webcam webcam;
 
-    public SubsystemManager(HardwareMap hmap, Telemetry telemetry) {
+    public SubsystemManager(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
         // add util class initializations here
         drive = new SimpleMecanumDrive(hmap);
         arm = new Arm(hmap);
@@ -30,6 +32,6 @@ public class SubsystemManager {
         horizontalSlides = new HorizontalSlides(hmap);
         topClaw = new TopClaw(hmap);
         slides = new Slides(hmap);
-        webcam = new Webcam(hmap, telemetry);
+        webcam = new Webcam(hmap, color, strategy);
     }
 }

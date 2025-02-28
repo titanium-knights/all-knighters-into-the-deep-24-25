@@ -7,17 +7,19 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Config
 public class BottomClaw {
 
-    public static final double OPEN_CLAW_POSITION = 0.2;
-    public static final double OPEN_CLAW_HALF_POSITION = 0.75;
+    public static final double OPEN_CLAW_POSITION = 0.1;
+    public static final double OPEN_CLAW_HALF_POSITION = 0.2;
     public static final double CLOSE_CLAW_POSITION = 0.4;
+
+    public static double TESTING_THETA = 0.0;
 
     public static final double ORTHOGONAL_CLAW_ROTATOR_POSITION = 0.3;
     public static final double NEUTRAL_CLAW_ROTATOR_POSITION = 0.68;
     public static final double PICKUP_CLAW_ROTATOR_POSITION = 0.0;
 
-    public static final double RIGHT_WRIST_UP_POSITION = 0.05;
-    public static final double RIGHT_WRIST_DOWN_POSITION = 0.8;
-    public static final double RIGHT_WRIST_HALFUP_POSITION = 0.75;
+    public static final double RIGHT_WRIST_UP_POSITION = 0.0;
+    public static final double RIGHT_WRIST_DOWN_POSITION = 0.75;
+    public static final double RIGHT_WRIST_HALFUP_POSITION = 0.7;
     public static final double RIGHT_WRIST_INIT_POSITION = 0.2;
 
 
@@ -29,6 +31,11 @@ public class BottomClaw {
         this.clawOpener = hmap.servo.get(CONFIG.clawServoBottom);
         this.clawRotator = hmap.servo.get(CONFIG.clawRotator);
         this.rightWristServo = hmap.servo.get(CONFIG.rightWristServo);
+    }
+
+    // rotates claw to position at theta radians
+    public void rotate(double theta) {
+        this.clawRotator.setPosition(theta * 0.68 / (Math.PI));
     }
 
     public double getClawOpenerPosition() {
@@ -62,6 +69,22 @@ public class BottomClaw {
     public void bottomClawUpPositionPreset() {
         rightWristUpPosition();
         neutralClawRotatorPosition();
+    }
+
+    public boolean isLoweredAndClosed() {
+        return getRightWristServoPosition() == RIGHT_WRIST_DOWN_POSITION
+                && getClawOpenerPosition() == CLOSE_CLAW_POSITION;
+    }
+    public boolean inOrthoPos() {
+        return getClawOpenerPosition() == ORTHOGONAL_CLAW_ROTATOR_POSITION;
+    }
+
+    public boolean inTransferPosition() {
+        return getRightWristServoPosition() == RIGHT_WRIST_UP_POSITION;
+    }
+
+    public boolean isClosed() {
+        return getClawOpenerPosition() == CLOSE_CLAW_POSITION;
     }
 
     public void orthogonalClawRotatorPosition() {

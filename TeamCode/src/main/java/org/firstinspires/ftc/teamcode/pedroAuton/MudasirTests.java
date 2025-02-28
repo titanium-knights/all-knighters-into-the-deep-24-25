@@ -14,19 +14,18 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.teleop.Teleop;
+import org.firstinspires.ftc.teamcode.utilities.SlideState;
+import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 /**
- * This is an example auto that showcases movement and control of two servos autonomously.
- * It is a 0+4 (Specimen + Sample) bucket auto. It scores a neutral preload and then pickups 3 samples from the ground and scores them before parking.
- * There are examples of different ways to build paths.
- * A path progression method has been created and can advance based on time, position, or other factors.
- *
- * @author Baron Henderson - 20077 The Indubitables
- * @version 2.0, 11/28/2024
+ * ignore this file
+ * @author mudasir
  */
 
-@Autonomous(name = "Test OoO", group = "Tests-Custom")
-public class SequenceTester extends OpMode {
+@Autonomous(name = "Mudasirs Red Auton", group = "AAAAAALeagues")
+public class MudasirTests extends OpMode {
 
     private Follower follower;
     private Timer pathTimer, actionTimer, opmodeTimer;
@@ -45,17 +44,18 @@ public class SequenceTester extends OpMode {
      * Lets assume the Robot is facing the human player and we want to score in the bucket */
 
     /** Start Pose of our robot */
-    private final Pose startPose = new Pose(0, 0, Math.toRadians(0));
+    private final Pose startPose = new Pose(8.155, 78.564, Math.toRadians(0));
 
     /** Scoring Pose of our robot. It is facing the submersible at a -45 degree (315 degree) angle. */
     private final Pose scorePose = new Pose(48, 0, Math.toRadians(0));
 
     /** Lowest (First) Sample from the Spike Mark */
-    private final Pose pickup1Pose = new Pose(0, 0, Math.toRadians(0));
+    private final Pose pickup1Pose = new Pose(36, 0, Math.toRadians(90));
 
-    /* These are our Paths and PathChains that we will define in buildPaths() */
+    /* These are our Paths and PathChstartPoseains that we will define in buildPaths() */
     private Path scorePreload;
     private PathChain scorePickup1;
+    private SubsystemManager subsystemManager;
 
     /** Build the paths for the auto (adds, for example, constant/linear headings while doing paths)
      * It is necessary to do this so that all the paths are built before the auto starts. **/
@@ -76,15 +76,45 @@ public class SequenceTester extends OpMode {
          * PathChains hold Path(s) within it and are able to hold their end point, meaning that they will holdPoint until another path is followed.
          * Here is a explanation of the difference between Paths and PathChains <https://pedropathing.com/commonissues/pathtopathchain.html> */
 
-        /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
-        scorePreload = new Path(new BezierLine(new Point(startPose), new Point(scorePose)));
-        scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
-
 
         /* This is our scorePickup1 PathChain. We are using a single path with a BezierLine, which is a straight line. */
         scorePickup1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(pickup1Pose), new Point(scorePose)))
-                .setLinearHeadingInterpolation(pickup1Pose.getHeading(), scorePose.getHeading())
+                .addPath(
+                        // Line 1
+                        new BezierLine(
+                                new Point(8.155, 78.564, Point.CARTESIAN),
+                                new Point(42.564, 78.564, Point.CARTESIAN)
+                        )
+                )
+                .setTangentHeadingInterpolation()
+                .addParametricCallback(0.1, ()->{
+                    subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                })
+                .addPath(
+                        // Line 2
+                        new BezierCurve(
+                                new Point(42.564, 78.564, Point.CARTESIAN),
+                                new Point(8.155, 59.470, Point.CARTESIAN),
+                                new Point(28.442, 42.564, Point.CARTESIAN)
+                        )
+                )
+                .setTangentHeadingInterpolation()
+                .addPath(
+                        // Line 3
+                        new BezierLine(
+                                new Point(28.442, 42.564, Point.CARTESIAN),
+                                new Point(75.182, 24.265, Point.CARTESIAN)
+                        )
+                )
+                .setTangentHeadingInterpolation()
+                .addPath(
+                        // Line 4
+                        new BezierLine(
+                                new Point(75.182, 24.265, Point.CARTESIAN),
+                                new Point(8.354, 20.486, Point.CARTESIAN)
+                        )
+                )
+                .setTangentHeadingInterpolation()
                 .build();
 
     }
@@ -95,7 +125,7 @@ public class SequenceTester extends OpMode {
     public void autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-                follower.followPath(scorePreload);
+                follower.followPath(scorePickup1, true);
                 setPathState(1);
                 break;
             case 1:
@@ -110,19 +140,12 @@ public class SequenceTester extends OpMode {
                 if(!follower.isBusy()) {
                     /* Score Preload */
 
-                    /* Since this is a pathChain, we can have Pedro hold the end point while we are grabbing the sample */
-//                    follower.followPath(scorePickup1,true);
+
                     setPathState(2);
                 }
                 break;
-            case 8:
-                /* This case checks the robot's position and will wait until the robot position is close (1 inch away) from the scorePose's position */
-                if(!follower.isBusy()) {
-                    /* Level 1 Ascent */
-
-                    /* Set the state to a Case we won't use or define, so it just stops running an new paths */
-                    setPathState(-1);
-                }
+            case 2:
+                //done
                 break;
         }
     }
@@ -160,6 +183,9 @@ public class SequenceTester extends OpMode {
         Constants.setConstants(FConstants.class, LConstants.class);
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
+
+         subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+
         buildPaths();
     }
 
@@ -173,6 +199,7 @@ public class SequenceTester extends OpMode {
     public void start() {
         opmodeTimer.resetTimer();
         setPathState(0);
+        subsystemManager.slides.slideToPosition(SlideState.TOP);
     }
 
     /** We do not use this because everything should automatically disable **/

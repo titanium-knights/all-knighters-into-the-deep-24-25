@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 //import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -17,10 +20,11 @@ public class Webcam {
     OpenCvPipeline pipeline; // daniel plainview would be proud
     int cameraMonitorViewId;
 
-    public Webcam(HardwareMap hmap, Telemetry telemetry) {
+    public Webcam(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
-//        this.pipeline = new ConfidenceOrientationVectorPipeline(telemetry);
+        this.pipeline = new ConfidenceOrientationVectorPipeline(color, strategy);
+        FtcDashboard.getInstance().startCameraStream(cam, 0);
 
         cam.setPipeline(pipeline);
         cam.setMillisecondsPermissionTimeout(5000);
@@ -46,7 +50,7 @@ public class Webcam {
                  * For a rear facing camera or a webcam, rotation is defined assuming the camera is facing
                  * away from the user.
                  */
-                cam.startStreaming(1280, 720, OpenCvCameraRotation.UPRIGHT);
+                cam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
@@ -59,8 +63,8 @@ public class Webcam {
         });
     }
 
-//    public DetectionResultScaledData bestDetectionCoordsAngle() {
+    public ConfidenceOrientationVectorPipeline.DetectionResultScaledData bestDetectionCoordsAngle() {
         // casting this cause i mean generalizability is always sweet
-//        return ((ConfidenceOrientationVectorPipeline)pipeline).bestDetectionCoordsAngle();
-//    }
+        return ((ConfidenceOrientationVectorPipeline)pipeline).bestDetectionCoordsAngle();
+    }
 }
