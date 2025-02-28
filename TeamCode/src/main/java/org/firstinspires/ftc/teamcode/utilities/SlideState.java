@@ -3,9 +3,10 @@ package org.firstinspires.ftc.teamcode.utilities;
 public enum SlideState {
     MANUAL_UP(0),
     MANUAL_DOWN(0),
-    TOP(-2000),
-    MEDIUM(-1300),
+    TOP(-1900),
+    MEDIUM(-1100),
     MEDIUM_SCORE(-800),
+    MEDIUM_SCORE_TELEOP(-850),
     BOTTOM(0);
 
     private final int encoderValue;

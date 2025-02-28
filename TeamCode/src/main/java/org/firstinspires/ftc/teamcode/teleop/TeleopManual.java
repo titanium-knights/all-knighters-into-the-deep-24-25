@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeBucketScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.Init;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
 import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
+import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
 import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
@@ -35,7 +37,7 @@ public class TeleopManual extends OpMode {
     private BeforeSpecimenScore beforeSpecimenScoreState;
     private SpecimenScore specimenScoreState;
     private Init initState;
-    private static boolean slowMode = false;
+    private static boolean slowMode = true;
     private static final double SLOW_MODE_MULTIPLIER = 0.3;
 
     private boolean beforePickup = false;
@@ -43,7 +45,7 @@ public class TeleopManual extends OpMode {
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap, telemetry);
+        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
@@ -89,9 +91,9 @@ public class TeleopManual extends OpMode {
         } else if (gamepad1.x) {
             switchToState(samplePickupState);
         } else if (gamepad1.y) {
-            switchToState(beforeSamplePickupTwist90State);
-        } else if (gamepad1.b) {
             switchToState(sampleTransferState);
+        } else if (gamepad1.b) {
+            switchToState(beforeSamplePickupTwist90State);
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
         } else if (gamepad1.right_trigger > 0.01f) {
@@ -113,7 +115,6 @@ public class TeleopManual extends OpMode {
         prevGamepad2.copy(gamepad2);
 
         telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
-        telemetry.addData("y coord: ", subsystemManager.yCoord);
         telemetry.update();
     }
 

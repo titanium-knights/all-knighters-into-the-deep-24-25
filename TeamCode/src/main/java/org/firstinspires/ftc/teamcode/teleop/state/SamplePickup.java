@@ -16,6 +16,7 @@ public class SamplePickup extends TeleopState {
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         Teleop.setSlowMode(true);
+        subsystemManager.bottomClaw.rightWristDownPosition();
         subsystemManager.bottomClaw.closeClaw(); // claw closes
     }
 }

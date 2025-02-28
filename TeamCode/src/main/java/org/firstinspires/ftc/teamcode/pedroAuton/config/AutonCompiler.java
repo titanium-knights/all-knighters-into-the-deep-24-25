@@ -5,6 +5,15 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
+
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpPostDunk;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpPreDunk;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClosedTwist;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpenTwist;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferOpen;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
@@ -13,6 +22,7 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumScore
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.LowHang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,7 +107,7 @@ public class AutonCompiler {
                     .addPath(new BezierLine(new Point(startPose), new Point(endPose)))
                     .setLinearHeadingInterpolation(startPose.getHeading(), endPose.getHeading())
                     .build();
-            follower.followPath(pathChain, true);
+            follower.followPath(pathChain, false);
         }
 
         @Override
@@ -140,6 +150,24 @@ public class AutonCompiler {
                     return new SlidesMediumScoreClawClosed(subsystemManager).update();
                 case "BOTTOM_OPEN":
                     return new SlidesBottomClawOpen(subsystemManager).update();
+                case "HORI_OUT_CLOSED":
+                    return new HorizontalOutClosed(subsystemManager).update();
+                case "HORI_OUT_OPEN":
+                    return new HorizontalOutOpen(subsystemManager).update();
+                case "HORI_TRANSFER_CLOSED":
+                    return new HorizontalTransferClosed(subsystemManager).update();
+                case "HORI_TRANSFER_OPEN":
+                    return new HorizontalTransferOpen(subsystemManager).update();
+                case "BUCKET_UP_POST_DUNK":
+                    return new BucketUpPostDunk(subsystemManager).update();
+                case "BUCKET_UP_PRE_DUNK":
+                    return new BucketUpPreDunk(subsystemManager).update();
+                case "LOW_HANG":
+                    return new LowHang(subsystemManager).update();
+                case "HOR_OUT_CLOSED_TWIST":
+                    return new HorizontalOutClosedTwist(subsystemManager).update();
+                case "HOR_OUT_OPEN_TWIST":
+                    return new HorizontalOutOpenTwist(subsystemManager).update();
                 default:
                     return true;
             }

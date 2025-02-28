@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonCompiler;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonCompiler.IAutonStep;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.IAutonConfig;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.LeftOneSpecimenParkConfig;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.RightOneSpecimenParkConfig;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
@@ -28,8 +29,8 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonState;
  * (RightOneSpecimenParkConfig) associated with this auton.
  * The OpMode compiles the config into executable steps and runs them sequentially.
  */
-@Autonomous(name = "Right Park", group = "Pedro Autons")
-public class RightOneSpecimenPark extends OpMode {
+@Autonomous(name = "Left Park", group = "Pedro Autons")
+public class LeftOneSpecimenPark extends OpMode {
 
     private Follower follower;
     private SubsystemManager subsystemManager;
@@ -59,7 +60,7 @@ public class RightOneSpecimenPark extends OpMode {
         follower = new Follower(hardwareMap);
 
         // Import the unique configuration.
-        config = new RightOneSpecimenParkConfig();
+        config = new LeftOneSpecimenParkConfig();
 
         // Set the starting pose.
         follower.setStartingPose(config.getStartPose());
