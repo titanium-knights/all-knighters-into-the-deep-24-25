@@ -7,7 +7,7 @@ public class Arm {
     private final Servo armServo;
 
     private static final double INIT_POSITION = 0.3;
-    private static final double RECEIVING_POSITION = 0.03;
+    private static final double RECEIVING_POSITION = 0.05;
     private static final double SCORE_POSITION = 0.65;
     private static final double LOW_HANG_POSITION = 0.8;
     private static final double RAISING_SLIDES_POSITION = 0.2;
