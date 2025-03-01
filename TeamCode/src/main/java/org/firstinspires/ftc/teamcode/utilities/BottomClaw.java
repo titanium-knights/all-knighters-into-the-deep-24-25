@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class BottomClaw {
 
     public static final double OPEN_CLAW_POSITION = 0.1;
-    public static final double OPEN_CLAW_HALF_POSITION = 0.2;
+    public static final double OPEN_CLAW_HALF_POSITION = 0.38;
     public static final double CLOSE_CLAW_POSITION = 0.4;
 
     public static double TESTING_THETA = 0.0;

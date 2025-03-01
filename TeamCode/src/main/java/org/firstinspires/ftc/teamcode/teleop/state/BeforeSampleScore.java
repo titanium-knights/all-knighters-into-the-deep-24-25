@@ -19,9 +19,11 @@ public class BeforeSampleScore extends TeleopState {
         Teleop.setSlowMode(true);
         TeleopManual.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.TOP); // slides move to top
-        subsystemManager.arm.toScorePos();
+        subsystemManager.arm.toScoreSamplePos();
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
+        subsystemManager.bottomClaw.openClaw();
+        //subsystemManager.topClaw.close();
         // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
     }
 }

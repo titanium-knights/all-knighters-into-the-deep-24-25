@@ -98,6 +98,33 @@ public class Teleop extends OpMode {
     public void loop() {
         // non-state based logic
 
+        // claw logic
+        if (gamepad1.left_bumper && topClawButton == ButtonPressState.UNPRESSED) {
+            topClawButton = ButtonPressState.PRESSED_GOOD;
+        } else if (gamepad1.left_bumper && topClawButton == ButtonPressState.PRESSED_GOOD) {
+            topClawButton = ButtonPressState.DEPRESSED;
+        } else if (!gamepad1.left_bumper) {
+            topClawButton = ButtonPressState.UNPRESSED;
+        }
+        if (topClawButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.topClaw.getOpenStatus()) {
+            subsystemManager.topClaw.open();
+        } else if (topClawButton==ButtonPressState.PRESSED_GOOD && subsystemManager.topClaw.getOpenStatus()) {
+            subsystemManager.topClaw.close();
+        }
+
+        if (gamepad1.right_bumper && bottomClawButton == ButtonPressState.UNPRESSED){
+            bottomClawButton = ButtonPressState.PRESSED_GOOD;
+        } else if (gamepad1.right_bumper && bottomClawButton == ButtonPressState.PRESSED_GOOD) {
+            bottomClawButton = ButtonPressState.DEPRESSED;
+        } else if (!gamepad1.right_bumper) {
+            bottomClawButton = ButtonPressState.UNPRESSED;
+        }
+        if (bottomClawButton==ButtonPressState.PRESSED_GOOD && subsystemManager.bottomClaw.isClosed()) {
+            subsystemManager.bottomClaw.openClaw();
+        } else if (bottomClawButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.bottomClaw.isClosed()) {
+            subsystemManager.bottomClaw.closeClaw();
+        }
+
         // manual mode
         if (gamepad2.y && manualButton == ButtonPressState.UNPRESSED) {
             manualButton = ButtonPressState.PRESSED_GOOD;
@@ -113,15 +140,6 @@ public class Teleop extends OpMode {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
         } else {
             subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
-        }
-
-        //claw things
-        if (gamepad1.left_bumper) {
-            subsystemManager.bottomClaw.openClaw();
-            subsystemManager.topClaw.open();
-        } else if (gamepad1.right_bumper) {
-            subsystemManager.bottomClaw.closeClaw();
-            subsystemManager.topClaw.close();
         }
 
         // logic to run to states
@@ -161,27 +179,6 @@ public class Teleop extends OpMode {
             telemetry.addData("angle: ", ((BeforeSamplePickupAutomated)currentState).angle);
             telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
             telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
-
-            if (gamepad1.left_bumper && topClawButton == ButtonPressState.PRESSED_GOOD) {
-                topClawButton = ButtonPressState.DEPRESSED;
-                subsystemManager.topClaw.open();
-            } else if (gamepad1.left_bumper && topClawButton == ButtonPressState.DEPRESSED) {
-                topClawButton = ButtonPressState.UNPRESSED;
-                subsystemManager.topClaw.close();
-            } else if (!gamepad1.left_bumper) {
-                topClawButton = ButtonPressState.UNPRESSED;
-            }
-
-            if (gamepad1.right_bumper && bottomClawButton == ButtonPressState.PRESSED_GOOD) {
-                bottomClawButton = ButtonPressState.DEPRESSED;
-                subsystemManager.bottomClaw.openClaw();
-            } else if (gamepad1.right_bumper && bottomClawButton == ButtonPressState.DEPRESSED) {
-                bottomClawButton = ButtonPressState.UNPRESSED;
-                subsystemManager.bottomClaw.closeClaw();
-            } else if (!gamepad1.right_bumper) {
-                bottomClawButton = ButtonPressState.UNPRESSED;
-            }
-
             if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
                 rotatorButton = ButtonPressState.PRESSED_GOOD;
                 if (clawPosition == ClawPosition.HORIZONTAL) {

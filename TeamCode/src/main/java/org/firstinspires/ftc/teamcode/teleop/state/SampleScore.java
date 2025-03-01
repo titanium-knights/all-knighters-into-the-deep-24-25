@@ -14,7 +14,7 @@ public class SampleScore extends TeleopState{
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         subsystemManager.slides.slideToPosition(SlideState.TOP);
-        subsystemManager.arm.toScorePos(); // arm rotates to empty bucket + score
+        subsystemManager.arm.toScoreSamplePos(); // arm rotates to empty bucket + score
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
