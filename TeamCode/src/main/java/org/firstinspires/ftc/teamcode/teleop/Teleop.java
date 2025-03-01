@@ -14,7 +14,6 @@ import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSampleScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
-import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
 import org.firstinspires.ftc.teamcode.teleop.state.Init;
 
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
@@ -35,7 +34,6 @@ public class Teleop extends OpMode {
     private SampleTransferAutomated sampleTransferAutomatedState;
     private BeforeSampleScore beforeBucketScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
-    private SpecimenScore specimenScoreState;
     private SampleTransfer sampleTransfer;
     private Init initState;
     private static boolean slowMode = false;
@@ -81,7 +79,6 @@ public class Teleop extends OpMode {
         sampleTransfer = new SampleTransfer(subsystemManager);
         beforeBucketScoreState = new BeforeSampleScore(subsystemManager);
         beforeSpecimenScoreState = new BeforeSpecimenScore(subsystemManager);
-        specimenScoreState = new SpecimenScore(subsystemManager, new TeleopState[] {beforeSpecimenScoreState});
         initState = new Init(subsystemManager);
 
         // set current state to be at init
@@ -158,7 +155,7 @@ public class Teleop extends OpMode {
         } else if (gamepad1.dpad_up) {
             switchToState(beforeSpecimenScoreState);
         } else if (gamepad1.dpad_down) {
-            switchToState(specimenScoreState);
+
         } else if (gamepad1.start) {
             switchToState(initState);
         }

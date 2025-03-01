@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -67,13 +65,13 @@ public class HorizontalSlides {
         return horizontalSlidesMotor.getPower() == idlePower;
     }
 
-    public void manualForward(double power) {
+    public void manualBackward(double power) {
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double adjustedPower = Math.abs(power); // Positive for backward movement
         horizontalSlidesMotor.setPower(adjustedPower);
     }
 
-    public void manualBack(double power) {
+    public void manualForward(double power) {
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double adjustedPower = -Math.abs(power); // Positive for forward movement
         horizontalSlidesMotor.setPower(adjustedPower);
