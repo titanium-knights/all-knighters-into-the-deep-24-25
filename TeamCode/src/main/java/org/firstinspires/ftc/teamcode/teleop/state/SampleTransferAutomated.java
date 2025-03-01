@@ -18,9 +18,8 @@ public class SampleTransferAutomated extends TeleopState {
         TeleopManual.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toReceivingPos();
-        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.TRANSFER);
+        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.TRANSFER_OUT_OF_SUBMERSIBLE);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
-        subsystemManager.bottomClaw.closeClaw();
     }
 }

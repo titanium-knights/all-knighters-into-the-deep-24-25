@@ -88,7 +88,7 @@ public class MudasirTests extends OpMode {
                 )
                 .setTangentHeadingInterpolation()
                 .addParametricCallback(0.1, ()->{
-                    subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                    subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
                 })
                 .addPath(
                         // Line 2

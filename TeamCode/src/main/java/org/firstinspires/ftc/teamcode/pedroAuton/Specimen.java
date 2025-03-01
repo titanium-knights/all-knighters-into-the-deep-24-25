@@ -63,9 +63,9 @@ public class Specimen extends LinearOpMode {
         telemetry.addLine("gonna raise slides");
         telemetry.update();
 
-        boolean slidesRaised = slides.slideToPosition(SlideState.MEDIUM);
+        boolean slidesRaised = slides.slideToPosition(SlideState.MEDIUM_SCORE);
         while (opModeIsActive() && !slidesRaised) {
-            slidesRaised = slides.slideToPosition(SlideState.MEDIUM);
+            slidesRaised = slides.slideToPosition(SlideState.MEDIUM_SCORE);
             follower.update(); // maybe wanna uncomment but prob not
 
             telemetry.addLine("slides go up up up!");

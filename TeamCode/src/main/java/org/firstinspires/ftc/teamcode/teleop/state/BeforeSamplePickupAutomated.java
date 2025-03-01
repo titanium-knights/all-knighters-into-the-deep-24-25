@@ -38,8 +38,8 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristDownPosition(); // claw is rotated down
         subsystemManager.bottomClaw.openClaw();
-
-        subsystemManager.arm.toReceivingPos();
+        subsystemManager.topClaw.open();
+        subsystemManager.arm.toGetOutOfWay();
 
         try {
             Thread.sleep(2000);

@@ -5,16 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
-import org.firstinspires.ftc.teamcode.teleop.state.BeforeBucketScore;
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeSampleScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
-import org.firstinspires.ftc.teamcode.teleop.state.BucketScore;
 import org.firstinspires.ftc.teamcode.teleop.state.Init;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
-import org.firstinspires.ftc.teamcode.teleop.state.SamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
-import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
 import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
@@ -29,11 +26,9 @@ public class TeleopManual extends OpMode {
     // instance variables for all potential states
     private Neutral neutralState;
     private BeforeSamplePickup beforeSamplePickupState;
-    private SamplePickup samplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
     private SampleTransfer sampleTransferState;
-    private BeforeBucketScore beforeBucketScoreState;
-    private BucketScore bucketScoreState;
+    private BeforeSampleScore beforeBucketScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
     private SpecimenScore specimenScoreState;
     private Init initState;
@@ -50,10 +45,8 @@ public class TeleopManual extends OpMode {
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
-        samplePickupState = new SamplePickup(subsystemManager, new TeleopState[] {beforeSamplePickupState, beforeSamplePickupTwist90State});
         sampleTransferState = new SampleTransfer(subsystemManager);
-        beforeBucketScoreState = new BeforeBucketScore(subsystemManager);
-        bucketScoreState = new BucketScore(subsystemManager, new TeleopState[] {beforeBucketScoreState});
+        beforeBucketScoreState = new BeforeSampleScore(subsystemManager);
         beforeSpecimenScoreState = new BeforeSpecimenScore(subsystemManager);
         specimenScoreState = new SpecimenScore(subsystemManager, new TeleopState[] {beforeSpecimenScoreState});
         initState = new Init(subsystemManager);
@@ -89,7 +82,7 @@ public class TeleopManual extends OpMode {
         } else if (gamepad1.dpad_right) {
             switchToState(beforeSamplePickupState);
         } else if (gamepad1.x) {
-            switchToState(samplePickupState);
+
         } else if (gamepad1.y) {
             switchToState(sampleTransferState);
         } else if (gamepad1.b) {
@@ -97,7 +90,7 @@ public class TeleopManual extends OpMode {
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
         } else if (gamepad1.right_trigger > 0.01f) {
-            switchToState(bucketScoreState);
+
         } else if (gamepad1.dpad_up) {
             switchToState(beforeSpecimenScoreState);
         } else if (gamepad1.dpad_down) {

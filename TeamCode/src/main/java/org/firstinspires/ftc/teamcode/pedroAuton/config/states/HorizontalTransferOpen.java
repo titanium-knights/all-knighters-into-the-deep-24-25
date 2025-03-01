@@ -15,14 +15,14 @@ public class HorizontalTransferOpen extends AutonState {
     @Override
     public boolean update() {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM); // slides move to top
-        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.NEUTRAL);
+        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.TRANSFER);
         subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.openClaw();
         subsystemManager.arm.toReceivingPos();
         // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
         if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM
                 && subsystemManager.slides.isIdle()
-                && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.NEUTRAL
+                && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.TRANSFER
                 && subsystemManager.horizontalSlides.isIdle()
                 && subsystemManager.bottomClaw.inTransferPosition()
                 && !subsystemManager.bottomClaw.isClosed()

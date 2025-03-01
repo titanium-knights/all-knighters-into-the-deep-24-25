@@ -15,8 +15,16 @@ public class Neutral extends TeleopState {
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) { // everything in neutral position
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-        subsystemManager.arm.toReceivingPos();
-        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.NEUTRAL);
+
+        // if horizontal slides are further out than 150 encoder ticks:
+        // 1) let arm get out of way 2) let bottom claw slightly open to let block slip down
+        if (subsystemManager.horizontalSlides.getEncoder() < -150) {
+            subsystemManager.arm.toGetOutOfWay();
+            subsystemManager.bottomClaw.openClawHalf();
+        } else {
+            subsystemManager.arm.toReceivingPos();
+        }
+        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
     }
