@@ -19,10 +19,10 @@ public class BeforeSamplePickupTwist90 extends TeleopState {
         Teleop.setSlowMode(true);
         TeleopManual.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-        subsystemManager.arm.toReceivingPos();
+        subsystemManager.arm.toGetOutOfWay();
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.OUT);
-        subsystemManager.bottomClaw.rightWristDownPosition();
-        subsystemManager.bottomClaw.openClaw();
-        subsystemManager.bottomClaw.orthogonalClawRotatorPosition(); // twist wrist 90 degrees
+        subsystemManager.topClaw.open();
+        subsystemManager.bottomClaw.pickUpClawRotatorPosition();
+        subsystemManager.bottomClaw.orthogonalClawRotatorPosition(); // claw is rotated down
     }
 }

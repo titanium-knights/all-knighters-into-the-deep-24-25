@@ -11,6 +11,7 @@ public class Arm {
     private static final double SCORE_SAMPLE_POS = 0.65;
     private static final double SCORE_SPECIMEN_POS = 0.80;
     private static final double LOW_HANG_POSITION = 0.8;
+    private static final double GET_OUT_OF_WAY_POS = 0.8;
     private static final double RAISING_SLIDES_POSITION = 0.2;
     private static final double ARM_SPEED = 0.005;
 
@@ -30,6 +31,7 @@ public class Arm {
         armServo.setPosition(SCORE_SAMPLE_POS);
     }
     public void toScoreSpecimenPos() {armServo.setPosition(SCORE_SPECIMEN_POS);}
+    public void toGetOutOfWay() {armServo.setPosition(GET_OUT_OF_WAY_POS);}
 
     public void toHangPosition() {
         armServo.setPosition(LOW_HANG_POSITION);

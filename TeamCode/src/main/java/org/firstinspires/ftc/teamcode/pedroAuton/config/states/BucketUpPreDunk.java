@@ -11,10 +11,10 @@ public class BucketUpPreDunk extends AutonState {
 
     @Override
     public boolean update() {
-        subsystemManager.slides.slideToPosition(SlideState.MEDIUM); // slides move to top
+        subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE); // slides move to top
         subsystemManager.arm.raisinPos();
         // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
-        if (subsystemManager.slides.getSlidesState() == SlideState.MEDIUM
+        if (subsystemManager.slides.getSlidesState() == SlideState.MEDIUM_SCORE
                 && subsystemManager.slides.isIdle()
                 && subsystemManager.arm.inPreScorePosition()) {
             return true;

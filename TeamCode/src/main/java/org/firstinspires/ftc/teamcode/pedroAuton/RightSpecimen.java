@@ -190,7 +190,7 @@ public class RightSpecimen extends OpMode {
                 if (!follower.isBusy()) {
                     follower.followPath(scorePreloadedSpecimen, true);
                     if (actionTimer.getElapsedTimeSeconds() <= 1) {
-                        subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                        subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
                     }
                     if (actionTimer.getElapsedTimeSeconds() > 1) {
                         subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
@@ -259,7 +259,7 @@ public class RightSpecimen extends OpMode {
                 if (!follower.isBusy()) {
                     follower.followPath(goToScoringPositionAfterPickup, true);
                     if (actionTimer.getElapsedTimeSeconds() <= 1) {
-                        subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                        subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
                     }
                     if (actionTimer.getElapsedTimeSeconds() > 1) {
                         subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);

@@ -239,7 +239,7 @@ public abstract class AutonMethods extends LinearOpMode {
         slides.slideToPosition(SlideState.BOTTOM);
         boolean slidesAtPosition = false;
         while (!slidesAtPosition && opModeIsActive()) {
-            slidesAtPosition = slides.slideToPosition(SlideState.MEDIUM);
+            slidesAtPosition = slides.slideToPosition(SlideState.MEDIUM_SCORE);
             topClaw.close();
         }
         sleep(500);

@@ -20,7 +20,5 @@ public class BeforeSpecimenScore extends TeleopState {
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.openClaw();
-        //subsystemManager.topClaw.close();
-
     }
 }

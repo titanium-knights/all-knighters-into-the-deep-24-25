@@ -84,12 +84,4 @@ public class HorizontalSlides {
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         horizontalSlidesMotor.setPower(slideForwardPower);
     }
-
-//    public void retract() {
-//        slideToPosition(minBack);
-//    }
-//
-//    public void goOut() {
-//        slideToPosition(maxForward);
-//    }
 }

@@ -160,10 +160,10 @@ public class RightPark extends OpMode {
                 if (!follower.isBusy()) {
                     follower.followPath(scorePreloadedSpecimen, true);
                     subsystemManager.topClaw.close();
-                    subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                    subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
                     boolean slidesAtPosition = false;
                     while (!slidesAtPosition) {
-                        slidesAtPosition = subsystemManager.slides.slideToPosition(SlideState.MEDIUM);
+                        slidesAtPosition = subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE);
                         subsystemManager.topClaw.close();
                     }
                 }

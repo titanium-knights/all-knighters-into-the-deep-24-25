@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.pedroAuton.config.states;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-
 import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonState;
 import org.firstinspires.ftc.teamcode.utilities.HorizontalSlidesState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
@@ -15,7 +13,7 @@ public class HorizontalTransferClosed extends AutonState {
     @Override
     public boolean update() {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM); // slides move to top
-        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.NEUTRAL);
+        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.TRANSFER);
         subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.closeClaw();
         subsystemManager.arm.toReceivingPos();
@@ -23,7 +21,7 @@ public class HorizontalTransferClosed extends AutonState {
         // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
         if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM
                 && subsystemManager.slides.isIdle()
-                && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.NEUTRAL
+                && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.TRANSFER
                 && subsystemManager.horizontalSlides.isIdle()
                 && subsystemManager.bottomClaw.inTransferPosition()
                 && subsystemManager.bottomClaw.isClosed()

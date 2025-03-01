@@ -19,7 +19,7 @@ public class BeforeSamplePickup extends TeleopState {
         Teleop.setSlowMode(true);
         TeleopManual.setSlowMode(true);
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-        subsystemManager.arm.toHangPosition(); // to get out of the way
+        subsystemManager.arm.toGetOutOfWay();
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.OUT);
         subsystemManager.topClaw.open();
         subsystemManager.bottomClaw.pickUpClawRotatorPosition();
