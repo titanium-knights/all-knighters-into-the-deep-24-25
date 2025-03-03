@@ -3,9 +3,7 @@ package org.firstinspires.ftc.teamcode.utilities;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -13,11 +11,10 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
-//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
 
 public class Webcam {
     OpenCvWebcam cam;
-    OpenCvPipeline pipeline; // daniel plainview would be proud
+    OpenCvPipeline pipeline;
     int cameraMonitorViewId;
 
     public Webcam(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
@@ -25,7 +22,6 @@ public class Webcam {
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
         this.pipeline = new ConfidenceOrientationVectorPipeline();
         FtcDashboard.getInstance().startCameraStream(cam, 0);
-
         cam.setPipeline(pipeline);
         cam.setMillisecondsPermissionTimeout(5000);
 
