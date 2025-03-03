@@ -12,8 +12,9 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClos
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClosedTwist;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpen;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpenTwist;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferClosed;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomClosedTopClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomClosedTopOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomOpenTopClosed;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
@@ -154,19 +155,21 @@ public class AutonCompiler {
                     return new HorizontalOutClosed(subsystemManager).update();
                 case "HORI_OUT_OPEN":
                     return new HorizontalOutOpen(subsystemManager).update();
-                case "HORI_TRANSFER_CLOSED":
-                    return new HorizontalTransferClosed(subsystemManager).update();
-                case "HORI_TRANSFER_OPEN":
-                    return new HorizontalTransferOpen(subsystemManager).update();
+                case "HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN":
+                    return new HorizontalTransferBottomClosedTopOpen(subsystemManager).update();
+                case "HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED":
+                    return new HorizontalTransferBottomClosedTopClosed(subsystemManager).update();
+                case "HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED":
+                    return new HorizontalTransferBottomOpenTopClosed(subsystemManager).update();
                 case "BUCKET_UP_POST_DUNK":
                     return new BucketUpPostDunk(subsystemManager).update();
                 case "BUCKET_UP_PRE_DUNK":
                     return new BucketUpPreDunk(subsystemManager).update();
                 case "LOW_HANG":
                     return new LowHang(subsystemManager).update();
-                case "HOR_OUT_CLOSED_TWIST":
+                case "HORI_OUT_CLOSED_TWIST":
                     return new HorizontalOutClosedTwist(subsystemManager).update();
-                case "HOR_OUT_OPEN_TWIST":
+                case "HORI_OUT_OPEN_TWIST":
                     return new HorizontalOutOpenTwist(subsystemManager).update();
                 default:
                     return true;

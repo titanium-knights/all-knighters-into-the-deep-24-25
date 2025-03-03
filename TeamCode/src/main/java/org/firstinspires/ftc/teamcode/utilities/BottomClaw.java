@@ -76,7 +76,7 @@ public class BottomClaw {
                 && getClawOpenerPosition() == CLOSE_CLAW_POSITION;
     }
     public boolean inOrthoPos() {
-        return getClawOpenerPosition() == ORTHOGONAL_CLAW_ROTATOR_POSITION;
+        return getClawRotatorPosition() == ORTHOGONAL_CLAW_ROTATOR_POSITION;
     }
 
     public boolean inTransferPosition() {

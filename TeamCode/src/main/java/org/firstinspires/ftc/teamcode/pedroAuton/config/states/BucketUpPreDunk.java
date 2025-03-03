@@ -11,12 +11,13 @@ public class BucketUpPreDunk extends AutonState {
 
     @Override
     public boolean update() {
-        subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE); // slides move to top
-        subsystemManager.arm.raisinPos();
-        // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
-        if (subsystemManager.slides.getSlidesState() == SlideState.MEDIUM_SCORE
+        subsystemManager.slides.slideToPosition(SlideState.TOP); // slides move to top
+        subsystemManager.arm.toScoreSamplePos();
+        subsystemManager.topClaw.close();
+        if (subsystemManager.slides.getSlidesState() == SlideState.TOP
                 && subsystemManager.slides.isIdle()
-                && subsystemManager.arm.inPreScorePosition()) {
+                && subsystemManager.arm.inScoredSamplePosition()
+                && !subsystemManager.topClaw.getOpenStatus()) {
             return true;
         } else {
             return false;

@@ -16,7 +16,7 @@ public class SlidesBottomClawOpen extends AutonState {
     public boolean update() {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM); // slides move to top
         subsystemManager.topClaw.open();
-        // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
+        subsystemManager.arm.toReceivingPos();
         if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM && subsystemManager.slides.isIdle() && subsystemManager.topClaw.getOpenStatus()) {
             return true;
         } else {

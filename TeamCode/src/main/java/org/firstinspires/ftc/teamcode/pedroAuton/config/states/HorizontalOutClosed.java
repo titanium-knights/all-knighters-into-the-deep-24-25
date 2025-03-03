@@ -16,7 +16,6 @@ public class HorizontalOutClosed extends AutonState {
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.OUT);
         subsystemManager.bottomClaw.closeClaw();
         subsystemManager.bottomClaw.rightWristDownPosition();
-        // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
         if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM
                 && subsystemManager.slides.isIdle()
                 && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.OUT

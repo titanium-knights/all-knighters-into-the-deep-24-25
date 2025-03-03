@@ -20,7 +20,7 @@ public class LowHang extends AutonState {
         // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
         if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM
                 && subsystemManager.slides.isIdle()
-                && subsystemManager.arm.inScoredPosition()
+                && subsystemManager.arm.inScoredSamplePosition()
                 && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.IN
                 && subsystemManager.horizontalSlides.isIdle()
                 && subsystemManager.bottomClaw.isLoweredAndClosed()) {

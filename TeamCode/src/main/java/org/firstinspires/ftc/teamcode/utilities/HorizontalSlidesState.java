@@ -4,6 +4,7 @@ public enum HorizontalSlidesState {
     IN(0),
     TRANSFER(-150),
     OUT(-2350),
+    MID_OUT(-1683),
     TRANSFER_OUT_OF_SUBMERSIBLE(-800);
 
     private final int encoderValue;

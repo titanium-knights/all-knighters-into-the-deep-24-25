@@ -7,10 +7,10 @@ public class Arm {
     private final Servo armServo;
 
     private static final double INIT_POSITION = 0.3;
-    private static final double RECEIVING_POSITION = 0.05;
+    private static final double RECEIVING_POSITION = 0.07;
     private static final double SCORE_SAMPLE_POS = 0.65;
     private static final double SCORE_SPECIMEN_POS = 0.80;
-    private static final double LOW_HANG_POSITION = 0.8;
+    private static final double LOW_HANG_POSITION = 0.73;
     private static final double GET_OUT_OF_WAY_POS = 0.8;
     private static final double RAISING_SLIDES_POSITION = 0.2;
     private static final double ARM_SPEED = 0.005;
@@ -38,8 +38,11 @@ public class Arm {
     }
     public void raisinPos() {armServo.setPosition(RAISING_SLIDES_POSITION);}
 
-    public boolean inScoredPosition() {
+    public boolean inScoredSamplePosition() {
         return armServo.getPosition() == SCORE_SAMPLE_POS;
+    }
+    public boolean inScoredSpecimenPosition() {
+        return armServo.getPosition() == SCORE_SPECIMEN_POS;
     }
     public boolean inPreScorePosition() {
         return armServo.getPosition() == RAISING_SLIDES_POSITION;
