@@ -24,6 +24,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     HardwareMap hmap;
     Telemetry telemetry;
     public double ogAngle, angle, rotationAngle, rotationTheta;
+    public ArrayList<Double> thetas;
     public static final int WINDOW = 160; // max range is 320
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
@@ -62,7 +63,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         telemetry.addLine("condition true?" + (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - 20));
         telemetry.update();
 
-        ArrayList<Double> thetas = new ArrayList<>();
+        thetas = new ArrayList<>();
 
         while ((Math.abs(xCoord - 320) >= WINDOW || yCoord < 240) && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - 20) {
             telemetry.addLine("y coordinate: " + yCoord);
@@ -88,7 +89,6 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         thetas = (ArrayList<Double>)thetas.stream().filter(d -> d!=180.0).collect(Collectors.toList());
 
-        telemetry.addLine("out of the loop!");
         subsystemManager.horizontalSlides.stop();
         if (thetas.isEmpty()) {
             return;

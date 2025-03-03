@@ -22,6 +22,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.Init;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @TeleOp(name = "Automated Driver Teleop", group = "User Control")
 public class Teleop extends OpMode {
@@ -160,6 +161,7 @@ public class Teleop extends OpMode {
                 currentState.runState(gamepad1, gamepad2);
                 beforePickup = true;
             }
+            telemetry.addData("angles: ", ((BeforeSamplePickupAutomated)currentState).thetas.stream().map(Object::toString).collect(Collectors.joining(", ")));
             telemetry.addData("og angle: ", ((BeforeSamplePickupAutomated)currentState).ogAngle);
             telemetry.addData("angle: ", ((BeforeSamplePickupAutomated)currentState).angle);
             telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
