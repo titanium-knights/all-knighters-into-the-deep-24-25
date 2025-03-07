@@ -12,7 +12,7 @@ public class HorizontalTransferBottomClosedTopOpen extends AutonState {
 
     @Override
     public boolean update() {
-        subsystemManager.slides.slideToPosition(SlideState.BOTTOM); // slides move to top
+        subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.closeClaw();

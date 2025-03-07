@@ -12,7 +12,7 @@ public class HorizontalTransferBottomClosedTopClosed extends AutonState {
 
     @Override
     public boolean update() {
-        subsystemManager.slides.slideToPosition(SlideState.BOTTOM); // slides move to top
+        subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.closeClaw();
@@ -30,12 +30,6 @@ public class HorizontalTransferBottomClosedTopClosed extends AutonState {
                 && !subsystemManager.topClaw.getOpenStatus()) {
             return true;
         } else {
-//            telemetry.addData("Slides at bottom:", subsystemManager.slides.getSlidesState());
-//            telemetry.addData("Slides are idle:", subsystemManager.slides.isIdle());
-//            telemetry.addData("Hor slides at neutral:", subsystemManager.horizontalSlides.getSlidesState());
-//            telemetry.addData("Hor slides idle:", subsystemManager.horizontalSlides.isIdle());
-//            telemetry.addData("Bottom claw in transfer pos:", subsystemManager.bottomClaw.inTransferPosition());
-//            telemetry.addData("Bottom claw is closed:", subsystemManager.bottomClaw.isClosed());
             return false;
         }
     }

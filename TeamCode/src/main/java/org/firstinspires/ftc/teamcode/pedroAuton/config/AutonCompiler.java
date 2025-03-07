@@ -8,6 +8,8 @@ import com.pedropathing.pathgen.Point;
 
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpPostDunk;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpPreDunk;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalMidOutClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalMidOutOpen;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClosedTwist;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpen;
@@ -171,6 +173,10 @@ public class AutonCompiler {
                     return new HorizontalOutClosedTwist(subsystemManager).update();
                 case "HORI_OUT_OPEN_TWIST":
                     return new HorizontalOutOpenTwist(subsystemManager).update();
+                case "HORI_MIDOUT_CLOSED":
+                    return new HorizontalMidOutClosed(subsystemManager).update();
+                case "HORI_MIDOUT_OPEN":
+                    return new HorizontalMidOutOpen(subsystemManager).update();
                 default:
                     return true;
             }
