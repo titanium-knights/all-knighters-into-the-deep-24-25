@@ -32,6 +32,14 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         this.telemetry = telemetry;
     }
 
+    public boolean gamepadIsTouched(Gamepad gamepad) {
+        return (
+                gamepad.a || gamepad.b || gamepad.x || gamepad.y
+                        || gamepad.dpad_left || gamepad.dpad_right || gamepad.dpad_up || gamepad.dpad_down
+                        || !gamepad.atRest() || gamepad.left_bumper || gamepad.right_bumper || gamepad.start
+        );
+    }
+
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         Teleop.setSlowMode(true);
@@ -70,6 +78,11 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.update();
+
+            if (gamepadIsTouched(gamepad1) || gamepadIsTouched(gamepad2)) {
+                break;
+            }
+
             subsystemManager.horizontalSlides.manualBack(0.35);
 
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
