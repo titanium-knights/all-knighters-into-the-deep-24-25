@@ -59,6 +59,7 @@ public class Teleop extends OpMode {
     }
 
     private ButtonPressState bottomClawButton = ButtonPressState.UNPRESSED;
+    private ButtonPressState twistButton = ButtonPressState.UNPRESSED;
     private ButtonPressState topClawButton = ButtonPressState.UNPRESSED;
     private ButtonPressState rotatorButton = ButtonPressState.UNPRESSED;
     private ButtonPressState manualButton = ButtonPressState.UNPRESSED;
@@ -129,6 +130,19 @@ public class Teleop extends OpMode {
             manualButton = ButtonPressState.UNPRESSED;
         }
 
+        if (gamepad1.dpad_up && twistButton == ButtonPressState.UNPRESSED) {
+            twistButton = ButtonPressState.PRESSED_GOOD;
+        } else if (gamepad1.dpad_up && twistButton == ButtonPressState.PRESSED_GOOD) {
+            twistButton = ButtonPressState.DEPRESSED;
+        } else if (!gamepad1.dpad_up) {
+            twistButton = ButtonPressState.UNPRESSED;
+        }
+        if (topClawButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.bottomClaw.inOrthoPos()) {
+            subsystemManager.bottomClaw.pickUpClawRotatorPosition();
+        } else if (topClawButton==ButtonPressState.PRESSED_GOOD && subsystemManager.bottomClaw.inOrthoPos()) {
+            subsystemManager.bottomClaw.orthogonalClawRotatorPosition();
+        }
+
         // drivetrain
         if (Teleop.slowMode) {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
@@ -154,9 +168,6 @@ public class Teleop extends OpMode {
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
         } else if (gamepad1.right_trigger > 0.01f) {
-
-        } else if (gamepad1.dpad_up) {
-            switchToState(beforeSpecimenScoreState);
         } else if (gamepad1.dpad_down) {
             switchToState(specimenScoreState);
         } else if (gamepad1.start) {
