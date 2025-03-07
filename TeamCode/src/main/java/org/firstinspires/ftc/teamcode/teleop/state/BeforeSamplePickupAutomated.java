@@ -55,7 +55,6 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     // Just when I thought I was out, they pull me back in.
     public void extendToPickupPosition(Gamepad gamepad1, Gamepad gamepad2) {
         double xCoord, yCoord;
-        ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
         yCoord = -1;
         xCoord = 320;
         telemetry.addLine("y coordinate: " + yCoord);
@@ -77,13 +76,12 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
                 telemetry.addLine("we got here!");
                 telemetry.update();
-                drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
-                xCoord = drsd.getX();
-                yCoord = drsd.getY();
+                xCoord = subsystemManager.webcam.getCenterX();
+                yCoord = subsystemManager.webcam.getCenterY();
             }
 
             if (yCoord != -1 && Math.abs(xCoord - 320) < WINDOW) {
-                thetas.add(drsd.getTheta());
+                thetas.add(subsystemManager.webcam.getAverageAngle());
             }
         }
 

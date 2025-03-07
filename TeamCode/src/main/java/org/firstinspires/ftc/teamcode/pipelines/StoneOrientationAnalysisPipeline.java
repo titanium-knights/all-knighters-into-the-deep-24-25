@@ -19,9 +19,11 @@
  * SOFTWARE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.pipelines;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
+import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import org.opencv.core.Core;
@@ -206,6 +208,13 @@ public class StoneOrientationAnalysisPipeline extends OpenCvPipeline
 
         return contoursList;
     }
+
+//    public ConfidenceOrientationVectorPipeline.DetectionResultScaledData bestDetectionCoordsAngle() {
+//        if (bestDetectionResult == null) {
+//            return new ConfidenceOrientationVectorPipeline.DetectionResultScaledData(-1, -1, -1, -1);
+//        }
+//        return new ConfidenceOrientationVectorPipeline.DetectionResultScaledData();
+//    }
 
     void morphMask(Mat input, Mat output)
     {

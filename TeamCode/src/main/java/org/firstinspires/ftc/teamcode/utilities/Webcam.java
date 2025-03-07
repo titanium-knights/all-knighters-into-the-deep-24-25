@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.pipelines.BasicColorMatch;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -17,10 +18,10 @@ public class Webcam {
     OpenCvPipeline pipeline;
     int cameraMonitorViewId;
 
-    public Webcam(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
+    public Webcam(HardwareMap hmap) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
-        this.pipeline = new ConfidenceOrientationVectorPipeline();
+        this.pipeline = new BasicColorMatch();
         FtcDashboard.getInstance().startCameraStream(cam, 0);
         cam.setPipeline(pipeline);
         cam.setMillisecondsPermissionTimeout(5000);
@@ -59,8 +60,20 @@ public class Webcam {
         });
     }
 
-    public ConfidenceOrientationVectorPipeline.DetectionResultScaledData bestDetectionCoordsAngle() {
-        // casting this cause i mean generalizability is always sweet
-        return ((ConfidenceOrientationVectorPipeline)pipeline).bestDetectionCoordsAngle();
+//    public ConfidenceOrientationVectorPipeline.DetectionResultScaledData bestDetectionCoordsAngle() {
+//        // casting this cause i mean generalizability is always sweet
+//        return ((ConfidenceOrientationVectorPipeline)pipeline).bestDetectionCoordsAngle();
+//    }
+
+    public double getAverageAngle() {
+        return ((BasicColorMatch)pipeline).getAverageAngle();
+    }
+
+    public double getCenterX() {
+        return ((BasicColorMatch)pipeline).getCenterX();
+    }
+
+    public double getCenterY() {
+        return ((BasicColorMatch)pipeline).getCenterY();
     }
 }

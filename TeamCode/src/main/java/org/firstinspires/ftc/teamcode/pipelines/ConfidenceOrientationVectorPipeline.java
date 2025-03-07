@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -7,6 +9,10 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+// We use static imports for convenience
+import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
+import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.fastBoxBlur;
 
 /**
  * Pipeline that:
@@ -66,13 +72,16 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         BLUE
     }
 
-    private Color color = Color.BLUE;
+    private Color color;
+    private Teleop.Strategy strategy;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline() {
+    public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
+        this.color = color;
+        this.strategy = strategy;
     }
 
-    Mat canvas, down = new Mat(), processed = new Mat(), hsvImage = new Mat(), yellow_mask = new Mat(), color_mask = new Mat(), red_mask_1 = new Mat(), red_mask_2 = new Mat(), mask = new Mat(), hierarchy = new Mat();
+    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
 
 
     @Override
@@ -88,9 +97,10 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         canvas = input.clone();
 
         // 2) Downscale for faster processing
-        Imgproc.resize(input, down, new Size(input.cols() * SCALE_FACTOR, input.rows() * SCALE_FACTOR), 0, 0, Imgproc.INTER_NEAREST);
+        downscale(input, SCALE_FACTOR, down);
 
         // 3) Denoise only on every SKIP_FRAMES-th frame
+        processed = new Mat();
         if (frameCount % SKIP_FRAMES == 0) {
             Imgproc.GaussianBlur(down, processed, new Size(3, 3), 0, 0);
         } else {
@@ -98,13 +108,20 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         }
 
         // 4) Convert (processed) image to HSV color space
+        hsvImage = new Mat();
         Imgproc.cvtColor(processed, hsvImage, Imgproc.COLOR_RGB2HSV);
 
         // 5a) Threshold for yellow
-        Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
+        yellow_mask = new Mat();
+        if (strategy == Teleop.Strategy.SAMPLE) { // on if collecting samples, off if specimen-focused
+            Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
+        }
 
         // 5b) Threshold for specified color
+        color_mask = new Mat();
         if (color == Color.RED) {
+            red_mask_1 = new Mat();
+            red_mask_2 = new Mat();
             Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
             Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
             Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
@@ -112,10 +129,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
         }
 
+        mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
 
         // 6) Find contours in downscaled space
         List<MatOfPoint> contours = new ArrayList<>();
+        hierarchy = new Mat();
         Imgproc.findContours(mask, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
 
         if (contours.isEmpty()) {
