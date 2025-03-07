@@ -24,8 +24,9 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
 
     // Poses for the first retrieval motion.
     //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 126, Math.toRadians(155));
+    public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(22, 126, Math.toRadians(155));
     //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 128, Math.toRadians(155));
-    public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 127, Math.toRadians(155));
+    //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 127, Math.toRadians(155));
     //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 126.5, Math.toRadians(155));
 
     // Poses for the second retrieval motion.
@@ -53,7 +54,7 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
 
     // Sleep time (in milliseconds) between segments.
     public static final int SEGMENT_SLEEP_TIME_MS = 50;
-    public static final double WAIT_PLS = 0.5; // in seconds
+    public static final double WAIT_PLS = 0.3; // in seconds
 
     public static final int GRAB_SPECIMEN_WAIT_MS = 250;
 
@@ -84,10 +85,13 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor(WAIT_PLS),
             new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
             new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
+            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
+            new AutonStepDescriptor(WAIT_PLS),
             new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
+            new AutonStepDescriptor(WAIT_PLS),
+            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
             new AutonStepDescriptor(SCORE_BUCKET_POSE, GET_OUT_OF_SCORE_BUCKET_POSE),
             new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
-            new AutonStepDescriptor(WAIT_PLS),
             new AutonStepDescriptor(GET_OUT_OF_SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE2),
 
             // --- Score Motion 2 ---
@@ -102,12 +106,14 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor(WAIT_PLS),
             new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
             new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
+            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
+            new AutonStepDescriptor(WAIT_PLS),
             new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
-            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
-            new AutonStepDescriptor(SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE3),
-            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"), // just to make sure we're folded in
-
+            new AutonStepDescriptor(WAIT_PLS),
+            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
+            new AutonStepDescriptor(SCORE_BUCKET_POSE, GET_OUT_OF_SCORE_BUCKET_POSE),
+            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+            new AutonStepDescriptor(GET_OUT_OF_SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE3),
 
             // --- Score Motion 3 ---
             new AutonStepDescriptor("HORI_OUT_OPEN_TWIST"),
@@ -121,8 +127,11 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3, RETRIEVE_SPECIMEN_POSE1),
             new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
             new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
+            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
+            new AutonStepDescriptor(WAIT_PLS),
             new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
-            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
+            new AutonStepDescriptor(WAIT_PLS),
+            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
             new AutonStepDescriptor(SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE1),
             new AutonStepDescriptor(
                     new ArrayList<AutonStepDescriptor>(Arrays.asList(

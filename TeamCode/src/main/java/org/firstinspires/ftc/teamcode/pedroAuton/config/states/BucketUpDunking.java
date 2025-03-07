@@ -4,19 +4,19 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
-public class BucketUpPreDunk extends AutonState {
-    public BucketUpPreDunk(SubsystemManager subsystemManager) {
+public class BucketUpDunking extends AutonState {
+    public BucketUpDunking(SubsystemManager subsystemManager) {
         super(subsystemManager);
     }
 
     @Override
     public boolean update() {
         subsystemManager.slides.slideToPosition(SlideState.TOP); // slides move to top
-        subsystemManager.arm.toPreScoreSamplePos();
+        subsystemManager.arm.toScoreSamplePos();
         subsystemManager.topClaw.close();
         if (subsystemManager.slides.getSlidesState() == SlideState.TOP
                 && subsystemManager.slides.isIdle()
-                && subsystemManager.arm.inPreScoreSamplePosition()
+                && subsystemManager.arm.inScoredSamplePosition()
                 && !subsystemManager.topClaw.getOpenStatus()) {
             return true;
         } else {

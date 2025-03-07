@@ -6,6 +6,7 @@ import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpDunking;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpPostDunk;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpPreDunk;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalMidOutClosed;
@@ -165,6 +166,8 @@ public class AutonCompiler {
                     return new HorizontalTransferBottomOpenTopClosed(subsystemManager).update();
                 case "BUCKET_UP_POST_DUNK":
                     return new BucketUpPostDunk(subsystemManager).update();
+                case "BUCKET_UP_DUNKING":
+                    return new BucketUpDunking(subsystemManager).update();
                 case "BUCKET_UP_PRE_DUNK":
                     return new BucketUpPreDunk(subsystemManager).update();
                 case "LOW_HANG":

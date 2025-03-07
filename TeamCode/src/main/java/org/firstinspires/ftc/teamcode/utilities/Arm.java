@@ -8,7 +8,7 @@ public class Arm {
 
     private static final double INIT_POSITION = 0.3;
     private static final double RECEIVING_POSITION = 0.07;
-    private static final double PRE_SCORE_SAMPLE_POS = 0.65;
+    private static final double PRE_SCORE_SAMPLE_POS = 0.4;
     private static final double SCORE_SAMPLE_POS = 0.75;
     private static final double SCORE_SPECIMEN_POS = 0.80;
     private static final double LOW_HANG_POSITION = 0.73;
