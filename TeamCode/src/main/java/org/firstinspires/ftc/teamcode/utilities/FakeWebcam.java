@@ -18,7 +18,7 @@ public class FakeWebcam {
     public FakeWebcam(HardwareMap hmap) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
-        this.pipeline = new BasicColorMatch(SubsystemManager.instance.telemetry);
+        this.pipeline = new BasicColorMatch();
         FtcDashboard.getInstance().startCameraStream(cam, 0);
         cam.setPipeline(pipeline);
         cam.setMillisecondsPermissionTimeout(2000);

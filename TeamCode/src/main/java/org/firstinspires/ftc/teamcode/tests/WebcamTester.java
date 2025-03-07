@@ -13,11 +13,13 @@ public class WebcamTester extends OpMode {
     @Override
     public void init() {
         telemetry.addData("Status", "Initialized");
-        manager = new SubsystemManager(hardwareMap, telemetry);
+        manager = new SubsystemManager(hardwareMap);
     }
 
     @Override
     public void loop() {
+        manager.drive.move(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+
         telemetry.addData("Status", "Running");
         telemetry.addData("Angle", manager.webcam2.getAngle());
         telemetry.update();

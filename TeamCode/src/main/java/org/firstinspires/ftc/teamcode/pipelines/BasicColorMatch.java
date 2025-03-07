@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
 //import org.firstinspires.ftc1.teamcode.utilities.SubsystemManager;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+//import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -16,15 +16,14 @@ public class BasicColorMatch extends OpenCvPipeline {
     private final Mat processedMat = new Mat();
     private final Mat mask = new Mat();
     private volatile double averageAngle = 0.0;
-    Telemetry telemetry;
+//    Telemetry telemetry;
 
-    public BasicColorMatch(Telemetry telemetry) {
-        this.telemetry = telemetry;
+    public BasicColorMatch() {
     }
 
     @Override
     public Mat processFrame(Mat input) {
-        telemetry.clearAll();
+//        telemetry.clearAll();
         Imgproc.cvtColor(input, processedMat, Imgproc.COLOR_RGB2YCrCb);
 
         Imgproc.GaussianBlur(processedMat, processedMat, new Size(9, 13), 5);
@@ -124,7 +123,7 @@ public class BasicColorMatch extends OpenCvPipeline {
     }
 
     public void log(String s) {
-        System.err.println(s);
-        telemetry.addLine(s);
+//        System.err.println(s);
+//        telemetry.addLine(s);
     }
 }

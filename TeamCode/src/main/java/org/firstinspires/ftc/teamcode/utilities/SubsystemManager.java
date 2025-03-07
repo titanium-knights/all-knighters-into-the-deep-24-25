@@ -23,7 +23,6 @@ public class SubsystemManager {
     public HorizontalSlides horizontalSlides;
     public Webcam webcam;
     public FakeWebcam webcam2;
-    public Telemetry telemetry;
     public static SubsystemManager instance = null;
 
     public SubsystemManager(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
@@ -39,8 +38,15 @@ public class SubsystemManager {
         instance = this;
     }
 
-    public SubsystemManager(HardwareMap hmap, Telemetry telemetry) {
-        this(hmap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
-        this.telemetry = telemetry;
+    public SubsystemManager(HardwareMap hmap) {
+        drive = new SimpleMecanumDrive(hmap);
+        arm = new Arm(hmap);
+        bottomClaw = new BottomClaw(hmap);
+        horizontalSlides = new HorizontalSlides(hmap);
+        topClaw = new TopClaw(hmap);
+        slides = new Slides(hmap);
+        this.webcam2 = new FakeWebcam(hmap);
+//        webcam = new Webcam(hmap, color, strategy);
+        instance = this;
     }
 }
