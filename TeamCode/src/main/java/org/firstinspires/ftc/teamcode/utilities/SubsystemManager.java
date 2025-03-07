@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
-import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 
 /**
@@ -23,6 +22,9 @@ public class SubsystemManager {
     public Slides slides;
     public HorizontalSlides horizontalSlides;
     public Webcam webcam;
+    public FakeWebcam webcam2;
+    public Telemetry telemetry;
+    public static SubsystemManager instance = null;
 
     public SubsystemManager(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
         // add util class initializations here
@@ -32,6 +34,13 @@ public class SubsystemManager {
         horizontalSlides = new HorizontalSlides(hmap);
         topClaw = new TopClaw(hmap);
         slides = new Slides(hmap);
-        webcam = new Webcam(hmap, color, strategy);
+        this.webcam2 = new FakeWebcam(hmap);
+//        webcam = new Webcam(hmap, color, strategy);
+        instance = this;
+    }
+
+    public SubsystemManager(HardwareMap hmap, Telemetry telemetry) {
+        this(hmap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+        this.telemetry = telemetry;
     }
 }
