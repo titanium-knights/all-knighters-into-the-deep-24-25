@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupAutomated;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeManualSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSampleScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
@@ -31,6 +32,7 @@ public class Teleop extends OpMode {
     private Neutral neutralState;
     private BeforeSamplePickupAutomated beforeSamplePickupAutomatedState;
     private BeforeSamplePickup beforeSamplePickupState;
+    private BeforeManualSamplePickup beforeManualSamplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
     private SampleTransferAutomated sampleTransferAutomatedState;
     private BeforeSampleScore beforeBucketScoreState;
@@ -77,6 +79,7 @@ public class Teleop extends OpMode {
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
+        beforeManualSamplePickupState = new BeforeManualSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
         sampleTransfer = new SampleTransfer(subsystemManager);
@@ -130,17 +133,21 @@ public class Teleop extends OpMode {
             manualButton = ButtonPressState.UNPRESSED;
         }
 
-        if (gamepad1.dpad_up && twistButton == ButtonPressState.UNPRESSED) {
+        if (gamepad1.b && twistButton == ButtonPressState.UNPRESSED) {
             twistButton = ButtonPressState.PRESSED_GOOD;
-        } else if (gamepad1.dpad_up && twistButton == ButtonPressState.PRESSED_GOOD) {
+            telemetry.addLine("hi");
+        } else if (gamepad1.b && twistButton == ButtonPressState.PRESSED_GOOD) {
             twistButton = ButtonPressState.DEPRESSED;
-        } else if (!gamepad1.dpad_up) {
+            telemetry.addLine("hi");
+        } else if (!gamepad1.b) {
             twistButton = ButtonPressState.UNPRESSED;
         }
-        if (topClawButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.bottomClaw.inOrthoPos()) {
+        if (twistButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.bottomClaw.inOrthoPos()) {
             subsystemManager.bottomClaw.pickUpClawRotatorPosition();
-        } else if (topClawButton==ButtonPressState.PRESSED_GOOD && subsystemManager.bottomClaw.inOrthoPos()) {
+            telemetry.addLine("hi");
+        } else if (twistButton==ButtonPressState.PRESSED_GOOD && subsystemManager.bottomClaw.inOrthoPos()) {
             subsystemManager.bottomClaw.orthogonalClawRotatorPosition();
+            telemetry.addLine("hi");
         }
 
         // drivetrain
@@ -151,11 +158,13 @@ public class Teleop extends OpMode {
         }
 
         // logic to run to states
-        if (gamepad1.dpad_left) {
+        if (gamepad1.dpad_left && subsystemManager.bottomClaw.isClosed()) {
             switchToState(neutralState);
         } else if (gamepad1.dpad_right) {
             if (manualMode) {
-                switchToState(beforeSamplePickupState);
+                //switchToState(beforeSamplePickupState);
+                switchToState(beforeManualSamplePickupState);
+
             } else {
                 switchToState(beforeSamplePickupAutomatedState);
             }
@@ -168,8 +177,10 @@ public class Teleop extends OpMode {
         } else if (gamepad1.left_trigger > 0.01f) {
             switchToState(beforeBucketScoreState);
         } else if (gamepad1.right_trigger > 0.01f) {
+        } else if (gamepad1.dpad_up) {
+            switchToState(beforeSpecimenScoreState);
         } else if (gamepad1.dpad_down) {
-            switchToState(specimenScoreState);
+
         } else if (gamepad1.start) {
             switchToState(initState);
         }
