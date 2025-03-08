@@ -158,13 +158,11 @@ public class Teleop extends OpMode {
         }
 
         // logic to run to states
-        if (gamepad1.dpad_left && subsystemManager.bottomClaw.isClosed()) {
+        if (gamepad1.dpad_left) {
             switchToState(neutralState);
         } else if (gamepad1.dpad_right) {
             if (manualMode) {
-                //switchToState(beforeSamplePickupState);
                 switchToState(beforeManualSamplePickupState);
-
             } else {
                 switchToState(beforeSamplePickupAutomatedState);
             }
@@ -234,10 +232,7 @@ public class Teleop extends OpMode {
     public void switchToState(TeleopState state) {
         // if the state we're trying to move to has potential dependencies and we are not in one of
         // them, don't move
-        if (
-                state.getDependencyStates().length == 0
-                        || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)
-        ) {
+        if (state.getDependencyStates().length == 0 || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)) {
             Teleop.slowMode = false;
             currentState = state;
         }
