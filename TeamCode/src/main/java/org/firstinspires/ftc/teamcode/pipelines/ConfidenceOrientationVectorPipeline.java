@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.pipelines;
+package org.firstinspires.ftc.teamcode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
@@ -11,9 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 // We use static imports for convenience
-import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
-import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.fastBoxBlur;
-
+import static org.firstinspires.ftc.teamcode.DenoiseUtils.downscale;
 /**
  * Pipeline that:
  *  1) Downscales the image for faster processing
@@ -67,18 +64,8 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     // Keep track of frames to decide when to denoise
     private int frameCount = 0;
 
-    public enum Color {
-        RED,
-        BLUE
-    }
-
-    private Color color;
-    private Teleop.Strategy strategy;
-
     // Constructor
-    public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
-        this.color = color;
-        this.strategy = strategy;
+    public ConfidenceOrientationVectorPipeline() {
     }
 
     Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
@@ -97,7 +84,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         canvas = input.clone();
 
         // 2) Downscale for faster processing
-        downscale(input, SCALE_FACTOR, down);
+        down = downscale(input, SCALE_FACTOR);
 
         // 3) Denoise only on every SKIP_FRAMES-th frame
         processed = new Mat();
@@ -113,21 +100,11 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
         // 5a) Threshold for yellow
         yellow_mask = new Mat();
-        if (strategy == Teleop.Strategy.SAMPLE) { // on if collecting samples, off if specimen-focused
-            Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
-        }
+        Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
 
         // 5b) Threshold for specified color
         color_mask = new Mat();
-        if (color == Color.RED) {
-            red_mask_1 = new Mat();
-            red_mask_2 = new Mat();
-            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
-            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
-            Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
-        } else {
-            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
-        }
+        Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
 
         mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
@@ -144,7 +121,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
-            if (contourArea < 100) {
+            if (contourArea < 26000) {
                 continue;
             }
 

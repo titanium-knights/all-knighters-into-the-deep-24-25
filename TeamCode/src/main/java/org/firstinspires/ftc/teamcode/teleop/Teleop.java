@@ -49,7 +49,6 @@ public class Teleop extends OpMode {
     private boolean beforePickup = false;
 
     private boolean manualMode = false;
-    private ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.BLUE;
 
     public enum Strategy {
         SAMPLE,
@@ -74,7 +73,7 @@ public class Teleop extends OpMode {
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap, color, strategy);
+        subsystemManager = new SubsystemManager(hardwareMap);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);

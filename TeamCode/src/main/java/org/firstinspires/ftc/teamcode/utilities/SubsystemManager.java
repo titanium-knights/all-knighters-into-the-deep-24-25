@@ -24,7 +24,7 @@ public class SubsystemManager {
     public HorizontalSlides horizontalSlides;
     public Webcam webcam;
 
-    public SubsystemManager(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
+    public SubsystemManager(HardwareMap hmap) {
         // add util class initializations here
         drive = new SimpleMecanumDrive(hmap);
         arm = new Arm(hmap);

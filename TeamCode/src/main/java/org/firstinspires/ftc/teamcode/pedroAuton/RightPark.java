@@ -268,7 +268,7 @@ public class RightPark extends OpMode {
         actionTimer = new Timer();
         opmodeTimer.resetTimer();
 
-        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+        subsystemManager = new SubsystemManager(hardwareMap);
 
         subsystemManager.arm.toInitPos();
         subsystemManager.topClaw.close();

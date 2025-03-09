@@ -184,7 +184,7 @@ public class MudasirTests extends OpMode {
         follower = new Follower(hardwareMap);
         follower.setStartingPose(startPose);
 
-         subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+         subsystemManager = new SubsystemManager(hardwareMap);
 
         buildPaths();
     }

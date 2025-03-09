@@ -50,7 +50,7 @@ public class LeftOneSpecimenPark extends OpMode {
         opmodeTimer = new Timer();
 
         // Initialize hardware subsystems.
-        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+        subsystemManager = new SubsystemManager(hardwareMap);
         subsystemManager.arm.toReceivingPos();
         subsystemManager.topClaw.close();
 

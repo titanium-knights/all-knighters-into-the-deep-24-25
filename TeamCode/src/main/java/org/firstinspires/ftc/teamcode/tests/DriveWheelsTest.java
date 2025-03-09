@@ -17,7 +17,7 @@ public class DriveWheelsTest extends OpMode {
     @Override
     public void init() {
 
-        manager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+        manager = new SubsystemManager(hardwareMap);
     }
 
     @Override

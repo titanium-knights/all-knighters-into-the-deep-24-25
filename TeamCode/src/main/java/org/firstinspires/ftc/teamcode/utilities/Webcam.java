@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.pipelines.BasicColorMatch;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.pipelines.StupidPipeline;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -21,7 +22,7 @@ public class Webcam {
     public Webcam(HardwareMap hmap) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
-        this.pipeline = new BasicColorMatch();
+        this.pipeline = new StupidPipeline();
         FtcDashboard.getInstance().startCameraStream(cam, 0);
         cam.setPipeline(pipeline);
         cam.setMillisecondsPermissionTimeout(5000);
