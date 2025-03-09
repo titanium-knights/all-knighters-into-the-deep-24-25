@@ -15,6 +15,9 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClos
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClosedTwist;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpen;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpenTwist;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalSpecInOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalSpecOutClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalSpecOutOpen;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomClosedTopClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomClosedTopOpen;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomOpenTopClosed;
@@ -180,6 +183,12 @@ public class AutonCompiler {
                     return new HorizontalMidOutClosed(subsystemManager).update();
                 case "HORI_MIDOUT_OPEN":
                     return new HorizontalMidOutOpen(subsystemManager).update();
+                case "HORI_SPECOUT_OPEN":
+                    return new HorizontalSpecOutOpen(subsystemManager).update();
+                case "HORI_SPECOUT_CLOSED":
+                    return new HorizontalSpecOutClosed(subsystemManager).update();
+                case "HORI_SPECIN_OPEN":
+                    return new HorizontalSpecInOpen(subsystemManager).update();
                 default:
                     return true;
             }

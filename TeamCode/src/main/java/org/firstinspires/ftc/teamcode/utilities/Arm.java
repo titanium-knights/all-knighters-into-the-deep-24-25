@@ -49,6 +49,9 @@ public class Arm {
     public boolean inPreScoreSamplePosition() {
         return armServo.getPosition() == PRE_SCORE_SAMPLE_POS;
     }
+    public boolean inGetOutOfWayPosition() {
+        return armServo.getPosition() == GET_OUT_OF_WAY_POS;
+    }
     public boolean inReceivingPosition() {
         return armServo.getPosition() == RECEIVING_POSITION;
     }
