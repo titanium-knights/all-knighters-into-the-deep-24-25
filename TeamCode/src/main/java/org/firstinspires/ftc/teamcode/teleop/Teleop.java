@@ -170,6 +170,7 @@ public class Teleop extends OpMode {
             telemetry.addData("angle: ", ((BeforeSamplePickupAutomated)currentState).angle);
             telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
             telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
+            telemetry.addData("fps: ", subsystemManager.webcam.getFps());
             if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
                 rotatorButton = ButtonPressState.PRESSED_GOOD;
                 if (clawPosition == ClawPosition.HORIZONTAL) {

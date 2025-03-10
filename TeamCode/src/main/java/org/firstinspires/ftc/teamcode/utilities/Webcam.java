@@ -67,4 +67,8 @@ public class Webcam {
         // casting this cause i mean generalizability is always sweet
         return ((ConfidenceOrientationVectorPipeline)pipeline).bestDetectionCoordsAngle();
     }
+
+    public double getFps() {
+        return cam.getFps();
+    }
 }
