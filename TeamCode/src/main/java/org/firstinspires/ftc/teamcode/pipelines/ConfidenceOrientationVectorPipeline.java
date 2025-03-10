@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.pipelines;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.*;
@@ -10,7 +10,8 @@ import java.util.Collections;
 import java.util.List;
 
 // We use static imports for convenience
-import static org.firstinspires.ftc.teamcode.DenoiseUtils.downscale;
+import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
+
 /**
  * Pipeline that:
  *  1) Downscales the image for faster processing
