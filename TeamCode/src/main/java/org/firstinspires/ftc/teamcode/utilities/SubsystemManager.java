@@ -23,6 +23,7 @@ public class SubsystemManager {
     public Slides slides;
     public HorizontalSlides horizontalSlides;
     public Webcam webcam;
+    public Swiper swiper;
 
     public SubsystemManager(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
         // add util class initializations here
@@ -33,5 +34,6 @@ public class SubsystemManager {
         topClaw = new TopClaw(hmap);
         slides = new Slides(hmap);
         webcam = new Webcam(hmap, color, strategy);
+        swiper = new Swiper(hmap);
     }
 }
