@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.teleop.state;
 
 import static org.firstinspires.ftc.teamcode.teleop.Teleop.SLOW_MODE_MULTIPLIER;
 
+import static java.lang.Double.min;
+import static java.lang.Math.max;
+
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -10,6 +13,7 @@ import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipel
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 
 import org.firstinspires.ftc.teamcode.teleop.TeleopState;
+import org.firstinspires.ftc.teamcode.utilities.HorizontalSlidesState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
@@ -49,18 +53,19 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     // It is done. My legacy.
     // Just when I thought I was out, they pull me back in.
     public void extendToPickupPosition(Gamepad gamepad1, Gamepad gamepad2) {
-        double xCoord, yCoord;
+        double xCoord, yCoord, encoder;
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
         yCoord = -1;
         xCoord = 320;
+        encoder = 0;
         telemetry.addLine("y coordinate: " + yCoord);
         telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
-        telemetry.addLine("condition true?" + (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - 20));
+        telemetry.addLine("condition true?" + (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
         telemetry.update();
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        while ((Math.abs(xCoord - 320) >= WINDOW || yCoord < 240) && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - 20) {
+        while ((Math.abs(xCoord - 320) >= WINDOW || yCoord < 240) && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
@@ -75,6 +80,8 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
                 xCoord = drsd.getX();
                 yCoord = drsd.getY();
+                encoder = subsystemManager.horizontalSlides.getEncoder();
+                encoder = max(encoder - 225, -subsystemManager.horizontalSlides.maxForward);
             }
 
             if (yCoord != -1 && Math.abs(xCoord - 320) < WINDOW) {
@@ -86,6 +93,8 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         telemetry.addLine("out of the loop!");
         subsystemManager.horizontalSlides.stop();
+        subsystemManager.horizontalSlides.slideToPosition((int) encoder);
+
         if (thetas.isEmpty()) {
             return;
         }

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import static java.lang.Math.min;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -8,7 +10,7 @@ public class HorizontalSlides {
     private static final double slideForwardPower = 1;
     private static final double slideBackPower = -1;
     private static final double idlePower = 0.0;
-    public final int maxForward = 2150;
+    public final int maxForward = 2400;
     public final int minBack = 0;
     public final int BUFFER = 50;
     private int pos;
@@ -44,6 +46,17 @@ public class HorizontalSlides {
     public boolean slideToPosition(HorizontalSlidesState state) {
         currentState = state;
         int targetPosition = state.getEncoderValue();
+        if (encoderValueWithinBufferOfTarget(targetPosition)) {
+            stop();
+            return true;
+        } else {
+            updateSlidesPower(targetPosition);
+            return false;
+        }
+    }
+
+    public boolean slideToPosition(int encoderValue) {
+        int targetPosition = min(encoderValue, maxForward);
         if (encoderValueWithinBufferOfTarget(targetPosition)) {
             stop();
             return true;
