@@ -21,6 +21,9 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalSpecOut
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomClosedTopClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomClosedTopOpen;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomOpenTopClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SwipeDown;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SwipeFold;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SwipeUp;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
@@ -189,6 +192,12 @@ public class AutonCompiler {
                     return new HorizontalSpecOutClosed(subsystemManager).update();
                 case "HORI_SPECIN_OPEN":
                     return new HorizontalSpecInOpen(subsystemManager).update();
+                case "SWIPEUP":
+                    return new SwipeUp(subsystemManager).update();
+                case "SWIPEDOWN":
+                    return new SwipeDown(subsystemManager).update();
+                case "SWIPEFOLD":
+                    return new SwipeFold(subsystemManager).update();
                 default:
                     return true;
             }

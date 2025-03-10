@@ -16,6 +16,9 @@ public class CONFIG {
     // misc
     public static String webcam = "Webcam 1";
 
+    // swiper
+    public static String swiperServo = "swiperServo";
+
     // intake
     public static String clawServoBottom = "clawB";      // tape: “bottomclaw”, eh servo 1
     public static String clawRotator = "clawR";          // tape: “clawrotator”, ch servo 5
