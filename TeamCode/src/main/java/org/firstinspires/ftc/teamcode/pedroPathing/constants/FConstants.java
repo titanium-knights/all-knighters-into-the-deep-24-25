@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.utilities.CONFIG;
 
 public class FConstants {
     static {
-        FollowerConstants.localizers = Localizers.THREE_WHEEL;
+        FollowerConstants.localizers = Localizers.THREE_WHEEL_IMU;
 
         // back of the robot has the vertical slides on it
         FollowerConstants.leftFrontMotorName = CONFIG.BACK_LEFT;
@@ -32,7 +32,7 @@ public class FConstants {
         // @60 in/sec: -77, -93, -95, -92, -91, -89, -121
         // @30 in/sec: -80, -73, -81, -105, -79, -78, -122, -73, -103, -88
 
-        FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.2,0.00002,0.003,0.00);
+        FollowerConstants.translationalPIDFCoefficients.setCoefficients(0.55,0,0.002,0.00);
         FollowerConstants.useSecondaryTranslationalPID = false;
 //        FollowerConstants.secondaryTranslationalPIDFCoefficients.setCoefficients(0.1,0,0.01,0); // Not being used, @see useSecondaryTranslationalPID
 
@@ -51,7 +51,7 @@ public class FConstants {
         FollowerConstants.pathEndTValueConstraint = 0.990; // from 0 to 1
         FollowerConstants.pathEndVelocityConstraint = 0.06;
         FollowerConstants.pathEndTranslationalConstraint = 0.1;
-        FollowerConstants.pathEndHeadingConstraint = 0.007;
+        FollowerConstants.pathEndHeadingConstraint = 0.0005;
 
          FollowerConstants.automaticHoldEnd = true;
 
