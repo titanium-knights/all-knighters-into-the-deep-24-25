@@ -16,6 +16,9 @@ public class CONFIG {
     // misc
     public static String webcam = "Webcam 1";
 
+    // swiper
+    public static String swiperServo = "swiperServo";
+
     // intake
     public static String clawServoBottom = "clawB";      // tape: “bottomclaw”, eh servo 1
     public static String clawRotator = "clawR";          // tape: “clawrotator”, ch servo 5
@@ -25,8 +28,6 @@ public class CONFIG {
     public static String slidesMotor = "slidesMotor";   // tape: “SlidesMotor”, eh motor 3
     public static String armServo = "armServo";         // tape: “R Bucket”,    ch servo 3
     public static String topClawServo = "claw";         // tape: "Claw",        ch servo 2
-
-    public static String swiper = "swiper";             // it's somewhere
 
     //NOTE: ch servo 4 is bad, do not use it until further investigation
 }

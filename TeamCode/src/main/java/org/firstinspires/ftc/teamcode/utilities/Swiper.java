@@ -8,20 +8,20 @@ public class Swiper {
     private final static double servoAngleModifier = (double) 360 / 300;
     private boolean open = true;
 
-    public static double openPos = 1.0;
-    public static double closePos = 0.65;
+    public static double upPos = .75;
+    public static double downPos = 0.25;
 
     public Swiper(HardwareMap hmap) {
-        this.swiper = hmap.servo.get(CONFIG.swiper);
+        this.swiper = hmap.servo.get(CONFIG.swiperServo);
     }
 
     public void up() {
-        swiper.setPosition(openPos);
+        swiper.setPosition(upPos);
         open = true;
     }
 
     public void down() {
-        swiper.setPosition(closePos);
+        swiper.setPosition(downPos);
         open = false;
     }
 
