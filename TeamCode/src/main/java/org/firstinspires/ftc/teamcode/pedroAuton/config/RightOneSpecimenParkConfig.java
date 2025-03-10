@@ -27,19 +27,16 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     public static final Pose ALIGN_TO_PREPARE_FOR_RETRIEVAL = new Pose(30, 36, Math.toRadians(0));
 
     // Poses for the first retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE1_1 = new Pose(60, 36, Math.toRadians(0));
-    public static final Pose RETRIEVE_SPECIMEN_POSE1_2 = new Pose(60, 27, Math.toRadians(0));
-    public static final Pose ENDING_POINT1 = new Pose(20, 27, Math.toRadians(0));
+    public static final Pose RETRIEVE_SPECIMEN_POSE1_1 = new Pose(60, 36, Math.toRadians(40));
+    public static final Pose ENDING_POINT1 = new Pose(60, 27, Math.toRadians(120));
 
     // Poses for the second retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE2_1 = new Pose(60, 27, Math.toRadians(5));
-    public static final Pose RETRIEVE_SPECIMEN_POSE2_2 = new Pose(60, 19, Math.toRadians(5));
-    public static final Pose ENDING_POINT2 = new Pose(20, 19, Math.toRadians(0));
+    public static final Pose RETRIEVE_SPECIMEN_POSE2_1 = new Pose(60, 27, Math.toRadians(45));
+    public static final Pose ENDING_POINT2 = new Pose(60, 19, Math.toRadians(120));
 
     // Poses for the third retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE3_1 = new Pose(60, 20, Math.toRadians(0));
-    public static final Pose RETRIEVE_SPECIMEN_POSE3_2 = new Pose(60, 12, Math.toRadians(350));
-    public static final Pose ENDING_POINT3 = new Pose(25, 12, Math.toRadians(0));
+    public static final Pose RETRIEVE_SPECIMEN_POSE3_1 = new Pose(60, 20, Math.toRadians(40));
+    public static final Pose ENDING_POINT3 = new Pose(60, 12, Math.toRadians(120));
 
     // Poses for scoring additional specimen.
     public static final Pose GET_SPECIMEN_POSE_1 = new Pose(24.4, 23.8, Math.toRadians(8));
@@ -53,9 +50,6 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
     // ===== Timing Parameters (in seconds) =====
 
     public static final double SCORING_INITIAL_WAIT_SECONDS = 0.5; //3.0
-    public static final double SCORING_SLIDES_WAIT_SECONDS = 0.0; //2.0
-    public static final double SCORING_CLAW_WAIT_SECONDS = 3.0;
-    public static final double SCORING_RETRACT_WAIT_SECONDS = 2.0;
 
     // Sleep time (in milliseconds) between segments.
     public static final int SEGMENT_SLEEP_TIME_MS = 50;
@@ -76,20 +70,26 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE, ALIGN_TO_PREPARE_FOR_RETRIEVAL), // Drive to pickup alignment.
 
             // --- Retrieval Motion 1 ---
+            new AutonStepDescriptor("SWIPEUP"),
             new AutonStepDescriptor(ALIGN_TO_PREPARE_FOR_RETRIEVAL, RETRIEVE_SPECIMEN_POSE1_1),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1_1, RETRIEVE_SPECIMEN_POSE1_2),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1_2, ENDING_POINT1),
+            new AutonStepDescriptor("SWIPEDOWN"),
+            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1_1, ENDING_POINT1),
+            new AutonStepDescriptor("SWIPEUP"),
 
 
             // --- Retrieval Motion 2 ---
             new AutonStepDescriptor(ENDING_POINT1, RETRIEVE_SPECIMEN_POSE2_1),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE2_1, RETRIEVE_SPECIMEN_POSE2_2),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE2_2, ENDING_POINT2),
+            new AutonStepDescriptor("SWIPEDOWN"),
+            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE2_1, ENDING_POINT2),
+            new AutonStepDescriptor("SWIPEUP"),
+
 
             // --- Retrieval Motion 3 ---
-//            new AutonStepDescriptor(ENDING_POINT2, RETRIEVE_SPECIMEN_POSE3_1),
-//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3_1, RETRIEVE_SPECIMEN_POSE3_2),
-//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3_2, ENDING_POINT3),
+            new AutonStepDescriptor(ENDING_POINT2, RETRIEVE_SPECIMEN_POSE3_1),
+            new AutonStepDescriptor("SWIPEDOWN"),
+            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3_1, ENDING_POINT3),
+            new AutonStepDescriptor("SWIPEFOLD"),
+
 
             // 2ND SPECIMEN
             // --- Align to get specimen ---

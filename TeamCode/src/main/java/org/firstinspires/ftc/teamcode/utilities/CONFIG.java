@@ -26,5 +26,7 @@ public class CONFIG {
     public static String armServo = "armServo";         // tape: “R Bucket”,    ch servo 3
     public static String topClawServo = "claw";         // tape: "Claw",        ch servo 2
 
+    public static String swiper = "swiper";             // it's somewhere
+
     //NOTE: ch servo 4 is bad, do not use it until further investigation
 }

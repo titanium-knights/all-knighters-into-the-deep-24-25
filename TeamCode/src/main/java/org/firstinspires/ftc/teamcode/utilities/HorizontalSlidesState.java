@@ -6,6 +6,7 @@ public enum HorizontalSlidesState {
     OUT(-2350),
     A_LITTLE_OUT(-1480),
     ALMOST_OUT(-2000),
+    MIDDLE(-1200),
     MID_OUT(-1483),
     TRANSFER_OUT_OF_SUBMERSIBLE(-800);
 
