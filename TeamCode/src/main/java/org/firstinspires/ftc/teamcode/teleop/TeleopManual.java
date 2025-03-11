@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.BeforeManualSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSampleScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
-import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
+//import org.firstinspires.ftc.teamcode.teleop.state.SpecimenScore;
 import org.firstinspires.ftc.teamcode.teleop.state.Init;
 
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
@@ -38,7 +38,7 @@ public class TeleopManual extends OpMode {
     private BeforeSampleScore beforeBucketScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
 
-    private SpecimenScore specimenScoreState;
+//    private SpecimenScore specimenScoreState;
     private SampleTransfer sampleTransfer;
   
     private Init initState;

@@ -21,7 +21,7 @@ public class BeforeManualSamplePickup extends TeleopState {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toGetOutOfWay();
         if (gamepad1.dpad_right) {
-            subsystemManager.horizontalSlides.manualBack(1);
+//            subsystemManager.horizontalSlides.manualBack(1);
         } else if (gamepad1.dpad_down) {
             subsystemManager.horizontalSlides.manualForward(1);
         }
