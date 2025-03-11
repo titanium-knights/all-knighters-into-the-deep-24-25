@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class Swiper {
     private final Servo swiper;
     private final static double servoAngleModifier = (double) 360 / 300;
-    private boolean open = true;
+    private boolean up = true;
 
     public static double upPos = .75;
     public static double downPos = 0.25;
@@ -17,16 +19,16 @@ public class Swiper {
 
     public void up() {
         swiper.setPosition(upPos);
-        open = true;
+        up = true;
     }
 
     public void down() {
         swiper.setPosition(downPos);
-        open = false;
+        up = false;
     }
 
     public boolean getUpStatus() {
-        return open;
+        return up;
     }
 
     public double getPosition() {
