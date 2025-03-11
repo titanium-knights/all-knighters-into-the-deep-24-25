@@ -5,7 +5,7 @@ import static org.firstinspires.ftc.teamcode.teleop.Teleop.SLOW_MODE_MULTIPLIER;
 import static java.lang.Double.min;
 import static java.lang.Math.max;
 
-import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -21,14 +21,11 @@ import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
-@Config
 public class BeforeSamplePickupAutomated extends TeleopState {
     HardwareMap hmap;
     Telemetry telemetry;
     public double ogAngle, angle, rotationAngle, rotationTheta;
     public static final int WINDOW = 160; // max range is 320
-
-    public static double slidesSpeed = 0.7;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -46,7 +43,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         subsystemManager.arm.toGetOutOfWay();
 
         try {
-            Thread.sleep(200);
+            Thread.sleep(2000);
         } catch (Exception e) {
             return;
         }
@@ -69,12 +66,13 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        while ((Math.abs(xCoord - 320) >= WINDOW || yCoord < 240) && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
+        while (yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
+            telemetry.addLine("angle detected:" + drsd.getTheta());
             telemetry.update();
-            subsystemManager.horizontalSlides.manualForward(slidesSpeed);
+            subsystemManager.horizontalSlides.manualForward(0.35);
 
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
 
@@ -93,7 +91,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             }
         }
 
-        thetas = (ArrayList<Double>)thetas.stream().filter(d -> d!=180.0).collect(Collectors.toList());
+        FtcDashboard.getInstance().stopCameraStream();
 
         telemetry.addLine("out of the loop!");
         subsystemManager.horizontalSlides.stop();
@@ -108,17 +106,22 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         if (angle < 0) {
             angle += 180;
         }
-        angle = 180 - angle;
         telemetry.addData("angle: ", angle);
 
 
         rotationAngle = (angle + 90) % 180;
         telemetry.addData("rotation angle: ", rotationAngle);
 
-        rotationTheta = ((rotationAngle * Math.PI) / 180) + Math.PI;
-        if (rotationTheta > 2 * Math.PI) {
+        rotationTheta = 2 * Math.PI - (((rotationAngle * Math.PI) / 180) + Math.PI);
+        while (rotationTheta > 2 * Math.PI) {
             rotationTheta -= 2 * Math.PI;
         }
+
+        while (rotationTheta < 0) {
+            rotationTheta += 2 * Math.PI;
+        }
+
+
         telemetry.addData("rotationTheta: ", rotationTheta);
         telemetry.update();
         subsystemManager.bottomClaw.rotate(rotationTheta);

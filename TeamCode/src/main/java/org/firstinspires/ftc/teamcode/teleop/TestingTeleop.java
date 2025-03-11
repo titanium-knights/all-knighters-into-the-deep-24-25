@@ -33,8 +33,6 @@ public class TestingTeleop extends OpMode {
         } else if (gamepad1.a) {
             manager.bottomClaw.rotate(BottomClaw.TESTING_THETA);
         }
-        telemetry.addData("scissors encoder value", manager.horizontalSlides.getEncoder());
-        telemetry.addData("vertical slides encoder value", manager.slides.getEncoder());
         telemetry.addData("claw rotation value", manager.bottomClaw.getClawRotatorPosition());
         telemetry.update();
     }
