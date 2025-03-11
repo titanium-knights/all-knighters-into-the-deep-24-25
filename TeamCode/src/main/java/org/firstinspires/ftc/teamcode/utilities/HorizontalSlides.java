@@ -44,19 +44,12 @@ public class HorizontalSlides {
     }
 
     public boolean slideToPosition(HorizontalSlidesState state) {
-        currentState = state;
-        int targetPosition = state.getEncoderValue();
-        if (encoderValueWithinBufferOfTarget(targetPosition)) {
+        if (state == HorizontalSlidesState.STOP) {
             stop();
             return true;
-        } else {
-            updateSlidesPower(targetPosition);
-            return false;
         }
-    }
-
-    public boolean slideToPosition(int encoderValue) {
-        int targetPosition = min(encoderValue, maxForward);
+        currentState = state;
+        int targetPosition = state.getEncoderValue();
         if (encoderValueWithinBufferOfTarget(targetPosition)) {
             stop();
             return true;
@@ -76,18 +69,6 @@ public class HorizontalSlides {
 
     public boolean isIdle() {
         return horizontalSlidesMotor.getPower() == idlePower;
-    }
-
-    public void manualBackward(double power) {
-        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double adjustedPower = Math.abs(power); // Positive for backward movement
-        horizontalSlidesMotor.setPower(adjustedPower);
-    }
-
-    public void manualForward(double power) {
-        horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double adjustedPower = -Math.abs(power); // Positive for forward movement
-        horizontalSlidesMotor.setPower(adjustedPower);
     }
 
     private void updateSlidesPower(int targetEncoderValue) {

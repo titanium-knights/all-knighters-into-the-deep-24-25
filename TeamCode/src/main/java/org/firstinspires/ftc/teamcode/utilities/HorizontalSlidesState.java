@@ -8,7 +8,8 @@ public enum HorizontalSlidesState {
     ALMOST_OUT(-2000),
     MIDDLE(-1200),
     MID_OUT(-1483),
-    TRANSFER_OUT_OF_SUBMERSIBLE(-800);
+    TRANSFER_OUT_OF_SUBMERSIBLE(-800),
+    STOP(200);
 
     private final int encoderValue;
 

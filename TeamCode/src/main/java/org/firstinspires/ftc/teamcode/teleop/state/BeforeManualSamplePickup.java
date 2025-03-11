@@ -21,12 +21,11 @@ public class BeforeManualSamplePickup extends TeleopState {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toGetOutOfWay();
         if (gamepad1.dpad_right) {
-//            subsystemManager.horizontalSlides.manualBack(1);
+            subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.OUT);
         } else if (gamepad1.dpad_down) {
-            subsystemManager.horizontalSlides.manualForward(1);
-        }
-        else {
-            subsystemManager.horizontalSlides.stop();
+            subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
+        } else {
+            subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.STOP);
         }
         subsystemManager.topClaw.open();
         subsystemManager.bottomClaw.rightWristDownPosition(); // claw is rotated down
