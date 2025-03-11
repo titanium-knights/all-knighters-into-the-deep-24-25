@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupAutomated;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
+
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeManualSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSampleScore;
@@ -36,8 +37,10 @@ public class TeleopManual extends OpMode {
     private SampleTransferAutomated sampleTransferAutomatedState;
     private BeforeSampleScore beforeBucketScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
+
     private SpecimenScore specimenScoreState;
     private SampleTransfer sampleTransfer;
+  
     private Init initState;
     private static boolean slowMode = false;
     public static final double SLOW_MODE_MULTIPLIER = 0.5;
@@ -77,7 +80,6 @@ public class TeleopManual extends OpMode {
         sampleTransfer = new SampleTransfer(subsystemManager);
         beforeBucketScoreState = new BeforeSampleScore(subsystemManager);
         beforeSpecimenScoreState = new BeforeSpecimenScore(subsystemManager);
-        specimenScoreState = new SpecimenScore(subsystemManager, new TeleopState[] {beforeSpecimenScoreState});
         initState = new Init(subsystemManager);
 
         // set current state to be at init

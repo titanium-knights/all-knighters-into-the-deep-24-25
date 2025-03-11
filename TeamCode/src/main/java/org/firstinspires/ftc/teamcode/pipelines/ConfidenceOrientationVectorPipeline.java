@@ -12,7 +12,6 @@ import java.util.List;
 
 // We use static imports for convenience
 import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
-import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.fastBoxBlur;
 
 /**
  * Pipeline that:
@@ -72,13 +71,11 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         BLUE
     }
 
-    private Color color;
-    private Teleop.Strategy strategy;
+    Color color;
+    Teleop.Strategy strategy;
 
     // Constructor
     public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
-        this.color = color;
-        this.strategy = strategy;
     }
 
     Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
@@ -113,21 +110,11 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
         // 5a) Threshold for yellow
         yellow_mask = new Mat();
-        if (strategy == Teleop.Strategy.SAMPLE) { // on if collecting samples, off if specimen-focused
-            Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
-        }
+        Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
 
         // 5b) Threshold for specified color
         color_mask = new Mat();
-        if (color == Color.RED) {
-            red_mask_1 = new Mat();
-            red_mask_2 = new Mat();
-            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
-            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
-            Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
-        } else {
-            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
-        }
+        Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
 
         mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
@@ -144,7 +131,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
-            if (contourArea < 100) {
+            if (contourArea < 30000) {
                 continue;
             }
 
@@ -157,6 +144,28 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             // Clamp
             confidence = Math.max(0, Math.min(1, confidence));
 
+            Point[] points = new Point[4];
+            rect.points(points);
+
+            // Determine orientation angle in original scale
+            double angle;
+            double AB = distance(points[0], points[1]);
+            double BC = distance(points[1], points[2]);
+            if (AB > BC) {
+                if (points[0].x == points[1].x) {
+                    angle = 90;
+                } else {
+                    angle = Math.atan((points[1].y - points[0].y) / (points[1].x - points[0].x)) * 180 / Math.PI;
+                }
+            } else {
+                if (points[1].x == points[2].x) {
+                    angle = 90;
+                } else {
+                    angle = Math.atan((points[2].y - points[1].y) / (points[2].x - points[1].y))  * 180 / Math.PI;
+                }
+            }
+
+            rect.angle = angle;
             detectionResults.add(new DetectionResult(rect, confidence));
         }
 
@@ -189,17 +198,18 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
                 boxList.add(box);
                 Imgproc.drawContours(canvas, boxList, 0, new Scalar(0,255,0), 2);
 
-                // Determine orientation angle in original scale
-                double angle = rectInOriginal.angle;
+
+
+
                 // If width < height, adjust angle by +90
-                if (rectInOriginal.size.width < rectInOriginal.size.height) {
-                    angle = 90 + angle;
-                }
+//                if (rectInOriginal.size.width < rectInOriginal.size.height) {
+//                    angle = 90 + angle;
+//                }
 
                 // Draw orientation line
                 Point center = rectInOriginal.center;
                 int length = 50;
-                double radians = Math.toRadians(angle);
+                double radians = Math.toRadians(rectInOriginal.angle);
                 Point end = new Point(
                         center.x + length * Math.cos(radians),
                         center.y + length * Math.sin(radians)
@@ -211,6 +221,10 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
         // Return the annotated original image
         return canvas;
+    }
+
+    public double distance(Point a, Point b) {
+        return Math.sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
     }
 
     public static class DetectionResultScaledData {

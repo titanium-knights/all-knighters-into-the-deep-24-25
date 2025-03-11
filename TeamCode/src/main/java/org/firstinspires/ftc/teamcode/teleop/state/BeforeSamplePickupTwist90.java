@@ -23,6 +23,7 @@ public class BeforeSamplePickupTwist90 extends TeleopState {
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.OUT);
         subsystemManager.topClaw.open();
         subsystemManager.bottomClaw.pickUpClawRotatorPosition();
-        subsystemManager.bottomClaw.orthogonalClawRotatorPosition(); // claw is rotated down
+        subsystemManager.bottomClaw.rightWristDownPosition();
+        subsystemManager.bottomClaw.orthogonalClawRotatorPosition(); // claw is twisted
     }
 }
