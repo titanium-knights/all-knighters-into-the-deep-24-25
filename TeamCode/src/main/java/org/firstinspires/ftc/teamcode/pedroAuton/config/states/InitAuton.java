@@ -16,7 +16,7 @@ public class InitAuton extends AutonState {
     public boolean update() {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM); // slides move to top
         subsystemManager.topClaw.close();
-        // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
+        subsystemManager.arm.raisinPos();
 
         if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM && subsystemManager.slides.isIdle() && !subsystemManager.topClaw.getOpenStatus()) {
             return true;

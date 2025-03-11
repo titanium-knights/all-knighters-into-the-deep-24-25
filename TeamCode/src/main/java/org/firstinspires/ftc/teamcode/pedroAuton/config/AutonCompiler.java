@@ -6,14 +6,24 @@ import com.pedropathing.pathgen.BezierLine;
 import com.pedropathing.pathgen.PathChain;
 import com.pedropathing.pathgen.Point;
 
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpDunking;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpPostDunk;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.BucketUpPreDunk;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalMidOutClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalMidOutOpen;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutClosedTwist;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpen;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalOutOpenTwist;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferClosed;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalSpecInOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalSpecOutClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalSpecOutOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomClosedTopClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomClosedTopOpen;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.HorizontalTransferBottomOpenTopClosed;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SwipeDown;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SwipeFold;
+import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SwipeUp;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
@@ -154,20 +164,40 @@ public class AutonCompiler {
                     return new HorizontalOutClosed(subsystemManager).update();
                 case "HORI_OUT_OPEN":
                     return new HorizontalOutOpen(subsystemManager).update();
-                case "HORI_TRANSFER_CLOSED":
-                    return new HorizontalTransferClosed(subsystemManager).update();
-                case "HORI_TRANSFER_OPEN":
-                    return new HorizontalTransferOpen(subsystemManager).update();
+                case "HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN":
+                    return new HorizontalTransferBottomClosedTopOpen(subsystemManager).update();
+                case "HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED":
+                    return new HorizontalTransferBottomClosedTopClosed(subsystemManager).update();
+                case "HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED":
+                    return new HorizontalTransferBottomOpenTopClosed(subsystemManager).update();
                 case "BUCKET_UP_POST_DUNK":
                     return new BucketUpPostDunk(subsystemManager).update();
+                case "BUCKET_UP_DUNKING":
+                    return new BucketUpDunking(subsystemManager).update();
                 case "BUCKET_UP_PRE_DUNK":
                     return new BucketUpPreDunk(subsystemManager).update();
                 case "LOW_HANG":
                     return new LowHang(subsystemManager).update();
-                case "HOR_OUT_CLOSED_TWIST":
+                case "HORI_OUT_CLOSED_TWIST":
                     return new HorizontalOutClosedTwist(subsystemManager).update();
-                case "HOR_OUT_OPEN_TWIST":
+                case "HORI_OUT_OPEN_TWIST":
                     return new HorizontalOutOpenTwist(subsystemManager).update();
+                case "HORI_MIDOUT_CLOSED":
+                    return new HorizontalMidOutClosed(subsystemManager).update();
+                case "HORI_MIDOUT_OPEN":
+                    return new HorizontalMidOutOpen(subsystemManager).update();
+                case "HORI_SPECOUT_OPEN":
+                    return new HorizontalSpecOutOpen(subsystemManager).update();
+                case "HORI_SPECOUT_CLOSED":
+                    return new HorizontalSpecOutClosed(subsystemManager).update();
+                case "HORI_SPECIN_OPEN":
+                    return new HorizontalSpecInOpen(subsystemManager).update();
+                case "SWIPEUP":
+                    return new SwipeUp(subsystemManager).update();
+                case "SWIPEDOWN":
+                    return new SwipeDown(subsystemManager).update();
+                case "SWIPEFOLD":
+                    return new SwipeFold(subsystemManager).update();
                 default:
                     return true;
             }

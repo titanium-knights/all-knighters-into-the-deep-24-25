@@ -13,14 +13,13 @@ public class HorizontalOutOpenTwist extends AutonState {
     @Override
     public boolean update() {
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM); // slides move to top
-        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.OUT);
+        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.MID_OUT);
         subsystemManager.bottomClaw.openClaw();
         subsystemManager.bottomClaw.rightWristDownPosition();
         subsystemManager.bottomClaw.orthogonalClawRotatorPosition();
-        // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
         if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM
                 && subsystemManager.slides.isIdle()
-                && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.OUT
+                && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.MID_OUT
                 && subsystemManager.horizontalSlides.isIdle()
                 && !subsystemManager.bottomClaw.isLoweredAndClosed()
                 && subsystemManager.bottomClaw.inOrthoPos()) {
