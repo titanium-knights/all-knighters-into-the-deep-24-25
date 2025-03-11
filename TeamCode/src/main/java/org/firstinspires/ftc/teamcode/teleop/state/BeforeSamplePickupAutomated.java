@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.teleop.Teleop.SLOW_MODE_MULTIPLIER;
 import static java.lang.Double.min;
 import static java.lang.Math.max;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -20,11 +21,14 @@ import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+@Config
 public class BeforeSamplePickupAutomated extends TeleopState {
     HardwareMap hmap;
     Telemetry telemetry;
     public double ogAngle, angle, rotationAngle, rotationTheta;
     public static final int WINDOW = 160; // max range is 320
+
+    public static double slidesSpeed = 0.7;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -42,7 +46,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         subsystemManager.arm.toGetOutOfWay();
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(200);
         } catch (Exception e) {
             return;
         }
@@ -70,7 +74,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.update();
-            subsystemManager.horizontalSlides.manualForward(0.35);
+            subsystemManager.horizontalSlides.manualForward(slidesSpeed);
 
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
 
