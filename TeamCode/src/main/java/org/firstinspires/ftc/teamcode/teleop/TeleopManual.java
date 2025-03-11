@@ -37,8 +37,6 @@ public class TeleopManual extends OpMode {
     private SampleTransferAutomated sampleTransferAutomatedState;
     private BeforeSampleScore beforeBucketScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
-
-//    private SpecimenScore specimenScoreState;
     private SampleTransfer sampleTransfer;
   
     private Init initState;
