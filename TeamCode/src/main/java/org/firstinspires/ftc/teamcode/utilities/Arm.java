@@ -1,20 +1,22 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class Arm {
     private final Servo armServo;
 
     private static final double INIT_POSITION = 0.3;
-    private static final double RECEIVING_POSITION = 0.08;
-    private static final double PRE_SCORE_SAMPLE_POS = 0.4;
-    private static final double SCORE_SAMPLE_POS = 0.75;
-    private static final double SCORE_SPECIMEN_POS = 0.80;
-    private static final double LOW_HANG_POSITION = 0.73;
-    private static final double GET_OUT_OF_WAY_POS = 0.8;
-    private static final double RAISING_SLIDES_POSITION = 0.2;
-    private static final double ARM_SPEED = 0.005;
+    public static double RECEIVING_POSITION = 0.08;
+    public static double PRE_SCORE_SAMPLE_POS = 0.4;
+    public static double SCORE_SAMPLE_POS = 0.75;
+    public static double SCORE_SPECIMEN_POS = 0.80;
+    public static double LOW_HANG_POSITION = 0.73;
+    public static double GET_OUT_OF_WAY_POS = 0.8;
+    public static double RAISING_SLIDES_POSITION = 0.2;
+    public static double ARM_SPEED = 0.005;
 
     public Arm(HardwareMap hmap) {
         this.armServo = hmap.get(Servo.class, CONFIG.armServo);
