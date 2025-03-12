@@ -13,6 +13,8 @@ import java.util.List;
 // We use static imports for convenience
 import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
 
+import com.acmerobotics.dashboard.config.Config;
+
 /**
  * Pipeline that:
  *  1) Downscales the image for faster processing
@@ -21,6 +23,8 @@ import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
  *  4) Finds contours, computes bounding boxes + confidence
  *  5) Sorts by confidence, draws the top 5 bounding boxes on the *original* image scale
  */
+
+@Config
 public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     // You can tweak these
     public static final double SCALE_FACTOR = 0.5; // Downscale 50%
@@ -40,6 +44,8 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public static final Scalar UPPER_RED_1 = new Scalar(5, 244, 255);
     public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 0);
     public static final Scalar UPPER_RED_2 = new Scalar(179, 255, 255);
+
+    public static int minPixel = 20000;
 
     // Class to hold the result of each detection: bounding box + confidence
     public static class DetectionResult {
@@ -131,7 +137,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
-            if (contourArea < 30000) {
+            if (contourArea < minPixel) {
                 continue;
             }
 

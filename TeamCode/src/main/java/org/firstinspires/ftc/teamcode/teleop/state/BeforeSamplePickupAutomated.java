@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop.state;
 import static org.firstinspires.ftc.teamcode.teleop.Teleop.SLOW_MODE_MULTIPLIER;
 
 import static java.lang.Double.min;
+import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -28,10 +29,10 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     public double ogAngle, angle, rotationAngle, rotationTheta;
     public static final int WINDOW = 160; // max range is 320
 
-    public static int timetoRotate = 500;
+    public static int timetoRotate = 1500;
     public static double slidesSpeed = 0.7;
 
-    public static int distanceDelay = 2;
+    public static int distanceDelay = 0;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -73,7 +74,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        while (yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
+        while (yCoord == -1 && abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
@@ -93,7 +94,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 encoder = max(encoder - distanceDelay*25.2/120*537, -subsystemManager.horizontalSlides.maxForward);
             }
 
-            if (yCoord != -1 && abs(xCoord - 320) < WINDOW) {
+            if (yCoord != -1) {
                 thetas.add(drsd.getTheta());
             }
         }
