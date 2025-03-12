@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.teleop.state;
 import static org.firstinspires.ftc.teamcode.teleop.Teleop.SLOW_MODE_MULTIPLIER;
 
 import static java.lang.Double.min;
-import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -74,9 +73,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        //makes sure sample is inside window and ensures slides dont extend past max
-        while ((abs(xCoord - 320) >= WINDOW || yCoord < 240)
-                && abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
+        while (yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
@@ -123,10 +120,16 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         rotationAngle = (angle + 90) % 180;
         telemetry.addData("rotation angle: ", rotationAngle);
 
-        rotationTheta = ((rotationAngle * Math.PI) / 180) + Math.PI;
-        if (rotationTheta > 2 * Math.PI) {
+        rotationTheta = 2 * Math.PI - (((rotationAngle * Math.PI) / 180) + Math.PI);
+        while (rotationTheta > 2 * Math.PI) {
             rotationTheta -= 2 * Math.PI;
         }
+
+        while (rotationTheta < 0) {
+            rotationTheta += 2 * Math.PI;
+        }
+
+
         telemetry.addData("rotationTheta: ", rotationTheta);
         telemetry.update();
         subsystemManager.bottomClaw.rotate(rotationTheta);
