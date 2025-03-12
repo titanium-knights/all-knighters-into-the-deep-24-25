@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop.state;
 import static org.firstinspires.ftc.teamcode.teleop.Teleop.SLOW_MODE_MULTIPLIER;
 
 import static java.lang.Double.min;
+import static java.lang.Math.abs;
 import static java.lang.Math.max;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -28,7 +29,10 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     public double ogAngle, angle, rotationAngle, rotationTheta;
     public static final int WINDOW = 160; // max range is 320
 
+    public static int timetoRotate = 500;
     public static double slidesSpeed = 0.7;
+
+    public static int distanceDelay = 2;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -45,8 +49,9 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         subsystemManager.topClaw.open();
         subsystemManager.arm.toGetOutOfWay();
 
+
         try {
-            Thread.sleep(200);
+            Thread.sleep(timetoRotate);
         } catch (Exception e) {
             return;
         }
@@ -63,32 +68,35 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         xCoord = 320;
         encoder = 0;
         telemetry.addLine("y coordinate: " + yCoord);
-        telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
-        telemetry.addLine("condition true?" + (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
+        telemetry.addLine("horizontal slides: " + abs(subsystemManager.horizontalSlides.getEncoder()));
+        telemetry.addLine("condition true?" + (yCoord < 360 && abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
         telemetry.update();
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        while ((Math.abs(xCoord - 320) >= WINDOW || yCoord < 240) && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
+        //makes sure sample is inside window and ensures slides dont extend past max
+        while ((abs(xCoord - 320) >= WINDOW || yCoord < 240)
+                && abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
-            telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
+            telemetry.addLine("horizontal slides: " + abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
+            telemetry.addLine("fps" + subsystemManager.webcam.getFps());
             telemetry.update();
             subsystemManager.horizontalSlides.manualForward(slidesSpeed);
 
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
 
-            if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
+            if (abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
                 telemetry.addLine("we got here!");
                 telemetry.update();
                 drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
                 xCoord = drsd.getX();
                 yCoord = drsd.getY();
                 encoder = subsystemManager.horizontalSlides.getEncoder();
-                encoder = max(encoder - 225, -subsystemManager.horizontalSlides.maxForward);
+                encoder = max(encoder - distanceDelay*25.2/120*537, -subsystemManager.horizontalSlides.maxForward);
             }
 
-            if (yCoord != -1 && Math.abs(xCoord - 320) < WINDOW) {
+            if (yCoord != -1 && abs(xCoord - 320) < WINDOW) {
                 thetas.add(drsd.getTheta());
             }
         }

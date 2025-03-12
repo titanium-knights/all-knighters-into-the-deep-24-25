@@ -218,6 +218,7 @@ public class Teleop extends OpMode {
 
         telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
         telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
+        telemetry.addData("fps: ", subsystemManager.webcam.getFps());
         telemetry.update();
     }
 
