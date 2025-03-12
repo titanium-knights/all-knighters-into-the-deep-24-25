@@ -54,7 +54,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 54);
     public static final Scalar UPPER_RED_2 = new Scalar(179, 255, 255);
 
-    public static int minPixel = 20000;
+    public static int minCenterPixel = 20000;
 
     public static String additionalColor = "blue";
 
@@ -157,7 +157,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
-            if (contourArea < minPixel) {
+            if (contourArea < minCenterPixel) {
                 continue;
             }
 
