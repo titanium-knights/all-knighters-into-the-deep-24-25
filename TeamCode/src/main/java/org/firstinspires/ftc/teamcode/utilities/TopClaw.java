@@ -34,5 +34,9 @@ public class TopClaw {
     public double getPosition() {
         return clawOpener.getPosition() / TopClaw.servoAngleModifier;
     }
+
+    public void keep_position(){
+        clawOpener.setPosition(clawOpener.getPosition());
+    }
 }
 
