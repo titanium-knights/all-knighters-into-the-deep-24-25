@@ -32,6 +32,10 @@ public class TestingTeleop extends OpMode {
             telemetry.addData("closed", true);
         } else if (gamepad1.a) {
             manager.bottomClaw.rotate(BottomClaw.TESTING_THETA);
+        } else if (gamepad1.b) {
+            manager.topClaw.close();
+        } else if (gamepad1.x) {
+            manager.topClaw.open();
         }
         telemetry.addData("claw rotation value", manager.bottomClaw.getClawRotatorPosition());
         telemetry.update();
