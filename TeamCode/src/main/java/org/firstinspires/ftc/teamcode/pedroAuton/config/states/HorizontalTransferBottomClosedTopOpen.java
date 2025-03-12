@@ -5,28 +5,29 @@ import org.firstinspires.ftc.teamcode.utilities.HorizontalSlidesState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
-public class HorizontalTransferClosed extends AutonState {
-    public HorizontalTransferClosed(SubsystemManager subsystemManager) {
+public class HorizontalTransferBottomClosedTopOpen extends AutonState {
+    public HorizontalTransferBottomClosedTopOpen(SubsystemManager subsystemManager) {
         super(subsystemManager);
     }
 
     @Override
     public boolean update() {
-        subsystemManager.slides.slideToPosition(SlideState.BOTTOM); // slides move to top
-        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.TRANSFER);
+        subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
+        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.closeClaw();
         subsystemManager.arm.toReceivingPos();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
-        // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
+        subsystemManager.topClaw.open();
         if (subsystemManager.slides.getSlidesState() == SlideState.BOTTOM
                 && subsystemManager.slides.isIdle()
-                && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.TRANSFER
+                && subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.IN
                 && subsystemManager.horizontalSlides.isIdle()
                 && subsystemManager.bottomClaw.inTransferPosition()
                 && subsystemManager.bottomClaw.isClosed()
                 && !subsystemManager.bottomClaw.inOrthoPos()
-                && subsystemManager.arm.inReceivingPosition()) {
+                && subsystemManager.arm.inReceivingPosition()
+                && subsystemManager.topClaw.getOpenStatus()) {
             return true;
         } else {
 //            telemetry.addData("Slides at bottom:", subsystemManager.slides.getSlidesState());

@@ -12,7 +12,7 @@ public class HorizontalSlides {
     private static final double idlePower = 0.0;
     public final int maxForward = 2400;
     public final int minBack = 0;
-    public final int BUFFER = 50;
+    public final int BUFFER = 30;
     private int pos;
     private final DcMotor horizontalSlidesMotor;
     private HorizontalSlidesState currentState;

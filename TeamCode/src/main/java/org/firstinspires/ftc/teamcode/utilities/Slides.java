@@ -14,7 +14,7 @@ public class Slides {
     // Preset encoder values
     public final int maxHeight = -2200;
     public final int minHeight = 0;
-    public final int BUFFER = 50;
+    public final int BUFFER = 35; // change back to 35 for auton
     private final DcMotor slidesMotor;
     private SlideState currentState;
 

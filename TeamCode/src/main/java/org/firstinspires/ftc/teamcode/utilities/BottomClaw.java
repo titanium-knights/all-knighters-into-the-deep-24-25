@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import static java.lang.Math.abs;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -76,7 +78,7 @@ public class BottomClaw {
                 && getClawOpenerPosition() == CLOSE_CLAW_POSITION;
     }
     public boolean inOrthoPos() {
-        return getClawOpenerPosition() == ORTHOGONAL_CLAW_ROTATOR_POSITION;
+        return getClawRotatorPosition() == ORTHOGONAL_CLAW_ROTATOR_POSITION;
     }
 
     public boolean inTransferPosition() {
@@ -108,4 +110,13 @@ public class BottomClaw {
     }
     public void rightWristHalfUpPosition() {rightWristServo.setPosition(RIGHT_WRIST_HALFUP_POSITION);}
     public void rightWristInitPosition() {rightWristServo.setPosition(RIGHT_WRIST_INIT_POSITION);}
+
+    public void shakeForPickUp(double position) {
+        //Turns claw back and forth until claw is called back. Takes the same angle that claw is originally rotated to
+        if (abs(clawRotator.getPosition() - position) < 0.05){
+            rotate((position + 90) % 360);
+        } else if (clawRotator.getPosition() - ((position + 0.25) % 1) < 0.05){
+            rotate(position);
+        }
+    }
 }

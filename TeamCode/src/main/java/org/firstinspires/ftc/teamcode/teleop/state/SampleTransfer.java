@@ -16,7 +16,7 @@ public class SampleTransfer extends TeleopState {
     public void runState(Gamepad gamepad1, Gamepad gamepad2) { // everything in neutral position
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
         subsystemManager.arm.toHangPosition();
-        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.TRANSFER);
+        subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.rightWristDownPosition();
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
     }
