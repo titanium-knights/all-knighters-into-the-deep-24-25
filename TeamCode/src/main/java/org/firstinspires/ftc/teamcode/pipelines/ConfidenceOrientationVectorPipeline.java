@@ -32,20 +32,31 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public static final int SKIP_FRAMES = 3;       // Denoise every 3rd frame
 
     // Define the yellow color range in HSV
-    public static final Scalar LOWER_YELLOW = new Scalar(14, 141, 215);
-    public static final Scalar UPPER_YELLOW = new Scalar(35, 252, 255);
+//    old - public static final Scalar LOWER_YELLOW = new Scalar(14, 141, 215);
+//    old - public static final Scalar UPPER_YELLOW = new Scalar(35, 252, 255);
+    public static final Scalar LOWER_YELLOW = new Scalar(19, 68, 117);
+    public static final Scalar UPPER_YELLOW = new Scalar(39, 255, 255);
 
     // Define the blue color range in HSV
-    public static final Scalar LOWER_BLUE = new Scalar(111, 79, 59);
-    public static final Scalar UPPER_BLUE = new Scalar(115, 255, 255);
+//    public static final Scalar LOWER_BLUE = new Scalar(111, 79, 59);
+//    public static final Scalar UPPER_BLUE = new Scalar(115, 255, 255);
+    public static final Scalar LOWER_BLUE = new Scalar(84, 71, 75);
+    public static final Scalar UPPER_BLUE = new Scalar(125, 255, 255);
 
-    // Define the red color range in HSV
-    public static final Scalar LOWER_RED_1 = new Scalar(0,119,113);
-    public static final Scalar UPPER_RED_1 = new Scalar(5, 244, 255);
-    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 0);
+    // Define the red color range in HSV, note need two ranges as red is at both ends
+//    old - public static final Scalar LOWER_RED_1 = new Scalar(0,119,113);
+//    public static final Scalar UPPER_RED_1 = new Scalar(10, 244, 255);
+//    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 0);
+//    public static final Scalar UPPER_RED_2 = new Scalar(179, 255, 255);
+
+    public static final Scalar LOWER_RED_1 = new Scalar(0,80,74);
+    public static final Scalar UPPER_RED_1 = new Scalar(10, 255, 255);
+    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 54);
     public static final Scalar UPPER_RED_2 = new Scalar(179, 255, 255);
 
     public static int minPixel = 20000;
+
+    public static String additionalColor = "blue";
 
     // Class to hold the result of each detection: bounding box + confidence
     public static class DetectionResult {
@@ -84,7 +95,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
     }
 
-    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
+    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, color_mask2, mask, hierarchy;
 
 
     @Override
@@ -119,9 +130,18 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
 
         // 5b) Threshold for specified color
-        color_mask = new Mat();
-        Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
 
+        color_mask = new Mat();
+        if (additionalColor == "blue"){
+            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
+
+
+        } else if (additionalColor == "red"){
+            color_mask2 = new Mat();
+            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, color_mask);
+            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, color_mask2);
+            Core.bitwise_or(color_mask, color_mask2, color_mask);
+        }
         mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
 
