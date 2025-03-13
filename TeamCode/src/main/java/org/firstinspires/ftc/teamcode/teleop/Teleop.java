@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import android.widget.Button;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -44,14 +46,19 @@ public class Teleop extends OpMode {
 
     private boolean manualMode = false;
 
-    public static String colorString = "blue";
-    private ConfidenceOrientationVectorPipeline.Color color = colorString.equals("blue") ? ConfidenceOrientationVectorPipeline.Color.BLUE : ConfidenceOrientationVectorPipeline.Color.RED;
+    private ConfidenceOrientationVectorPipeline.Color color;
 
     public enum Strategy {
         SAMPLE,
         SPECIMEN
+
     }
     private Strategy strategy = Strategy.SAMPLE;
+
+    public Teleop(ConfidenceOrientationVectorPipeline.Color color){
+        this.color = color;
+    }
+
 
     enum ButtonPressState {
         PRESSED_GOOD, // the first time we see the button
@@ -63,6 +70,8 @@ public class Teleop extends OpMode {
     private ButtonPressState topClawButton = ButtonPressState.UNPRESSED;
     private ButtonPressState rotatorButton = ButtonPressState.UNPRESSED;
     private ButtonPressState manualButton = ButtonPressState.UNPRESSED;
+
+    private ButtonPressState strategyButton = ButtonPressState.UNPRESSED;
     enum ClawPosition {
         HORIZONTAL,
         ORTHOGONAL
@@ -90,9 +99,27 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
+        //maintains positions of servos
         subsystemManager.swiper.up();
         subsystemManager.topClaw.maintainPosition();
+
+
         // non-state based logic
+
+
+        // Strategy Logic
+        if (gamepad2.a && strategyButton == ButtonPressState.UNPRESSED) {
+            strategyButton = ButtonPressState.PRESSED_GOOD;
+            if (strategy == Strategy.SAMPLE) subsystemManager.webcam.setStrategy(Strategy.SPECIMEN);
+            else if (strategy == Strategy.SPECIMEN) subsystemManager.webcam.setStrategy(Strategy.SAMPLE);
+        } else if (gamepad2.a && strategyButton == ButtonPressState.PRESSED_GOOD) {
+            strategyButton = ButtonPressState.DEPRESSED;
+        } else if (!gamepad2.a) {
+            strategyButton = ButtonPressState.UNPRESSED;
+        }
+
+        if (strategy == Strategy.SAMPLE) telemetry.addData("Strategy: ", "Sample");
+        if (strategy == Strategy.SPECIMEN) telemetry.addData("Strategy: ", "Specimen");
 
         // claw logic
         if (gamepad1.left_bumper && topClawButton == ButtonPressState.UNPRESSED) {

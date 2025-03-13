@@ -82,7 +82,10 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     Teleop.Strategy strategy = Teleop.Strategy.SAMPLE;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline(ConfidenceOrientationVectorPipeline.Color color) {
+    public ConfidenceOrientationVectorPipeline() {
+    }
+
+    public void setColor(Color color){
         this.color = color;
     }
 
@@ -90,7 +93,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         this.strategy = strategy;
     }
 
-    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, blue_mask, red_mask_1, red_mask_2, mask, hierarchy;
+    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
 
 
     @Override
