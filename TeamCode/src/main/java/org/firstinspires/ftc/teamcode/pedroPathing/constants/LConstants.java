@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.constants;
 
-
 import com.pedropathing.localization.*;
 import com.pedropathing.localization.constants.*;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
-
 import org.firstinspires.ftc.teamcode.utilities.CONFIG;
-
 
 public class LConstants {
     static {
@@ -36,19 +33,16 @@ public class LConstants {
 //        ThreeWheelIMUConstants.IMU_HardwareMapName = "imu";
 //        ThreeWheelIMUConstants.IMU_Orientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
 
+        ThreeWheelConstants.forwardTicksToInches = 0.000536;
+        ThreeWheelConstants.strafeTicksToInches = 0.000529;
+        ThreeWheelConstants.turnTicksToInches = 0.001395647259;
 
-        ThreeWheelConstants.forwardTicksToInches = 0.0005285356789805085;
-        ThreeWheelConstants.strafeTicksToInches = 0.0005330987731201786;
-        ThreeWheelConstants.turnTicksToInches = 0.0014035813648817649;//0.00345396830067402; //0.001998322827427511
-
-
-        ThreeWheelConstants.leftY = 14.208125;
-        ThreeWheelConstants.rightY = -15.08125;
-        ThreeWheelConstants.strafeX = .23622;
+        ThreeWheelConstants.leftY = 14.7; // 13.9402
+        ThreeWheelConstants.rightY = -13.9402; // -14.7
+        ThreeWheelConstants.strafeX = 0.65;
         ThreeWheelConstants.leftEncoder_HardwareMapName = CONFIG.BACK_LEFT;
         ThreeWheelConstants.rightEncoder_HardwareMapName = CONFIG.BACK_RIGHT;
         ThreeWheelConstants.strafeEncoder_HardwareMapName = CONFIG.FRONT_RIGHT;
-
 
         ThreeWheelConstants.leftEncoderDirection = Encoder.FORWARD;
         ThreeWheelConstants.rightEncoderDirection = Encoder.FORWARD;
