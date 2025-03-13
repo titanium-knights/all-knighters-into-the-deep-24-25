@@ -13,7 +13,6 @@ import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
-import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
@@ -268,7 +267,7 @@ public class RightPark extends OpMode {
         actionTimer = new Timer();
         opmodeTimer.resetTimer();
 
-        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED);
 
         subsystemManager.arm.toInitPos();
         subsystemManager.topClaw.close();

@@ -12,14 +12,9 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.RightOneSpecimenParkConf
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
-import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.InitAuton;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawOpen;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesBottomClawClosed;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumClawClosed;
-import org.firstinspires.ftc.teamcode.pedroAuton.config.states.SlidesMediumScoreClawClosed;
 import org.firstinspires.ftc.teamcode.pedroAuton.config.AutonState;
 
 /**
@@ -49,7 +44,7 @@ public class RightOneSpecimenPark extends OpMode {
         opmodeTimer = new Timer();
 
         // Initialize hardware subsystems.
-        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED);
         subsystemManager.arm.toReceivingPos();
         subsystemManager.topClaw.close();
 

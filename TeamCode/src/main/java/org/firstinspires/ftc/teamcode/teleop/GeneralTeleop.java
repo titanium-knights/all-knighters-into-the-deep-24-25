@@ -3,25 +3,25 @@ package org.firstinspires.ftc.teamcode.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
-//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupAutomated;
-import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
-import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSampleScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
-import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
 import org.firstinspires.ftc.teamcode.teleop.state.Init;
-
+import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
+import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
+import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import java.util.Arrays;
 
-@TeleOp(name = "Automated Driver Teleop", group = "User Control")
-public class Teleop extends OpMode {
+@TeleOp(name = "General Teleop", group = "User Control")
+public class GeneralTeleop {
     public static TeleopState currentState;
     private final Gamepad prevGamepad1 = new Gamepad();
     private final Gamepad prevGamepad2 = new Gamepad();
@@ -43,7 +43,7 @@ public class Teleop extends OpMode {
 
     private boolean manualMode = false;
 
-    private final ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.BLUE;
+    public ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.BLUE;
 
     public enum Strategy {
         SAMPLE,
@@ -70,8 +70,7 @@ public class Teleop extends OpMode {
     }
     private ClawPosition clawPosition = ClawPosition.HORIZONTAL;
 
-    @Override
-    public void init() {
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         // instantiate all hardware util classes
         subsystemManager = new SubsystemManager(hardwareMap, color);
         // register all teleop states
@@ -89,35 +88,13 @@ public class Teleop extends OpMode {
         currentState = initState;
     }
 
-    @Override
-    public void loop() {
+    public void loop(Telemetry telemetry, Gamepad gamepad1, Gamepad gamepad2) {
         //maintains positions of servos
         subsystemManager.swiper.up();
         subsystemManager.topClaw.maintainPosition();
 
 
         // non-state based logic
-
-
-        // Strategy Logic
-        if (gamepad2.a && strategyButton == ButtonPressState.UNPRESSED) {
-            strategyButton = ButtonPressState.PRESSED_GOOD;
-            if (strategy == Strategy.SAMPLE){
-                subsystemManager.webcam.setStrategy(Strategy.SPECIMEN);
-                strategy = Strategy.SPECIMEN;
-            }
-            else if (strategy == Strategy.SPECIMEN){
-                subsystemManager.webcam.setStrategy(Strategy.SAMPLE);
-                strategy = Strategy.SAMPLE;
-            }
-        } else if (gamepad2.a && strategyButton == ButtonPressState.PRESSED_GOOD) {
-            strategyButton = ButtonPressState.DEPRESSED;
-        } else if (!gamepad2.a) {
-            strategyButton = ButtonPressState.UNPRESSED;
-        }
-
-        if (strategy == Strategy.SAMPLE) telemetry.addData("Strategy: ", "Sample");
-        if (strategy == Strategy.SPECIMEN) telemetry.addData("Strategy: ", "Specimen");
 
         // claw logic
         if (gamepad1.left_bumper && topClawButton == ButtonPressState.UNPRESSED) {
@@ -127,9 +104,9 @@ public class Teleop extends OpMode {
         } else if (!gamepad1.left_bumper) {
             topClawButton = ButtonPressState.UNPRESSED;
         }
-        if (topClawButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.topClaw.getOpenStatus()) {
+        if (topClawButton== ButtonPressState.PRESSED_GOOD && !subsystemManager.topClaw.getOpenStatus()) {
             subsystemManager.topClaw.open();
-        } else if (topClawButton==ButtonPressState.PRESSED_GOOD && subsystemManager.topClaw.getOpenStatus()) {
+        } else if (topClawButton== ButtonPressState.PRESSED_GOOD && subsystemManager.topClaw.getOpenStatus()) {
             subsystemManager.topClaw.close();
         }
 
@@ -140,9 +117,9 @@ public class Teleop extends OpMode {
         } else if (!gamepad1.right_bumper) {
             bottomClawButton = ButtonPressState.UNPRESSED;
         }
-        if (bottomClawButton==ButtonPressState.PRESSED_GOOD && subsystemManager.bottomClaw.isClosed()) {
+        if (bottomClawButton== ButtonPressState.PRESSED_GOOD && subsystemManager.bottomClaw.isClosed()) {
             subsystemManager.bottomClaw.openClaw();
-        } else if (bottomClawButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.bottomClaw.isClosed()) {
+        } else if (bottomClawButton== ButtonPressState.PRESSED_GOOD && !subsystemManager.bottomClaw.isClosed()) {
             subsystemManager.bottomClaw.closeClaw();
         }
 
@@ -157,7 +134,7 @@ public class Teleop extends OpMode {
         }
 
         // drivetrain
-        if (Teleop.slowMode) {
+        if (GeneralTeleop.slowMode) {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
         } else {
             if (gamepad2.left_stick_x > 0.3){
@@ -241,7 +218,7 @@ public class Teleop extends OpMode {
 
 
     public static void setSlowMode(boolean slowMode) {
-        Teleop.slowMode = slowMode;
+        GeneralTeleop.slowMode = slowMode;
     }
 
     public void switchToState(TeleopState state) {
@@ -249,9 +226,9 @@ public class Teleop extends OpMode {
         // them, don't move
         if (
                 state.getDependencyStates().length == 0
-                        || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)
+                        || Arrays.asList(state.getDependencyStates()).contains(GeneralTeleop.currentState)
         ) {
-            Teleop.slowMode = false;
+            GeneralTeleop.slowMode = false;
             currentState = state;
         }
     }

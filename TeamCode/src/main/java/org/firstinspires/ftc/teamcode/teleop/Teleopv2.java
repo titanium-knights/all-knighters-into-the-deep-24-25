@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
-import android.widget.Button;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -22,7 +20,6 @@ import org.firstinspires.ftc.teamcode.teleop.state.Init;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @TeleOp(name = "Automated Driver Teleopv2", group = "User Control")
 public class Teleopv2 extends OpMode {
@@ -82,7 +79,7 @@ public class Teleopv2 extends OpMode {
     @Override
     public void init() {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap, color, strategy);
+        subsystemManager = new SubsystemManager(hardwareMap, color);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupAutomatedStatev2 = new BeforeSamplePickupAutomatedv2(subsystemManager, hardwareMap, telemetry);
