@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static java.lang.Math.min;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,7 +10,7 @@ public class HorizontalSlides {
     private static final double slideForwardPower = 1;
     private static final double slideBackPower = -1;
     private static final double idlePower = 0.0;
-    public final int maxForward = 2150;
+    public final int maxForward = 2400;
     public final int minBack = 0;
     public final int BUFFER = 30;
     private int pos;
@@ -55,6 +55,17 @@ public class HorizontalSlides {
         }
     }
 
+    public boolean slideToPosition(int encoderValue) {
+        int targetPosition = min(encoderValue, maxForward);
+        if (encoderValueWithinBufferOfTarget(targetPosition)) {
+            stop();
+            return true;
+        } else {
+            updateSlidesPower(targetPosition);
+            return false;
+        }
+    }
+
     public double getPower() {
         return horizontalSlidesMotor.getPower();
     }
@@ -67,13 +78,13 @@ public class HorizontalSlides {
         return horizontalSlidesMotor.getPower() == idlePower;
     }
 
-    public void manualForward(double power) {
+    public void manualBackward(double power) {
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double adjustedPower = Math.abs(power); // Positive for backward movement
         horizontalSlidesMotor.setPower(adjustedPower);
     }
 
-    public void manualBack(double power) {
+    public void manualForward(double power) {
         horizontalSlidesMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double adjustedPower = -Math.abs(power); // Positive for forward movement
         horizontalSlidesMotor.setPower(adjustedPower);

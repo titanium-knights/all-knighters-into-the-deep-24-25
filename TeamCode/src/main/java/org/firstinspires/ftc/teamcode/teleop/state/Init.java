@@ -22,7 +22,7 @@ public class Init extends TeleopState {
         // resetting slides encoders if needed
         if (gamepad1.right_stick_y > 0.1f) {
              subsystemManager.slides.manualDown(0.5);
-             subsystemManager.horizontalSlides.manualForward(0.5);
+             subsystemManager.horizontalSlides.manualBackward(0.5);
         }
         if (gamepad2.start) {
             subsystemManager.slides.resetSlideEncoder();
