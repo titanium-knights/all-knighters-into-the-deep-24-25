@@ -118,6 +118,9 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
             drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
             pickupable = drsd.pickupable;
+            if (drsd.getY() != -1) {
+                thetas.add(drsd.getTheta());
+            }
         }
 
         FtcDashboard.getInstance().stopCameraStream();
