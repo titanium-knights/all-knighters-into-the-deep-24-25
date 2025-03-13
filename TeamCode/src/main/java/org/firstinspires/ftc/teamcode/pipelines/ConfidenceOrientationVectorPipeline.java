@@ -46,9 +46,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         public RotatedRect rect;  // in the *downscaled* coordinate space
         public double confidence;
 
-        public DetectionResult(RotatedRect rect, double confidence) {
+        public Point[] points;
+
+        public DetectionResult(RotatedRect rect, double confidence, Point[] points) {
             this.rect = rect;
             this.confidence = confidence;
+            this.points = points;
         }
     }
 
@@ -128,6 +131,8 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             return canvas;
         }
 
+
+
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
@@ -161,12 +166,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
                 if (points[1].x == points[2].x) {
                     angle = 90;
                 } else {
-                    angle = Math.atan((points[2].y - points[1].y) / (points[2].x - points[1].y))  * 180 / Math.PI;
+                    angle = Math.atan((points[2].y - points[1].y) / (points[2].x - points[1].x))  * 180 / Math.PI;
                 }
             }
 
             rect.angle = angle;
-            detectionResults.add(new DetectionResult(rect, confidence));
+            detectionResults.add(new DetectionResult(rect, confidence, points));
         }
 
         // 8) Sort descending by confidence
@@ -247,12 +252,15 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         double x, y; // coordinates of center of rotated rectangle
         double theta; // angle of rotated rectangle
         double confidence; // confidence of detection
+
+        public Point[] points;
         public DetectionResultScaledData(DetectionResult dr) {
             RotatedRect r = scaleRotatedRect(dr.rect, 1.0 / SCALE_FACTOR);
             this.x = r.center.x;
             this.y = r.center.y;
             this.theta = r.angle;
             this.confidence = dr.confidence;
+            this.points = dr.points;
         }
 
         public DetectionResultScaledData(double x, double y, double theta, double confidence) {

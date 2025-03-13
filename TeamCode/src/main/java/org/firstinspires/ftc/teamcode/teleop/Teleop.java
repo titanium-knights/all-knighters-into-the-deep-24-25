@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.Init;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @TeleOp(name = "Automated Driver Teleop", group = "User Control")
 public class Teleop extends OpMode {
@@ -171,6 +172,8 @@ public class Teleop extends OpMode {
             telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
             telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
             telemetry.addData("fps: ", subsystemManager.webcam.getFps());
+            String pointString = Arrays.stream(((BeforeSamplePickupAutomated)currentState).points).map(p -> "(" + p.x + "," + p.y + ")").collect(Collectors.joining(","));
+            telemetry.addData("points: ", pointString);
             if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
                 rotatorButton = ButtonPressState.PRESSED_GOOD;
                 if (clawPosition == ClawPosition.HORIZONTAL) {

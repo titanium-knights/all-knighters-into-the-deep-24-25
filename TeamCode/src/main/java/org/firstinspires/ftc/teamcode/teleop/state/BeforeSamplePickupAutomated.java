@@ -17,6 +17,7 @@ import org.firstinspires.ftc.teamcode.teleop.TeleopState;
 import org.firstinspires.ftc.teamcode.utilities.HorizontalSlidesState;
 import org.firstinspires.ftc.teamcode.utilities.SlideState;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
+import org.opencv.core.Point;
 
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -26,6 +27,8 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     Telemetry telemetry;
     public double ogAngle, angle, rotationAngle, rotationTheta;
     public static final int WINDOW = 160; // max range is 320
+
+    public Point[] points;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -86,10 +89,12 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 encoder = max(encoder - 225, -subsystemManager.horizontalSlides.maxForward);
             }
 
-            if (yCoord != -1 && Math.abs(xCoord - 320) < WINDOW) {
+            if (yCoord != -1) {
                 thetas.add(drsd.getTheta());
             }
         }
+
+        points=drsd.points;
 
         FtcDashboard.getInstance().stopCameraStream();
 
@@ -103,6 +108,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         ogAngle = thetas.get(thetas.size() / 2);
         angle = ogAngle % 180;
+
         if (angle < 0) {
             angle += 180;
         }
