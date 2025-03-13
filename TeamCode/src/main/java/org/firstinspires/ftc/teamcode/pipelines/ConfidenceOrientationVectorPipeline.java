@@ -29,17 +29,17 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public static final int SKIP_FRAMES = 3;       // Denoise every 3rd frame
 
     // Define the yellow color range in HSV
-    public static final Scalar LOWER_YELLOW = new Scalar(14, 141, 215);
-    public static final Scalar UPPER_YELLOW = new Scalar(35, 252, 255);
+    public static final Scalar LOWER_YELLOW = new Scalar(19, 68, 117);
+    public static final Scalar UPPER_YELLOW = new Scalar(39, 255, 255);
 
     // Define the blue color range in HSV
-    public static final Scalar LOWER_BLUE = new Scalar(111, 79, 59);
-    public static final Scalar UPPER_BLUE = new Scalar(115, 255, 255);
+    public static final Scalar LOWER_BLUE = new Scalar(105, 71, 75);
+    public static final Scalar UPPER_BLUE = new Scalar(125, 255, 255);
 
-    // Define the red color range in HSV
-    public static final Scalar LOWER_RED_1 = new Scalar(0,119,113);
-    public static final Scalar UPPER_RED_1 = new Scalar(5, 244, 255);
-    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 0);
+    // Define the red color range in HSV, note need two ranges as red is at both ends
+    public static final Scalar LOWER_RED_1 = new Scalar(0,80,74);
+    public static final Scalar UPPER_RED_1 = new Scalar(10, 255, 255);
+    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 54);
     public static final Scalar UPPER_RED_2 = new Scalar(179, 255, 255);
 
     // Class to hold the result of each detection: bounding box + confidence
