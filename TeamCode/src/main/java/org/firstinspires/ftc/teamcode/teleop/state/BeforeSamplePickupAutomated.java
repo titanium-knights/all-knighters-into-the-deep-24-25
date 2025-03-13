@@ -105,6 +105,10 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
 //        points=drsd.points;
 
+        telemetry.addLine("out of the loop!");
+        subsystemManager.horizontalSlides.stop();
+        subsystemManager.horizontalSlides.slideToPosition((int) encoder);
+
         while (!pickupable) {
             if (xCoord < (double) (2 * WINDOW) /3){
                 subsystemManager.drive.move(0.2, 0, 0);
@@ -117,10 +121,6 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         }
 
         FtcDashboard.getInstance().stopCameraStream();
-
-        telemetry.addLine("out of the loop!");
-        subsystemManager.horizontalSlides.stop();
-        subsystemManager.horizontalSlides.slideToPosition((int) encoder);
 
         if (thetas.isEmpty()) {
             return;
