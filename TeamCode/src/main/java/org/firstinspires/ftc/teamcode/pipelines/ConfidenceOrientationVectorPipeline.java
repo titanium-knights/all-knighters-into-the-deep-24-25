@@ -266,13 +266,16 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         double confidence; // confidence of detection
 
         public Point[] points;
+
+        public boolean pickupable;
         public DetectionResultScaledData(DetectionResult dr) {
             RotatedRect r = scaleRotatedRect(dr.rect, 1.0 / SCALE_FACTOR);
             this.x = r.center.x;
             this.y = r.center.y;
             this.theta = r.angle;
             this.confidence = dr.confidence;
-//            this.points = dr.points;
+            this.points = dr.points;
+            this.pickupable = dr.pickupable;
         }
 
         public DetectionResultScaledData(double x, double y, double theta, double confidence) {
