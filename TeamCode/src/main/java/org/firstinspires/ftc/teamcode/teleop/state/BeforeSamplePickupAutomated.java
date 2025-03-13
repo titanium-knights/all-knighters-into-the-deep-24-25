@@ -139,9 +139,12 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         }
 
         subsystemManager.drive.move(0, 0, 0);
+        while (Math.abs(subsystemManager.horizontalSlides.getEncoder() - encoder) > 50){
+        }
+
         encoder = max(encoder - slidesAdvanceForPickUp * INTOENCODER, -subsystemManager.horizontalSlides.maxForward);
-        subsystemManager.horizontalSlides.stop();
         subsystemManager.horizontalSlides.slideToPosition((int) encoder);
+
 
 
         if (drsd.getY() != -1) {
