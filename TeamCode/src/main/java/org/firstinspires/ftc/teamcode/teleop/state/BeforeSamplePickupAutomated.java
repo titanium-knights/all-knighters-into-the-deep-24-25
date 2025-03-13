@@ -26,7 +26,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     HardwareMap hmap;
     Telemetry telemetry;
     public double ogAngle, angle, rotationAngle, rotationTheta;
-    boolean pickupable;
+
     public static final int WINDOW = 160; // max range is 320
 
     public static double slideSpeed = 0.7;
@@ -64,11 +64,13 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     // Just when I thought I was out, they pull me back in.
     public void extendToPickupPosition(Gamepad gamepad1, Gamepad gamepad2) {
         double xCoord, yCoord, encoder;
+        boolean pickupable;
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
         yCoord = -1;
         xCoord = 320;
-        encoder = 0;
         pickupable = false;
+        encoder = 0;
+
         telemetry.addLine("y coordinate: " + yCoord);
         telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
         telemetry.addLine("condition true?" + (Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
@@ -76,15 +78,14 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        while (yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
+        while (!pickupable && yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.addLine("angle detected:" + drsd.getTheta());
+            telemetry.addLine("telemetry:" + drsd.pickupable);
             telemetry.update();
             subsystemManager.horizontalSlides.manualForward(slideSpeed);
-
-            subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
 
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
                 telemetry.addLine("we got here!");
@@ -92,11 +93,25 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
                 xCoord = drsd.getX();
                 yCoord = drsd.getY();
+                pickupable = drsd.pickupable;
+//                if (pickupable){
+//                    subsystemManager.drive.move(0, 0, 0);
+//
+//                } else {
+//                    if (xCoord < (double) (2 * WINDOW) /3){
+//                        subsystemManager.drive.move(0.2, 0, 0);
+//                    } else if (xCoord > 2 * (double) (2 * WINDOW) /3){
+//                        subsystemManager.drive.move(-0.2, 0, 0);
+//                    }
+//                }
+
                 encoder = subsystemManager.horizontalSlides.getEncoder();
                 encoder = max(encoder - clawDistanceAdjust/537*120/25.4, -subsystemManager.horizontalSlides.maxForward);
+
+
             }
 
-            if (yCoord != -1) {
+            if (pickupable && yCoord != -1) {
                 thetas.add(drsd.getTheta());
             }
         }
