@@ -32,7 +32,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     public static int timetoRotate = 1500;
     public static double slidesSpeed = 0.7;
 
-    public static int distanceDelay = 0;
+    public static double distanceDelay = 0;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;

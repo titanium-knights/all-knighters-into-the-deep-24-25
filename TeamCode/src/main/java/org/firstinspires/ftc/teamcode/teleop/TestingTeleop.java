@@ -39,6 +39,11 @@ public class TestingTeleop extends OpMode {
         } else if (gamepad1.y) {
             manager.topClaw.getPosition();
         }
+
+        ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = manager.webcam.bestDetectionCoordsAngle();
+        telemetry.addData("angle", drsd.getTheta());
+        telemetry.addData("fps: ", manager.webcam.getFps());
+
         telemetry.addData("claw rotation value", manager.bottomClaw.getClawRotatorPosition());
         telemetry.update();
     }

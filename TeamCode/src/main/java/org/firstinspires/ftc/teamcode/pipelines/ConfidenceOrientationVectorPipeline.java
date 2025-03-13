@@ -40,7 +40,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     // Define the blue color range in HSV
 //    public static final Scalar LOWER_BLUE = new Scalar(111, 79, 59);
 //    public static final Scalar UPPER_BLUE = new Scalar(115, 255, 255);
-    public static final Scalar LOWER_BLUE = new Scalar(84, 71, 75);
+    public static final Scalar LOWER_BLUE = new Scalar(105, 71, 75);
     public static final Scalar UPPER_BLUE = new Scalar(125, 255, 255);
 
     // Define the red color range in HSV, note need two ranges as red is at both ends
@@ -56,7 +56,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
     public static int minCenterPixel = 20000;
 
-    public static String additionalColor = "blue";
+    public static int additionalColor = 0; //0 = blue, 1 = red
 
     // Class to hold the result of each detection: bounding box + confidence
     public static class DetectionResult {
@@ -95,7 +95,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
     }
 
-    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, color_mask2, mask, hierarchy;
+    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask1, red_mask2, mask, hierarchy;
 
 
     @Override
@@ -132,15 +132,16 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         // 5b) Threshold for specified color
 
         color_mask = new Mat();
-        if (additionalColor == "blue"){
+        if (additionalColor == 0){
             Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
 
 
-        } else if (additionalColor == "red"){
-            color_mask2 = new Mat();
-            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, color_mask);
-            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, color_mask2);
-            Core.bitwise_or(color_mask, color_mask2, color_mask);
+        } else if (additionalColor == 1){
+            red_mask1 = new Mat();
+            red_mask2 = new Mat();
+            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask1);
+            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask2);
+            Core.bitwise_or(red_mask1, red_mask2, color_mask);
         }
         mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
