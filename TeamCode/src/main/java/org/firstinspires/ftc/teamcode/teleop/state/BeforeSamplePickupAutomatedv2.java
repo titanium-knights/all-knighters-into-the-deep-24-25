@@ -51,6 +51,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     public boolean readyForPickup = false;
     public boolean timeReset = false;
     public boolean finishedPickup = false;
+    public boolean adjusting = false;
 
     ElapsedTime time;
 
@@ -98,7 +99,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
             slidesExtending = true;
         }
 
-        if (objectDetected || Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER){
+        if (!adjusting && objectDetected || Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER){
             telemetry.addLine("we have stopped moving slides");
             telemetry.update();
             subsystemManager.horizontalSlides.stop();
@@ -157,6 +158,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
 
             encoder = max(encoder - slidesAdvanceForPickUp * INTOENCODER, -subsystemManager.horizontalSlides.maxForward);
             subsystemManager.horizontalSlides.slideToPosition((int) encoder);
+            adjusting = true;
 
             // WARNING DO NOT TRY TO UNDERSTAND THIS, IT MAKES NO SENSE BUT IT WORKS
             angle = angleSeen % 180;
