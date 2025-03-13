@@ -43,7 +43,9 @@ public class Teleop extends OpMode {
     private boolean beforePickup = false;
 
     private boolean manualMode = false;
-    private ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.BLUE;
+
+    public static String colorString = "blue";
+    private ConfidenceOrientationVectorPipeline.Color color = colorString.equals("blue") ? ConfidenceOrientationVectorPipeline.Color.BLUE : ConfidenceOrientationVectorPipeline.Color.RED;
 
     public enum Strategy {
         SAMPLE,

@@ -186,7 +186,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         }
 
         // 8) Sort descending by confidence
-        detectionResults.sort(Comparator.comparing((DetectionResult dr) -> !dr.pickupable).thenComparing((DetectionResult dr) -> -dr.confidence));
+        detectionResults.sort(Comparator.comparing((DetectionResult dr) -> dr.pickupable ? 0 : 1).thenComparing((DetectionResult dr) -> dr.confidence, Comparator.reverseOrder()));
 
 
         if (detectionResults.isEmpty()) {
