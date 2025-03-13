@@ -90,6 +90,8 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
+        subsystemManager.swiper.up();
+        subsystemManager.topClaw.maintainPosition();
         // non-state based logic
 
         // claw logic

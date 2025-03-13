@@ -110,4 +110,6 @@ public class BottomClaw {
     public void rightWristHalfUpPosition() {rightWristServo.setPosition(RIGHT_WRIST_HALFUP_POSITION);}
     public void rightWristInitPosition() {rightWristServo.setPosition(RIGHT_WRIST_INIT_POSITION);}
 
+
+
 }

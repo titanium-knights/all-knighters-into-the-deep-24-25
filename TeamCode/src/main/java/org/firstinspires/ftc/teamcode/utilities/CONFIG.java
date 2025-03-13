@@ -13,6 +13,7 @@ public class CONFIG {
     // horizontal slides
     public static String horizontalSlidesMotor = "horizontalSlidesMotor"; // tape: "scissorsMotor", eh motor 0
 
+    public static String swiperServo = "swiperServo"; // no tape: shorter of the two unlabeled servo wires from the horizontal slides, expansion hub 5
     // misc
     public static String webcam = "Webcam 1";
 
@@ -25,6 +26,7 @@ public class CONFIG {
     public static String slidesMotor = "slidesMotor";   // tape: “SlidesMotor”, eh motor 3
     public static String armServo = "armServo";         // tape: “R Bucket”,    ch servo 3
     public static String topClawServo = "claw";         // tape: "Claw",        ch servo 5
+
 
     //NOTE: ch servo 4 is bad, do not use it until further investigation
 }
