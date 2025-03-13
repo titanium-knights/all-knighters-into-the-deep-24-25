@@ -113,6 +113,8 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             return;
         }
 
+
+        // WARNING DO NOT TRY TO UNDERSTAND THIS, IT MAKES NO SENSE BUT IT WORKS
         ogAngle = thetas.get(thetas.size() / 2);
         angle = ogAngle % 180;
 
@@ -120,7 +122,6 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             angle += 180;
         }
         telemetry.addData("angle: ", angle);
-
 
         rotationAngle = (angle + 90) % 180;
         telemetry.addData("rotation angle: ", rotationAngle);
