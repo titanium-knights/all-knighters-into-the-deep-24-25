@@ -122,13 +122,13 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         // 5b) Threshold for specified color
         color_mask = new Mat();
         if (color == Color.BLUE){
-            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, blue_mask);
+            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
         } else if (color == Color.RED){
             Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
+            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
+            Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
+
         }
-
-
-
         mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
 
