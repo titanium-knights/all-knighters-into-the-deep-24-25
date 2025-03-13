@@ -78,10 +78,13 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         BLUE
     }
 
-    Color color = Color.BLUE;
+    Color color;
+    Teleop.Strategy strategy;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline() {
+    public ConfidenceOrientationVectorPipeline(ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
+        this.color = color;
+        this.strategy = strategy;
     }
 
     Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, blue_mask, red_mask_1, red_mask_2, mask, hierarchy;
@@ -115,6 +118,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(processed, hsvImage, Imgproc.COLOR_RGB2HSV);
 
         // 5a) Threshold for yellow
+
         yellow_mask = new Mat();
         Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
 
@@ -128,8 +132,13 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
 
         }
+
         mask = new Mat();
-        Core.bitwise_or(yellow_mask, color_mask, mask);
+        if (strategy.equals(Teleop.Strategy.SAMPLE)) {
+            Core.bitwise_or(yellow_mask, color_mask, mask);
+        } else if (strategy.equals(Teleop.Strategy.SPECIMEN)){
+            mask = color_mask;
+        }
 
         // 6) Find contours in downscaled space
         List<MatOfPoint> contours = new ArrayList<>();

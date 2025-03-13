@@ -27,7 +27,7 @@ public class Webcam {
     public Webcam(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
-        this.pipeline = new ConfidenceOrientationVectorPipeline();
+        this.pipeline = new ConfidenceOrientationVectorPipeline(color, strategy);
         if (stream == 1) FtcDashboard.getInstance().startCameraStream(cam, 0);
 
         cam.setPipeline(pipeline);
