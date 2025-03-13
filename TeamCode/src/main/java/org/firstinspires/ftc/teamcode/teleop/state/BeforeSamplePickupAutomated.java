@@ -120,6 +120,10 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
             drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
             pickupable = drsd.pickupable;
+            telemetry.addData("pickupable? ", pickupable);
+            telemetry.addData("y coord: ", yCoord);
+            telemetry.addData("x coord: ", xCoord);
+            telemetry.update();
             if (drsd.getY() != -1) {
                 thetas.add(drsd.getTheta());
             }
