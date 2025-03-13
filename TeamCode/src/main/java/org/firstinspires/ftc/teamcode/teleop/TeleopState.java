@@ -33,4 +33,8 @@ public abstract class TeleopState {
     public TeleopState[] getDependencyStates() {
         return dependencyStates;
     }
+
+    public void reset() {
+
+    }
 }

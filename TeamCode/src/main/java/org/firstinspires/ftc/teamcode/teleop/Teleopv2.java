@@ -261,6 +261,7 @@ public class Teleopv2 extends OpMode {
                         || Arrays.asList(state.getDependencyStates()).contains(Teleopv2.currentState)
         ) {
             Teleopv2.slowMode = false;
+            currentState.reset();
             currentState = state;
         }
     }
