@@ -111,13 +111,16 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         while (!pickupable) {
             if (xCoord < (double) (2 * WINDOW) /3){
-                subsystemManager.drive.move(0.2, 0, 0);
-            } else if (xCoord > 2 * (double) (2 * WINDOW) /3){
                 subsystemManager.drive.move(-0.2, 0, 0);
+            } else if (xCoord > 2 * (double) (2 * WINDOW) /3){
+                subsystemManager.drive.move(0.2, 0, 0);
             }
 
             drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
             pickupable = drsd.pickupable;
+            if (drsd.getY() != -1) {
+                thetas.add(drsd.getTheta());
+            }
         }
 
         FtcDashboard.getInstance().stopCameraStream();
