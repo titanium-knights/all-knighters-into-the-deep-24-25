@@ -26,6 +26,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     HardwareMap hmap;
     Telemetry telemetry;
     public double ogAngle, angle, rotationAngle, rotationTheta;
+    boolean pickupable;
     public static final int WINDOW = 160; // max range is 320
 
     public static double slideSpeed = 0.7;
@@ -67,6 +68,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         yCoord = -1;
         xCoord = 320;
         encoder = 0;
+        pickupable = false;
         telemetry.addLine("y coordinate: " + yCoord);
         telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
         telemetry.addLine("condition true?" + (Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
