@@ -77,16 +77,14 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        while (!pickupable && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
+        while (yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.addLine("angle detected:" + drsd.getTheta());
             telemetry.update();
 
-            if (yCoord == -1){
-                subsystemManager.horizontalSlides.manualForward(slideSpeed);
-            }
+            subsystemManager.horizontalSlides.manualForward(slideSpeed);
 
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
                 telemetry.addLine("we got here!");
@@ -95,21 +93,9 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 xCoord = drsd.getX();
                 yCoord = drsd.getY();
                 pickupable = drsd.pickupable;
-//                if (pickupable){
-//                    subsystemManager.drive.move(0, 0, 0);
-//
-//                } else {
-//                    if (xCoord < (double) (2 * WINDOW) /3){
-//                        subsystemManager.drive.move(0.2, 0, 0);
-//                    } else if (xCoord > 2 * (double) (2 * WINDOW) /3){
-//                        subsystemManager.drive.move(-0.2, 0, 0);
-//                    }
-//                }
 
                 encoder = subsystemManager.horizontalSlides.getEncoder();
                 encoder = max(encoder - clawDistanceAdjust/537*120/25.4, -subsystemManager.horizontalSlides.maxForward);
-
-
             }
 
             if (pickupable) {
@@ -118,6 +104,17 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         }
 
 //        points=drsd.points;
+
+        while (!pickupable) {
+            if (xCoord < (double) (2 * WINDOW) /3){
+                subsystemManager.drive.move(0.2, 0, 0);
+            } else if (xCoord > 2 * (double) (2 * WINDOW) /3){
+                subsystemManager.drive.move(-0.2, 0, 0);
+            }
+
+            drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
+            pickupable = drsd.pickupable;
+        }
 
         FtcDashboard.getInstance().stopCameraStream();
 
