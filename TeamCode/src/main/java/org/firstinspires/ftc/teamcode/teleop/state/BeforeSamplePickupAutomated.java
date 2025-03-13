@@ -28,7 +28,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     public double ogAngle, angle, rotationAngle, rotationTheta;
 
     public static final int WINDOW = 160; // max range is 320
-
+    public boolean pickupable;
     public static double slideSpeed = 0.7;
     public static int slideDelay = 1500;
 
@@ -64,7 +64,6 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     // Just when I thought I was out, they pull me back in.
     public void extendToPickupPosition(Gamepad gamepad1, Gamepad gamepad2) {
         double xCoord, yCoord, encoder;
-        boolean pickupable;
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
         yCoord = -1;
         xCoord = 320;
@@ -78,14 +77,16 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        while (!pickupable && yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
+        while (!pickupable && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.addLine("angle detected:" + drsd.getTheta());
-            telemetry.addLine("telemetry:" + drsd.pickupable);
             telemetry.update();
-            subsystemManager.horizontalSlides.manualForward(slideSpeed);
+
+            if (yCoord == -1){
+                subsystemManager.horizontalSlides.manualForward(slideSpeed);
+            }
 
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
                 telemetry.addLine("we got here!");
@@ -111,7 +112,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
             }
 
-            if (pickupable && yCoord != -1) {
+            if (pickupable) {
                 thetas.add(drsd.getTheta());
             }
         }
