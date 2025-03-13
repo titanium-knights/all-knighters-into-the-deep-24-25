@@ -78,11 +78,10 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         BLUE
     }
 
-    Color color;
-    Teleop.Strategy strategy;
+    Color color = Color.BLUE;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
+    public ConfidenceOrientationVectorPipeline() {
     }
 
     Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, blue_mask, red_mask_1, red_mask_2, mask, hierarchy;
