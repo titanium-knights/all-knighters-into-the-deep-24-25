@@ -8,6 +8,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 // We use static imports for convenience
@@ -47,11 +48,13 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         public double confidence;
 
         public Point[] points;
+        public boolean pickupable;
 
-        public DetectionResult(RotatedRect rect, double confidence, Point[] points) {
+        public DetectionResult(RotatedRect rect, double confidence, Point[] points, boolean pickupable) {
             this.rect = rect;
             this.confidence = confidence;
             this.points = points;
+            this.pickupable = pickupable;
         }
     }
 
@@ -136,9 +139,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
-            if (contourArea < 30000) {
-                continue;
-            }
+            boolean pickupable = contourArea >= 30000;
 
             MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
             RotatedRect rect = Imgproc.minAreaRect(contour2f);
@@ -171,11 +172,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             }
 
             rect.angle = angle;
-            detectionResults.add(new DetectionResult(rect, confidence, points));
+            detectionResults.add(new DetectionResult(rect, confidence, points, pickupable));
         }
 
         // 8) Sort descending by confidence
-        Collections.sort(detectionResults, (r1, r2) -> Double.compare(r2.confidence, r1.confidence));
+        detectionResults.sort(Comparator.comparing((DetectionResult dr) -> !dr.pickupable).thenComparing((DetectionResult dr) -> -dr.confidence));
+
 
         if (detectionResults.isEmpty()) {
             bestDetectionResult = null;
