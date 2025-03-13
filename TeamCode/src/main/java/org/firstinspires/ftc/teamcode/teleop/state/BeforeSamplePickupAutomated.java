@@ -118,7 +118,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         rotationAngle = (angle + 90) % 180;
         telemetry.addData("rotation angle: ", rotationAngle);
 
-        rotationTheta = 2 * Math.PI - (((rotationAngle * Math.PI) / 180) + Math.PI);
+        rotationTheta = Math.PI - (((rotationAngle * Math.PI) / 180));
         while (rotationTheta > 2 * Math.PI) {
             rotationTheta -= 2 * Math.PI;
         }
@@ -126,6 +126,8 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         while (rotationTheta < 0) {
             rotationTheta += 2 * Math.PI;
         }
+
+        if (rotationTheta < Math.PI/2) rotationTheta += Math.PI;
 
 
         telemetry.addData("rotationTheta: ", rotationTheta);
