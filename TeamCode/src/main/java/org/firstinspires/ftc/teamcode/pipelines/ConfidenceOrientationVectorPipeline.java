@@ -46,12 +46,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         public RotatedRect rect;  // in the *downscaled* coordinate space
         public double confidence;
 
-        public Point[] points;
+//        public Point[] points;
 
         public DetectionResult(RotatedRect rect, double confidence, Point[] points) {
             this.rect = rect;
             this.confidence = confidence;
-            this.points = points;
+//            this.points = points;
         }
     }
 
@@ -81,7 +81,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
     }
 
-    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
+    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, blue_mask, red_mask_1, red_mask_2, mask, hierarchy;
 
 
     @Override
@@ -117,7 +117,13 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
         // 5b) Threshold for specified color
         color_mask = new Mat();
-        Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
+        if (color == Color.BLUE){
+            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, blue_mask);
+        } else if (color == Color.RED){
+            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
+        }
+
+
 
         mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
@@ -260,7 +266,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             this.y = r.center.y;
             this.theta = r.angle;
             this.confidence = dr.confidence;
-            this.points = dr.points;
+//            this.points = dr.points;
         }
 
         public DetectionResultScaledData(double x, double y, double theta, double confidence) {

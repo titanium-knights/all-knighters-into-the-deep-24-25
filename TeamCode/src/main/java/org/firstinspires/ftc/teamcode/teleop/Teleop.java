@@ -172,8 +172,10 @@ public class Teleop extends OpMode {
             telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
             telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
             telemetry.addData("fps: ", subsystemManager.webcam.getFps());
-            String pointString = Arrays.stream(((BeforeSamplePickupAutomated)currentState).points).map(p -> "(" + p.x + "," + p.y + ")").collect(Collectors.joining(","));
-            telemetry.addData("points: ", pointString);
+
+//            String pointString = Arrays.stream(((BeforeSamplePickupAutomated)currentState).points).map(p -> "(" + p.x + "," + p.y + ")").collect(Collectors.joining(","));
+//            telemetry.addData("points: ", pointString);
+
             if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
                 rotatorButton = ButtonPressState.PRESSED_GOOD;
                 if (clawPosition == ClawPosition.HORIZONTAL) {

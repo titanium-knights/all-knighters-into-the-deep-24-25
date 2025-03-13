@@ -28,7 +28,12 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     public double ogAngle, angle, rotationAngle, rotationTheta;
     public static final int WINDOW = 160; // max range is 320
 
-    public Point[] points;
+    public static double slideSpeed = 0.7;
+    public static int slideDelay = 1500;
+
+    public static double clawDistanceAdjust = 0.5;
+
+//    public Point[] points;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -46,7 +51,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         subsystemManager.arm.toGetOutOfWay();
 
         try {
-            Thread.sleep(2000);
+            Thread.sleep(slideDelay);
         } catch (Exception e) {
             return;
         }
@@ -64,7 +69,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         encoder = 0;
         telemetry.addLine("y coordinate: " + yCoord);
         telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
-        telemetry.addLine("condition true?" + (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
+        telemetry.addLine("condition true?" + (Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
         telemetry.update();
 
         ArrayList<Double> thetas = new ArrayList<>();
@@ -75,7 +80,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.addLine("angle detected:" + drsd.getTheta());
             telemetry.update();
-            subsystemManager.horizontalSlides.manualForward(0.35);
+            subsystemManager.horizontalSlides.manualForward(slideSpeed);
 
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
 
@@ -86,7 +91,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 xCoord = drsd.getX();
                 yCoord = drsd.getY();
                 encoder = subsystemManager.horizontalSlides.getEncoder();
-                encoder = max(encoder - 225, -subsystemManager.horizontalSlides.maxForward);
+                encoder = max(encoder - clawDistanceAdjust/537*120/25.4, -subsystemManager.horizontalSlides.maxForward);
             }
 
             if (yCoord != -1) {
@@ -94,7 +99,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             }
         }
 
-        points=drsd.points;
+//        points=drsd.points;
 
         FtcDashboard.getInstance().stopCameraStream();
 
