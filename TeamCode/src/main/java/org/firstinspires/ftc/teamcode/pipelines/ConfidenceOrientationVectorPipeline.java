@@ -79,11 +79,14 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     }
 
     Color color;
-    Teleop.Strategy strategy;
+    Teleop.Strategy strategy = Teleop.Strategy.SAMPLE;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline(ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
+    public ConfidenceOrientationVectorPipeline(ConfidenceOrientationVectorPipeline.Color color) {
         this.color = color;
+    }
+
+    public void setStrategy(Teleop.Strategy strategy){
         this.strategy = strategy;
     }
 
