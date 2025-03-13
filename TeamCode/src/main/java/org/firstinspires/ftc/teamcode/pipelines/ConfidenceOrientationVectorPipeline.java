@@ -146,6 +146,9 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
+            if (contourArea < 1000) {
+                continue;
+            }
             boolean pickupable = contourArea >= 30000;
 
             MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
