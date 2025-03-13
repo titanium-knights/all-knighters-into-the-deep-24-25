@@ -6,6 +6,7 @@ import static java.lang.Double.min;
 import static java.lang.Math.max;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -22,6 +23,7 @@ import org.opencv.core.Point;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+@Config
 public class BeforeSamplePickupAutomated extends TeleopState {
     HardwareMap hmap;
     Telemetry telemetry;
