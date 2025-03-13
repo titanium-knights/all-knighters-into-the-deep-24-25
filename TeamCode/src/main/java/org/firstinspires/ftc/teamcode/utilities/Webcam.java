@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 //import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
+import org.firstinspires.ftc.teamcode.teleop.Teleopv2;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -84,4 +85,7 @@ public class Webcam {
     public void setStrategy(Teleop.Strategy strategy){ pipeline.setStrategy(strategy);}
 
     public void setColor(ConfidenceOrientationVectorPipeline.Color color){pipeline.setColor(color);}
+
+    public void setStrategy(Teleopv2.Strategy strategy) {
+    }
 }

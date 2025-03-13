@@ -12,7 +12,7 @@ public class Teleop_Red extends OpMode {
     Teleop teleop;
     @Override
     public void init(){
-        teleop = new Teleop(ConfidenceOrientationVectorPipeline.Color.RED);
+        teleop = new Teleop();
         teleop.init();
     }
 

@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
+import org.firstinspires.ftc.teamcode.teleop.Teleopv2;
 
 /**
  * This class is used to encapsulate all utility classes for subsystems.
@@ -35,5 +36,8 @@ public class SubsystemManager {
         slides = new Slides(hmap);
         webcam = new Webcam(hmap, color, strategy);
         swiper = new Swiper(hmap);
+    }
+
+    public SubsystemManager(HardwareMap hardwareMap, ConfidenceOrientationVectorPipeline.Color color, Teleopv2.Strategy strategy) {
     }
 }

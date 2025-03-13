@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class HorizontalSlides {
 
-    private static final double slideForwardPower = 1;
-    private static final double slideBackPower = -1;
+    public static double slideForwardPower = 0.7;
+    public static double slideBackPower = -0.7;
     private static final double idlePower = 0.0;
     public final int maxForward = 2400;
     public final int minBack = 0;

@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupAutomated;
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupAutomatedv2;
 import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
@@ -23,15 +24,15 @@ import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-@TeleOp(name = "Automated Driver Teleop", group = "User Control")
-public class Teleop extends OpMode {
+@TeleOp(name = "Automated Driver Teleopv2", group = "User Control")
+public class Teleopv2 extends OpMode {
     public static TeleopState currentState;
     private final Gamepad prevGamepad1 = new Gamepad();
     private final Gamepad prevGamepad2 = new Gamepad();
     private SubsystemManager subsystemManager;
     // instance variables for all potential states
     private Neutral neutralState;
-    private BeforeSamplePickupAutomated beforeSamplePickupAutomatedState;
+    private BeforeSamplePickupAutomatedv2 beforeSamplePickupAutomatedStatev2;
     private BeforeSamplePickup beforeSamplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
     private SampleTransferAutomated sampleTransferAutomatedState;
@@ -46,7 +47,7 @@ public class Teleop extends OpMode {
 
     private boolean manualMode = false;
 
-    private final ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.BLUE;
+    private final ConfidenceOrientationVectorPipeline.Color color;
 
     public enum Strategy {
         SAMPLE,
@@ -54,6 +55,11 @@ public class Teleop extends OpMode {
 
     }
     private Strategy strategy = Strategy.SAMPLE;
+
+    public Teleopv2(ConfidenceOrientationVectorPipeline.Color color){
+        this.color = color;
+    }
+
 
     enum ButtonPressState {
         PRESSED_GOOD, // the first time we see the button
@@ -79,7 +85,7 @@ public class Teleop extends OpMode {
         subsystemManager = new SubsystemManager(hardwareMap, color, strategy);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
-        beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);
+        beforeSamplePickupAutomatedStatev2 = new BeforeSamplePickupAutomatedv2(subsystemManager, hardwareMap, telemetry);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
@@ -160,7 +166,7 @@ public class Teleop extends OpMode {
         }
 
         // drivetrain
-        if (Teleop.slowMode) {
+        if (Teleopv2.slowMode) {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
         } else {
             if (gamepad2.left_stick_x > 0.3){
@@ -176,7 +182,7 @@ public class Teleop extends OpMode {
             if (manualMode) {
                 switchToState(beforeSamplePickupState);
             } else {
-                switchToState(beforeSamplePickupAutomatedState);
+                switchToState(beforeSamplePickupAutomatedStatev2);
             }
         } else if (gamepad1.x) {
 
@@ -197,7 +203,7 @@ public class Teleop extends OpMode {
         }
 
         // run the current state
-        if (currentState == beforeSamplePickupAutomatedState) {
+        if (currentState == beforeSamplePickupAutomatedStatev2) {
             if (!beforePickup) {
                 currentState.runState(gamepad1, gamepad2);
                 beforePickup = true;
@@ -244,7 +250,7 @@ public class Teleop extends OpMode {
 
 
     public static void setSlowMode(boolean slowMode) {
-        Teleop.slowMode = slowMode;
+        Teleopv2.slowMode = slowMode;
     }
 
     public void switchToState(TeleopState state) {
@@ -252,9 +258,9 @@ public class Teleop extends OpMode {
         // them, don't move
         if (
                 state.getDependencyStates().length == 0
-                        || Arrays.asList(state.getDependencyStates()).contains(Teleop.currentState)
+                        || Arrays.asList(state.getDependencyStates()).contains(Teleopv2.currentState)
         ) {
-            Teleop.slowMode = false;
+            Teleopv2.slowMode = false;
             currentState = state;
         }
     }

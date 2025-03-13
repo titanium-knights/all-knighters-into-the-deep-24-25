@@ -14,6 +14,8 @@ import java.util.List;
 // We use static imports for convenience
 import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
 
+import com.acmerobotics.dashboard.config.Config;
+
 /**
  * Pipeline that:
  *  1) Downscales the image for faster processing
@@ -22,6 +24,7 @@ import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
  *  4) Finds contours, computes bounding boxes + confidence
  *  5) Sorts by confidence, draws the top 5 bounding boxes on the *original* image scale
  */
+@Config
 public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     // You can tweak these
     public static final double SCALE_FACTOR = 0.5; // Downscale 50%
@@ -78,7 +81,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         BLUE
     }
 
-    Color color;
+
     Teleop.Strategy strategy = Teleop.Strategy.SAMPLE;
 
     // Constructor
@@ -95,7 +98,9 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
     Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
 
+    public static String additionalColor = "blue";
 
+    Color color = additionalColor.equals("blue") ? Color.BLUE : Color.RED;
     @Override
     public Mat processFrame(Mat input) {
         // Increment frame counter
@@ -130,9 +135,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
         // 5b) Threshold for specified color
         color_mask = new Mat();
+
         if (color == Color.BLUE){
             Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
         } else if (color == Color.RED){
+            red_mask_1 = new Mat();
+            red_mask_2 = new Mat();
             Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
             Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
             Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
