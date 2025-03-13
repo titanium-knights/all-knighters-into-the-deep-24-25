@@ -135,6 +135,9 @@ public class Teleop extends OpMode {
         if (Teleop.slowMode) {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
         } else {
+            if (gamepad2.left_stick_x > 0.3){
+                telemetry.addData("gamepad2: ", gamepad2.left_stick_x);
+            }
             subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
         }
 

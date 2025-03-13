@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 import org.opencv.core.Point;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.stream.Collectors;
 
 @Config
@@ -30,11 +31,15 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     public double ogAngle, angle, rotationAngle, rotationTheta;
 
     public static final int WINDOW = 160; // max range is 320
+
+    public static final double INTOENCODER = 537.7/120*25.4;
     public boolean pickupable;
     public static double slideSpeed = 0.7;
     public static int slideDelay = 1500;
 
-    public static double clawDistanceAdjust = 0.5;
+    public static double slidesWithdrawForAdjust = -0.5;
+
+    public static double slidesAdvanceForPickUp = 4;
 
 //    public Point[] points;
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
@@ -79,7 +84,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
         ArrayList<Double> thetas = new ArrayList<>();
 
-        while (yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
+        while (yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER) {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
@@ -97,7 +102,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 pickupable = drsd.pickupable;
 
                 encoder = subsystemManager.horizontalSlides.getEncoder();
-                encoder = max(encoder - clawDistanceAdjust/537*120/25.4, -subsystemManager.horizontalSlides.maxForward);
+                encoder = max(encoder - slidesWithdrawForAdjust*INTOENCODER, -subsystemManager.horizontalSlides.maxForward);
             }
 
             if (pickupable) {
@@ -111,25 +116,38 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         subsystemManager.horizontalSlides.stop();
         subsystemManager.horizontalSlides.slideToPosition((int) encoder);
 
-        while (!pickupable) {
-            if (xCoord < (double) (2 * WINDOW) /3){
-                subsystemManager.drive.move(-0.3, 0, 0);
-            } else if (xCoord > 2 * (double) (2 * WINDOW) /3){
+        while (!pickupable && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER - 100) {
+            if (xCoord != -1 && xCoord < 2*WINDOW - 50){
                 subsystemManager.drive.move(0.3, 0, 0);
+                telemetry.addData("move: ", "positive");
+            } else if (xCoord > 2*WINDOW + 50){
+                telemetry.addData("move: ", "negative");
+                subsystemManager.drive.move(-0.3, 0, 0);
+            } else if (xCoord  != -1){
+                pickupable = true;
             }
 
             drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
-            pickupable = drsd.pickupable;
+            pickupable = pickupable || drsd.pickupable;
+            xCoord = drsd.getX();
+            yCoord = drsd.getY();
             telemetry.addData("pickupable? ", pickupable);
             telemetry.addData("y coord: ", yCoord);
             telemetry.addData("x coord: ", xCoord);
             telemetry.update();
-            if (drsd.getY() != -1) {
-                thetas.add(drsd.getTheta());
-            }
+
         }
 
-        FtcDashboard.getInstance().stopCameraStream();
+        subsystemManager.drive.move(0, 0, 0);
+        encoder = max(encoder - slidesAdvanceForPickUp * INTOENCODER, -subsystemManager.horizontalSlides.maxForward);
+        subsystemManager.horizontalSlides.stop();
+        subsystemManager.horizontalSlides.slideToPosition((int) encoder);
+
+
+        if (drsd.getY() != -1) {
+            thetas.add(drsd.getTheta());
+        }
+
 
         if (thetas.isEmpty()) {
             return;
