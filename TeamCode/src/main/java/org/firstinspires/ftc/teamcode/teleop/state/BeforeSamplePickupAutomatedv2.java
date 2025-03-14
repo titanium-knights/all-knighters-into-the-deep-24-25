@@ -108,7 +108,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
         if (!objectDetected){
             telemetry.addLine("We have not detected the object");
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
-                telemetry.addLine("we have seen something!");
+                telemetry.addLine("we are looking!");
                 drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
                 xCoord = drsd.getX();
                 yCoord = drsd.getY();

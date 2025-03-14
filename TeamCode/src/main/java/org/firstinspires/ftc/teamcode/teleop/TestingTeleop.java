@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,10 +8,13 @@ import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipel
 import org.firstinspires.ftc.teamcode.utilities.BottomClaw;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
+@Config
 @TeleOp(name = "Testing Teleop", group = "User Control")
 public class TestingTeleop extends OpMode {
 
+    public static String additionalColor = "blue";
 
+    public static ConfidenceOrientationVectorPipeline.Color color = additionalColor.equals("blue") ? ConfidenceOrientationVectorPipeline.Color.BLUE : ConfidenceOrientationVectorPipeline.Color.RED;
     private SubsystemManager manager;
 
     @Override
