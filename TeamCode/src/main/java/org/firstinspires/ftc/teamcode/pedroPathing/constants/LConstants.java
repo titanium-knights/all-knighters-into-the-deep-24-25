@@ -33,13 +33,13 @@ public class LConstants {
 //        ThreeWheelIMUConstants.IMU_HardwareMapName = "imu";
 //        ThreeWheelIMUConstants.IMU_Orientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
 
-        ThreeWheelConstants.forwardTicksToInches = 0.000536;
-        ThreeWheelConstants.strafeTicksToInches = 0.000529;
-        ThreeWheelConstants.turnTicksToInches = 0.001395647259;
+        ThreeWheelConstants.forwardTicksToInches = 0.000534; //0.000536
+        ThreeWheelConstants.strafeTicksToInches = 0.000530; //0.000529
+        ThreeWheelConstants.turnTicksToInches = 0.000534; //0.001395647259
 
-        ThreeWheelConstants.leftY = 14.7; // 13.9402
-        ThreeWheelConstants.rightY = -13.9402; // -14.7
-        ThreeWheelConstants.strafeX = 0.65;
+        ThreeWheelConstants.leftY = 5.488; // 13.9402
+        ThreeWheelConstants.rightY = -5.787; // -14.7
+        ThreeWheelConstants.strafeX = 0.2677; //0.68
         ThreeWheelConstants.leftEncoder_HardwareMapName = CONFIG.BACK_LEFT;
         ThreeWheelConstants.rightEncoder_HardwareMapName = CONFIG.BACK_RIGHT;
         ThreeWheelConstants.strafeEncoder_HardwareMapName = CONFIG.FRONT_RIGHT;
