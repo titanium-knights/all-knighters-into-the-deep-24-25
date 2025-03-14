@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.utilities.CONFIG;
 public class LConstants {
     static {
 //        ThreeWheelIMUConstants.forwardTicksToInches = 0.0005285356789805085;
-//        ThreeWheelIMUConstants.strafeTicksToInches = 0.0005330987731201786;`
+//        ThreeWheelIMUConstants.strafeTicksToInches = 0.0005330987731201786;
 //        ThreeWheelIMUConstants.turnTicksToInches = 0.00345396830067402;
 //        // before: 0.001998322827427511
 //        // before: 0.00200977183130706
@@ -33,13 +33,13 @@ public class LConstants {
 //        ThreeWheelIMUConstants.IMU_HardwareMapName = "imu";
 //        ThreeWheelIMUConstants.IMU_Orientation = new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP, RevHubOrientationOnRobot.UsbFacingDirection.RIGHT);
 
-        ThreeWheelConstants.forwardTicksToInches = 0.000536;
-        ThreeWheelConstants.strafeTicksToInches = 0.000529;
-        ThreeWheelConstants.turnTicksToInches = 0.001395647259;
+        ThreeWheelConstants.forwardTicksToInches = 0.000534; //0.000536
+        ThreeWheelConstants.strafeTicksToInches = 0.000530; //0.000529
+        ThreeWheelConstants.turnTicksToInches = 0.000534; //0.001395647259
 
-        ThreeWheelConstants.leftY = 13.9402; // 13.9402
-        ThreeWheelConstants.rightY = -14.7; // -14.7
-        ThreeWheelConstants.strafeX = 0.65;
+        ThreeWheelConstants.leftY = 5.488; // 13.9402
+        ThreeWheelConstants.rightY = -5.787; // -14.7
+        ThreeWheelConstants.strafeX = 0.2677; //0.68
         ThreeWheelConstants.leftEncoder_HardwareMapName = CONFIG.BACK_LEFT;
         ThreeWheelConstants.rightEncoder_HardwareMapName = CONFIG.BACK_RIGHT;
         ThreeWheelConstants.strafeEncoder_HardwareMapName = CONFIG.FRONT_RIGHT;
@@ -49,4 +49,3 @@ public class LConstants {
         ThreeWheelConstants.strafeEncoderDirection = Encoder.FORWARD;
     }
 }
-
