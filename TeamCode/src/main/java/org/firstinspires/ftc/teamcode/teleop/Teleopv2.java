@@ -105,23 +105,6 @@ public class Teleopv2 extends OpMode {
         // non-state based logic
 
 
-        // Strategy Logic
-        if (gamepad2.a && strategyButton == ButtonPressState.UNPRESSED) {
-            strategyButton = ButtonPressState.PRESSED_GOOD;
-            if (strategy == Strategy.SAMPLE){
-                subsystemManager.webcam.setStrategy(Strategy.SPECIMEN);
-                strategy = Strategy.SPECIMEN;
-            }
-            else if (strategy == Strategy.SPECIMEN){
-                subsystemManager.webcam.setStrategy(Strategy.SAMPLE);
-                strategy = Strategy.SAMPLE;
-            }
-        } else if (gamepad2.a && strategyButton == ButtonPressState.PRESSED_GOOD) {
-            strategyButton = ButtonPressState.DEPRESSED;
-        } else if (!gamepad2.a) {
-            strategyButton = ButtonPressState.UNPRESSED;
-        }
-
         if (strategy == Strategy.SAMPLE) telemetry.addData("Strategy: ", "Sample");
         if (strategy == Strategy.SPECIMEN) telemetry.addData("Strategy: ", "Specimen");
 

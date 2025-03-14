@@ -22,7 +22,7 @@ public class Webcam {
 
     public static int stream = 0;
 
-    Teleop.Strategy strategy;
+    Teleop.Strategy strategy = Teleop.Strategy.SAMPLE;
     public Webcam(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);

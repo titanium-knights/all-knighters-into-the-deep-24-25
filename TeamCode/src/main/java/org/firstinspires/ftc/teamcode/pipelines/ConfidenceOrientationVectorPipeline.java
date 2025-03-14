@@ -148,11 +148,10 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         }
 
         mask = new Mat();
-        if (strategy.equals(Teleop.Strategy.SAMPLE)) {
-            Core.bitwise_or(yellow_mask, color_mask, mask);
-        } else if (strategy.equals(Teleop.Strategy.SPECIMEN)){
-            mask = color_mask;
-        }
+        Core.bitwise_or(yellow_mask, color_mask, mask);
+//        else if (strategy.equals(Teleop.Strategy.SPECIMEN)){
+//            mask = color_mask;
+//        }
 
         // 6) Find contours in downscaled space
         List<MatOfPoint> contours = new ArrayList<>();
