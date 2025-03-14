@@ -34,7 +34,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     public static final int WINDOW = 160; // max range is 320
 
     public static final double INTOENCODER = 537.7/120*25.4;
-    public boolean pickupable;
+    public boolean pickupable = false;
     public static double slideSpeed = 0.7;
     public static int servoRotationDelay = 1500;
 
@@ -53,7 +53,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     public boolean finishedPickup = false;
     public boolean adjusting = false;
 
-    ElapsedTime time;
+    ElapsedTime time = new ElapsedTime();
 
     double xCoord, yCoord, encoder;
     public BeforeSamplePickupAutomatedv2(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
@@ -92,14 +92,14 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
             return;
         }
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
-        if (!slidesExtending && !objectDetected && !(Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER)){
+        if (!slidesExtending && !objectDetected && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER){
             telemetry.addLine("we have started moving slides");
             telemetry.update();
             subsystemManager.horizontalSlides.manualForward(slideSpeed);
             slidesExtending = true;
         }
 
-        if (!adjusting && objectDetected || Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER){
+        if ((!adjusting && objectDetected) || !(Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER)){
             telemetry.addLine("we have stopped moving slides");
             telemetry.update();
             subsystemManager.horizontalSlides.stop();
@@ -130,14 +130,15 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
         } else if (!pickupable && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER - 100) {
             telemetry.addLine("we are moving horizontally to align");
             if (xCoord != -1 && xCoord < 2*WINDOW - 50){
-                subsystemManager.drive.move(0.3, 0, 0);
+                subsystemManager.drive.move(0.5, 0, 0);
                 telemetry.addData("move: ", "positive");
             } else if (xCoord > 2*WINDOW + 50){
                 telemetry.addData("move: ", "negative");
-                subsystemManager.drive.move(-0.3, 0, 0);
+                subsystemManager.drive.move(-0.5, 0, 0);
             } else if (xCoord != -1){
                 pickupable = true;
             }
+            adjusting = true;
 
             drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
             pickupable = pickupable || drsd.pickupable;
@@ -158,7 +159,6 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
 
             encoder = max(encoder - slidesAdvanceForPickUp * INTOENCODER, -subsystemManager.horizontalSlides.maxForward);
             subsystemManager.horizontalSlides.slideToPosition((int) encoder);
-            adjusting = true;
 
             // WARNING DO NOT TRY TO UNDERSTAND THIS, IT MAKES NO SENSE BUT IT WORKS
             angle = angleSeen % 180;

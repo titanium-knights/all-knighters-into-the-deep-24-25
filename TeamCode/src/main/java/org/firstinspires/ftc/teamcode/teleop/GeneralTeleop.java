@@ -180,15 +180,26 @@ public class GeneralTeleop {
 
         // run the current state
         if (currentState == beforeSamplePickupAutomatedStatev2) {
-            if (!beforePickup) {
-                currentState.runState(gamepad1, gamepad2);
-                beforePickup = true;
-            }
-            telemetry.addData("og angle: ", ((BeforeSamplePickupAutomated)currentState).ogAngle);
-            telemetry.addData("angle: ", ((BeforeSamplePickupAutomated)currentState).angle);
-            telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
-            telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
+            currentState.runState(gamepad1, gamepad2);
+            telemetry.addData("og angle: ", ((BeforeSamplePickupAutomatedv2)currentState).angleSeen);
+            telemetry.addData("angle: ", ((BeforeSamplePickupAutomatedv2)currentState).angle);
+            telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomatedv2)currentState).rotationAngle);
+            telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomatedv2)currentState).rotationTheta);
             telemetry.addData("fps: ", subsystemManager.webcam.getFps());
+
+            telemetry.addData("wristRotated: ", ((BeforeSamplePickupAutomatedv2)currentState).wristRotated);
+            telemetry.addData("slidesExtending: ", ((BeforeSamplePickupAutomatedv2)currentState).slidesExtending);
+            telemetry.addData("objectDetected: ", ((BeforeSamplePickupAutomatedv2)currentState).objectDetected);
+            telemetry.addData("objectInFrame: ", ((BeforeSamplePickupAutomatedv2)currentState).objectInFrame);
+            telemetry.addData("slidesInPosition: ", ((BeforeSamplePickupAutomatedv2)currentState).slidesInPosition);
+            telemetry.addData("pictureTaken: ", ((BeforeSamplePickupAutomatedv2)currentState).pictureTaken);
+            telemetry.addData("readyForPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).readyForPickup);
+            telemetry.addData("timeReset: ", ((BeforeSamplePickupAutomatedv2)currentState).timeReset);
+            telemetry.addData("finishedPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).finishedPickup);
+            telemetry.addData("adjusting: ", ((BeforeSamplePickupAutomatedv2)currentState).adjusting);
+            telemetry.addData("pickupable: ", ((BeforeSamplePickupAutomatedv2)currentState).pickupable);
+            telemetry.update();
+
 
 //            String pointString = Arrays.stream(((BeforeSamplePickupAutomated)currentState).points).map(p -> "(" + p.x + "," + p.y + ")").collect(Collectors.joining(","));
 //            telemetry.addData("points: ", pointString);
