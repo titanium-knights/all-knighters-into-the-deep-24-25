@@ -198,6 +198,8 @@ public class GeneralTeleop {
             telemetry.addData("finishedPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).finishedPickup);
             telemetry.addData("adjusting: ", ((BeforeSamplePickupAutomatedv2)currentState).adjusting);
             telemetry.addData("pickupable: ", ((BeforeSamplePickupAutomatedv2)currentState).pickupable);
+            telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
+            telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
             telemetry.update();
 
 

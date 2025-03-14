@@ -56,6 +56,8 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     ElapsedTime time = new ElapsedTime();
 
     double xCoord, yCoord, encoder;
+
+    public boolean inited = false;
     public BeforeSamplePickupAutomatedv2(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -65,10 +67,12 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         Teleop.setSlowMode(true);
+        if (!inited) {
+            subsystemManager.bottomClaw.neutralClawRotatorPosition();
+            subsystemManager.bottomClaw.openClaw();
+        }
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-        subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristDownPosition(); // claw is rotated down
-        subsystemManager.bottomClaw.openClaw();
         subsystemManager.topClaw.open();
         subsystemManager.arm.toGetOutOfWay();
 
@@ -89,6 +93,9 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     // Just when I thought I was out, they pull me back in.
     public void extendToPickupPosition(Gamepad gamepad1, Gamepad gamepad2) {
         if (finishedPickup) {
+            subsystemManager.bottomClaw.rotate(rotationTheta);
+            telemetry.addLine("we finished pickup!");
+            telemetry.update();
             return;
         }
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
@@ -204,5 +211,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
         pickupable = false;
         encoder = 0;
         finishedPickup = false;
+        inited = false;
+
     }
 }
