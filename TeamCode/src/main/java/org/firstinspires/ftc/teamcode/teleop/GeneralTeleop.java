@@ -5,22 +5,24 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickup;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupAutomated;
+import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupAutomatedv2;
+import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
+import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSamplePickupTwist90;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSampleScore;
 import org.firstinspires.ftc.teamcode.teleop.state.BeforeSpecimenScore;
-import org.firstinspires.ftc.teamcode.teleop.state.Init;
-import org.firstinspires.ftc.teamcode.teleop.state.Neutral;
-import org.firstinspires.ftc.teamcode.teleop.state.SampleTransfer;
 import org.firstinspires.ftc.teamcode.teleop.state.SampleTransferAutomated;
+import org.firstinspires.ftc.teamcode.teleop.state.Init;
+
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import java.util.Arrays;
 
-@TeleOp(name = "General Teleop", group = "User Control")
 public class GeneralTeleop {
     public static TeleopState currentState;
     private final Gamepad prevGamepad1 = new Gamepad();
@@ -28,7 +30,7 @@ public class GeneralTeleop {
     private SubsystemManager subsystemManager;
     // instance variables for all potential states
     private Neutral neutralState;
-    private BeforeSamplePickupAutomated beforeSamplePickupAutomatedState;
+    private BeforeSamplePickupAutomatedv2 beforeSamplePickupAutomatedStatev2;
     private BeforeSamplePickup beforeSamplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
     private SampleTransferAutomated sampleTransferAutomatedState;
@@ -43,7 +45,7 @@ public class GeneralTeleop {
 
     private boolean manualMode = false;
 
-    public ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.BLUE;
+    public ConfidenceOrientationVectorPipeline.Color color = null;
 
     public enum Strategy {
         SAMPLE,
@@ -51,6 +53,8 @@ public class GeneralTeleop {
 
     }
     private Strategy strategy = Strategy.SAMPLE;
+
+
 
     enum ButtonPressState {
         PRESSED_GOOD, // the first time we see the button
@@ -75,7 +79,7 @@ public class GeneralTeleop {
         subsystemManager = new SubsystemManager(hardwareMap, color);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
-        beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);
+        beforeSamplePickupAutomatedStatev2 = new BeforeSamplePickupAutomatedv2(subsystemManager, hardwareMap, telemetry);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
@@ -96,6 +100,10 @@ public class GeneralTeleop {
 
         // non-state based logic
 
+
+        if (strategy == Strategy.SAMPLE) telemetry.addData("Strategy: ", "Sample");
+        if (strategy == Strategy.SPECIMEN) telemetry.addData("Strategy: ", "Specimen");
+
         // claw logic
         if (gamepad1.left_bumper && topClawButton == ButtonPressState.UNPRESSED) {
             topClawButton = ButtonPressState.PRESSED_GOOD;
@@ -104,9 +112,9 @@ public class GeneralTeleop {
         } else if (!gamepad1.left_bumper) {
             topClawButton = ButtonPressState.UNPRESSED;
         }
-        if (topClawButton== ButtonPressState.PRESSED_GOOD && !subsystemManager.topClaw.getOpenStatus()) {
+        if (topClawButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.topClaw.getOpenStatus()) {
             subsystemManager.topClaw.open();
-        } else if (topClawButton== ButtonPressState.PRESSED_GOOD && subsystemManager.topClaw.getOpenStatus()) {
+        } else if (topClawButton==ButtonPressState.PRESSED_GOOD && subsystemManager.topClaw.getOpenStatus()) {
             subsystemManager.topClaw.close();
         }
 
@@ -117,9 +125,9 @@ public class GeneralTeleop {
         } else if (!gamepad1.right_bumper) {
             bottomClawButton = ButtonPressState.UNPRESSED;
         }
-        if (bottomClawButton== ButtonPressState.PRESSED_GOOD && subsystemManager.bottomClaw.isClosed()) {
+        if (bottomClawButton==ButtonPressState.PRESSED_GOOD && subsystemManager.bottomClaw.isClosed()) {
             subsystemManager.bottomClaw.openClaw();
-        } else if (bottomClawButton== ButtonPressState.PRESSED_GOOD && !subsystemManager.bottomClaw.isClosed()) {
+        } else if (bottomClawButton==ButtonPressState.PRESSED_GOOD && !subsystemManager.bottomClaw.isClosed()) {
             subsystemManager.bottomClaw.closeClaw();
         }
 
@@ -150,7 +158,7 @@ public class GeneralTeleop {
             if (manualMode) {
                 switchToState(beforeSamplePickupState);
             } else {
-                switchToState(beforeSamplePickupAutomatedState);
+                switchToState(beforeSamplePickupAutomatedStatev2);
             }
         } else if (gamepad1.x) {
 
@@ -171,16 +179,27 @@ public class GeneralTeleop {
         }
 
         // run the current state
-        if (currentState == beforeSamplePickupAutomatedState) {
-            if (!beforePickup) {
-                currentState.runState(gamepad1, gamepad2);
-                beforePickup = true;
-            }
-            telemetry.addData("og angle: ", ((BeforeSamplePickupAutomated)currentState).ogAngle);
-            telemetry.addData("angle: ", ((BeforeSamplePickupAutomated)currentState).angle);
-            telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
-            telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
+        if (currentState == beforeSamplePickupAutomatedStatev2) {
+            currentState.runState(gamepad1, gamepad2);
+            telemetry.addData("og angle: ", ((BeforeSamplePickupAutomatedv2)currentState).angleSeen);
+            telemetry.addData("angle: ", ((BeforeSamplePickupAutomatedv2)currentState).angle);
+            telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomatedv2)currentState).rotationAngle);
+            telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomatedv2)currentState).rotationTheta);
             telemetry.addData("fps: ", subsystemManager.webcam.getFps());
+
+            telemetry.addData("wristRotated: ", ((BeforeSamplePickupAutomatedv2)currentState).wristRotated);
+            telemetry.addData("slidesExtending: ", ((BeforeSamplePickupAutomatedv2)currentState).slidesExtending);
+            telemetry.addData("objectDetected: ", ((BeforeSamplePickupAutomatedv2)currentState).objectDetected);
+            telemetry.addData("objectInFrame: ", ((BeforeSamplePickupAutomatedv2)currentState).objectInFrame);
+            telemetry.addData("slidesInPosition: ", ((BeforeSamplePickupAutomatedv2)currentState).slidesInPosition);
+            telemetry.addData("pictureTaken: ", ((BeforeSamplePickupAutomatedv2)currentState).pictureTaken);
+            telemetry.addData("readyForPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).readyForPickup);
+            telemetry.addData("timeReset: ", ((BeforeSamplePickupAutomatedv2)currentState).timeReset);
+            telemetry.addData("finishedPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).finishedPickup);
+            telemetry.addData("adjusting: ", ((BeforeSamplePickupAutomatedv2)currentState).adjusting);
+            telemetry.addData("pickupable: ", ((BeforeSamplePickupAutomatedv2)currentState).pickupable);
+            telemetry.update();
+
 
 //            String pointString = Arrays.stream(((BeforeSamplePickupAutomated)currentState).points).map(p -> "(" + p.x + "," + p.y + ")").collect(Collectors.joining(","));
 //            telemetry.addData("points: ", pointString);
@@ -229,6 +248,7 @@ public class GeneralTeleop {
                         || Arrays.asList(state.getDependencyStates()).contains(GeneralTeleop.currentState)
         ) {
             GeneralTeleop.slowMode = false;
+            currentState.reset();
             currentState = state;
         }
     }
