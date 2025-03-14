@@ -24,8 +24,8 @@ public class FConstants {
         // remember to update this (kg)
         FollowerConstants.mass = 11.76;
 
-        FollowerConstants.xMovement = 59.07727; // now: 59.07727, 62.428, 57.5, 60.07, 64. Before: 66.14857687058154
-        FollowerConstants.yMovement = 52.546002199434454; // now: 55.2, 52.86, 54
+        FollowerConstants.xMovement = 59.07727;
+        FollowerConstants.yMovement = 52.546002199434454;
 
         FollowerConstants.forwardZeroPowerAcceleration = -45; // now: -46, -49, -43, -48, -42 before: -39.623173380073275
         FollowerConstants.lateralZeroPowerAcceleration = -74.37752447;  // before: 71.09840593627987
@@ -45,7 +45,7 @@ public class FConstants {
 //        FollowerConstants.secondaryDrivePIDFCoefficients.setCoefficients(0.1,0,0,0.6,0); // Not being used, @see useSecondaryDrivePID
 
         FollowerConstants.zeroPowerAccelerationMultiplier = 5;
-        FollowerConstants.centripetalScaling = 0.0005; // used to be .0007
+        FollowerConstants.centripetalScaling = 0.0003;
 
         FollowerConstants.pathEndTimeoutConstraint = 100;
         FollowerConstants.pathEndTValueConstraint = 0.990; // from 0 to 1
