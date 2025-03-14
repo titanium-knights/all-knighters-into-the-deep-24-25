@@ -6,15 +6,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Arm {
     private final Servo armServo;
 
-    private static final double INIT_POSITION = 0.3;
-    private static final double RECEIVING_POSITION = 0.08;
-    private static final double PRE_SCORE_SAMPLE_POS = 0.4;
-    private static final double SCORE_SAMPLE_POS = 0.75;
-    private static final double SCORE_SPECIMEN_POS = 0.80;
-    private static final double LOW_HANG_POSITION = 0.73;
-    private static final double GET_OUT_OF_WAY_POS = 0.8;
-    private static final double RAISING_SLIDES_POSITION = 0.2;
-    private static final double ARM_SPEED = 0.005;
+    public static double INIT_POSITION = 0.3;
+    public static double RECEIVING_POSITION = 0.05;
+    public static double SCORE_SAMPLE_POS = 0.65;
+    public static double SCORE_SPECIMEN_POS = 0.80;
+    public static double LOW_HANG_POSITION = 0.8;
+    public static double GET_OUT_OF_WAY_POS = 0.8;
+    public static double RAISING_SLIDES_POSITION = 0.2;
+    public static double ARM_SPEED = 0.005;
 
     public Arm(HardwareMap hmap) {
         this.armServo = hmap.get(Servo.class, CONFIG.armServo);
@@ -28,7 +27,6 @@ public class Arm {
         armServo.setPosition(INIT_POSITION);
     }
 
-    public void toPreScoreSamplePos() {armServo.setPosition(PRE_SCORE_SAMPLE_POS);}
     public void toScoreSamplePos() {
         armServo.setPosition(SCORE_SAMPLE_POS);
     }
@@ -40,17 +38,11 @@ public class Arm {
     }
     public void raisinPos() {armServo.setPosition(RAISING_SLIDES_POSITION);}
 
-    public boolean inScoredSamplePosition() {
+    public boolean inScoredPosition() {
         return armServo.getPosition() == SCORE_SAMPLE_POS;
     }
-    public boolean inScoredSpecimenPosition() {
-        return armServo.getPosition() == SCORE_SPECIMEN_POS;
-    }
-    public boolean inPreScoreSamplePosition() {
-        return armServo.getPosition() == PRE_SCORE_SAMPLE_POS;
-    }
-    public boolean inGetOutOfWayPosition() {
-        return armServo.getPosition() == GET_OUT_OF_WAY_POS;
+    public boolean inPreScorePosition() {
+        return armServo.getPosition() == RAISING_SLIDES_POSITION;
     }
     public boolean inReceivingPosition() {
         return armServo.getPosition() == RECEIVING_POSITION;

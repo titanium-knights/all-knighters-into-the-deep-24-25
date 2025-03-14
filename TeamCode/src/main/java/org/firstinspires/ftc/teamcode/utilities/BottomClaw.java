@@ -35,7 +35,8 @@ public class BottomClaw {
 
     // rotates claw to position at theta radians
     public void rotate(double theta) {
-        this.clawRotator.setPosition(theta * 0.68 / (Math.PI));
+       this.clawRotator.setPosition(theta * 0.68 / (Math.PI));
+//          this.clawRotator.setPosition(theta);
     }
 
     public double getClawOpenerPosition() {
@@ -108,4 +109,7 @@ public class BottomClaw {
     }
     public void rightWristHalfUpPosition() {rightWristServo.setPosition(RIGHT_WRIST_HALFUP_POSITION);}
     public void rightWristInitPosition() {rightWristServo.setPosition(RIGHT_WRIST_INIT_POSITION);}
+
+
+
 }

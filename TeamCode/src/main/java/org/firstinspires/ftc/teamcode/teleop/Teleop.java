@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.teleop.state.Init;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 @TeleOp(name = "Automated Driver Teleop", group = "User Control")
 public class Teleop extends OpMode {
@@ -44,7 +45,9 @@ public class Teleop extends OpMode {
     private boolean beforePickup = false;
 
     private boolean manualMode = false;
-    private ConfidenceOrientationVectorPipeline.Color color = ConfidenceOrientationVectorPipeline.Color.BLUE;
+
+    public static String colorString = "blue";
+    private ConfidenceOrientationVectorPipeline.Color color = colorString.equals("blue") ? ConfidenceOrientationVectorPipeline.Color.BLUE : ConfidenceOrientationVectorPipeline.Color.RED;
 
     public enum Strategy {
         SAMPLE,
@@ -91,6 +94,8 @@ public class Teleop extends OpMode {
 
     @Override
     public void loop() {
+        subsystemManager.swiper.up();
+        subsystemManager.topClaw.maintainPosition();
         // non-state based logic
 
         // claw logic
@@ -151,6 +156,9 @@ public class Teleop extends OpMode {
         if (Teleop.slowMode) {
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
         } else {
+            if (gamepad2.left_stick_x > 0.3){
+                telemetry.addData("gamepad2: ", gamepad2.left_stick_x);
+            }
             subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
         }
 
@@ -191,6 +199,10 @@ public class Teleop extends OpMode {
             telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomated)currentState).rotationAngle);
             telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomated)currentState).rotationTheta);
             telemetry.addData("fps: ", subsystemManager.webcam.getFps());
+
+//            String pointString = Arrays.stream(((BeforeSamplePickupAutomated)currentState).points).map(p -> "(" + p.x + "," + p.y + ")").collect(Collectors.joining(","));
+//            telemetry.addData("points: ", pointString);
+
             if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
                 rotatorButton = ButtonPressState.PRESSED_GOOD;
                 if (clawPosition == ClawPosition.HORIZONTAL) {

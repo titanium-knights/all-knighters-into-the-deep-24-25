@@ -8,6 +8,7 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 // We use static imports for convenience
@@ -35,10 +36,10 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public static final Scalar LOWER_BLUE = new Scalar(111, 79, 59);
     public static final Scalar UPPER_BLUE = new Scalar(115, 255, 255);
 
-    // Define the red color range in HSV
-    public static final Scalar LOWER_RED_1 = new Scalar(0,119,113);
-    public static final Scalar UPPER_RED_1 = new Scalar(5, 244, 255);
-    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 0);
+    // Define the red color range in HSV, note need two ranges as red is at both ends
+    public static final Scalar LOWER_RED_1 = new Scalar(0,80,74);
+    public static final Scalar UPPER_RED_1 = new Scalar(10, 255, 255);
+    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 54);
     public static final Scalar UPPER_RED_2 = new Scalar(179, 255, 255);
 
     // Class to hold the result of each detection: bounding box + confidence
@@ -46,9 +47,15 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         public RotatedRect rect;  // in the *downscaled* coordinate space
         public double confidence;
 
-        public DetectionResult(RotatedRect rect, double confidence) {
+        public Point[] points;
+        public boolean pickupable;
+
+        public DetectionResult(RotatedRect rect, double confidence, Point[] points, boolean pickupable) {
             this.rect = rect;
             this.confidence = confidence;
+            this.points = points;
+            this.pickupable = pickupable;
+//            this.points = points;
         }
     }
 
@@ -71,14 +78,13 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         BLUE
     }
 
-    Color color;
-    Teleop.Strategy strategy;
+    Color color = Color.BLUE;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
+    public ConfidenceOrientationVectorPipeline() {
     }
 
-    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
+    Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, blue_mask, red_mask_1, red_mask_2, mask, hierarchy;
 
 
     @Override
@@ -114,8 +120,14 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
         // 5b) Threshold for specified color
         color_mask = new Mat();
-        Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
+        if (color == Color.BLUE){
+            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
+        } else if (color == Color.RED){
+            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
+            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
+            Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
 
+        }
         mask = new Mat();
         Core.bitwise_or(yellow_mask, color_mask, mask);
 
@@ -128,12 +140,15 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             return canvas;
         }
 
+
+
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
-            if (contourArea < 30000) {
+            if (contourArea < 1000) {
                 continue;
             }
+            boolean pickupable = contourArea >= 30000;
 
             MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
             RotatedRect rect = Imgproc.minAreaRect(contour2f);
@@ -161,16 +176,22 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
                 if (points[1].x == points[2].x) {
                     angle = 90;
                 } else {
-                    angle = Math.atan((points[2].y - points[1].y) / (points[2].x - points[1].y))  * 180 / Math.PI;
+                    angle = Math.atan((points[2].y - points[1].y) / (points[2].x - points[1].x))  * 180 / Math.PI;
                 }
             }
 
             rect.angle = angle;
-            detectionResults.add(new DetectionResult(rect, confidence));
+            detectionResults.add(new DetectionResult(rect, confidence, points, pickupable));
         }
 
         // 8) Sort descending by confidence
-        Collections.sort(detectionResults, (r1, r2) -> Double.compare(r2.confidence, r1.confidence));
+        detectionResults.sort((a, b) -> {
+            if (a.pickupable != b.pickupable) {
+                return a.pickupable ? -1 : 1;
+            }
+            return Double.compare(b.confidence, a.confidence);
+        });
+
 
         if (detectionResults.isEmpty()) {
             bestDetectionResult = null;
@@ -247,12 +268,18 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         double x, y; // coordinates of center of rotated rectangle
         double theta; // angle of rotated rectangle
         double confidence; // confidence of detection
+
+        public Point[] points;
+
+        public boolean pickupable;
         public DetectionResultScaledData(DetectionResult dr) {
             RotatedRect r = scaleRotatedRect(dr.rect, 1.0 / SCALE_FACTOR);
             this.x = r.center.x;
             this.y = r.center.y;
             this.theta = r.angle;
             this.confidence = dr.confidence;
+            this.points = dr.points;
+            this.pickupable = dr.pickupable;
         }
 
         public DetectionResultScaledData(double x, double y, double theta, double confidence) {
