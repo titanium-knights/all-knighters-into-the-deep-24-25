@@ -67,15 +67,15 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         xCoord = 320;
         encoder = 0;
         telemetry.addLine("y coordinate: " + yCoord);
-        telemetry.addLine("horizontal slides: " + abs(subsystemManager.horizontalSlides.getEncoder()));
-        telemetry.addLine("condition true?" + (yCoord < 360 && abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
+        telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
+        telemetry.addLine("condition true?" + (yCoord < 360 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward));
         telemetry.update();
 
         ArrayList<Double> thetas = new ArrayList<>();
 
         while (yCoord == -1 && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward) {
             telemetry.addLine("y coordinate: " + yCoord);
-            telemetry.addLine("horizontal slides: " + abs(subsystemManager.horizontalSlides.getEncoder()));
+            telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
             telemetry.addLine("fps" + subsystemManager.webcam.getFps());
             telemetry.update();
@@ -83,7 +83,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
 
             subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
 
-            if (abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
+            if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
                 telemetry.addLine("we got here!");
                 telemetry.update();
                 drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
@@ -93,7 +93,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
                 encoder = max(encoder - distanceDelay*25.2/120*537, -subsystemManager.horizontalSlides.maxForward);
             }
 
-            if (yCoord != -1 && abs(xCoord - 320) < WINDOW) {
+            if (yCoord != -1 && Math.abs(xCoord - 320) < WINDOW) {
                 thetas.add(drsd.getTheta());
             }
         }
