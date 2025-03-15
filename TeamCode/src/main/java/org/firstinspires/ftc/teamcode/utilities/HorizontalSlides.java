@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -56,7 +57,7 @@ public class HorizontalSlides {
     }
 
     public boolean slideToPosition(int encoderValue) {
-        int targetPosition = min(encoderValue, maxForward);
+        int targetPosition = max(encoderValue, -maxForward);
         if (encoderValueWithinBufferOfTarget(targetPosition)) {
             stop();
             return true;

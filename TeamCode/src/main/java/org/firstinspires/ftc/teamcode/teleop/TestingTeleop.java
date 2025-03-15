@@ -34,17 +34,22 @@ public class TestingTeleop extends OpMode {
             //manager.bottomClaw.closeClaw();
             //manager.bottomClaw.orthogonalClawRotatorPosition();
             telemetry.addData("closed", true);
-        } else if (gamepad1.a) {
+        } else if (gamepad1.dpad_left) {
             manager.bottomClaw.rotate(BottomClaw.TESTING_THETA);
-        } else if (gamepad1.b) {
+        } else if (gamepad1.dpad_up) {
             manager.swiper.up();
-        } else if (gamepad1.x) {
+        } else if (gamepad1.dpad_down) {
             manager.swiper.down();
+        } else if (gamepad1.left_stick_y > 0.1f){
+            manager.drive.move(0, 0.3, 0);
+        } else if (gamepad1.left_stick_y < -0.1f){
+            manager.drive.move(0, 0.1, 0);
         }
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = manager.webcam.bestDetectionCoordsAngle();
         telemetry.addData("x-coord: ", drsd.getX());
         telemetry.addData("y-coord: ", drsd.getY());
         telemetry.addData("theta: ", drsd.getTheta());
+        telemetry.addData("size:", drsd.size);
 
         telemetry.addData("claw rotation value", manager.bottomClaw.getClawRotatorPosition());
         telemetry.update();

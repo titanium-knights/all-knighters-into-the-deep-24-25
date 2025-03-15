@@ -29,7 +29,6 @@ public class Webcam {
         this.pipeline = new ConfidenceOrientationVectorPipeline();
 
         pipeline.setColor(color);
-        pipeline.setStrategy(strategy);
 
         if (stream == 1) FtcDashboard.getInstance().startCameraStream(cam, 0);
 
@@ -81,5 +80,6 @@ public class Webcam {
 
 
     public void setColor(ConfidenceOrientationVectorPipeline.Color color){pipeline.setColor(color);}
+    public void setStrategy(Teleop.Strategy strategy) {pipeline.setStrategy(strategy);}
 
 }

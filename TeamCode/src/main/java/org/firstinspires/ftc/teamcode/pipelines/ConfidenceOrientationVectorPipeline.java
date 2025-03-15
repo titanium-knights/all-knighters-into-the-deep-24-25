@@ -24,9 +24,12 @@ import com.acmerobotics.dashboard.config.Config;
  *  4) Finds contours, computes bounding boxes + confidence
  *  5) Sorts by confidence, draws the top 5 bounding boxes on the *original* image scale
  */
+
+
 @Config
 public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     // You can tweak these
+    public static int minSize = 15000;
     public static final double SCALE_FACTOR = 0.5; // Downscale 50%
     public static final int BLUR_RADIUS = 1;       // Radius=1 => 3x3 kernel
     public static final int SKIP_FRAMES = 3;       // Denoise every 3rd frame
@@ -36,7 +39,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     public static final Scalar UPPER_YELLOW = new Scalar(35, 252, 255);
 
     // Define the blue color range in HSV
-    public static final Scalar LOWER_BLUE = new Scalar(100, 92, 0);
+    public static final Scalar LOWER_BLUE = new Scalar(100, 136, 0);
     public static final Scalar UPPER_BLUE = new Scalar(142, 255, 255);
 
     // Define the red color range in HSV, note need two ranges as red is at both ends
@@ -53,11 +56,14 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         public Point[] points;
         public boolean pickupable;
 
-        public DetectionResult(RotatedRect rect, double confidence, Point[] points, boolean pickupable) {
+        public double size;
+
+        public DetectionResult(RotatedRect rect, double confidence, Point[] points, boolean pickupable, double size) {
             this.rect = rect;
             this.confidence = confidence;
             this.points = points;
             this.pickupable = pickupable;
+            this.size = size;
 //            this.points = points;
         }
     }
@@ -168,7 +174,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             if (contourArea < 1000) {
                 continue;
             }
-            boolean pickupable = contourArea >= 30000;
+            boolean pickupable = contourArea >= minSize;
 
             MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
             RotatedRect rect = Imgproc.minAreaRect(contour2f);
@@ -201,7 +207,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             }
 
             rect.angle = angle;
-            detectionResults.add(new DetectionResult(rect, confidence, points, pickupable));
+            detectionResults.add(new DetectionResult(rect, confidence, points, pickupable, contourArea));
         }
 
         // 8) Sort descending by confidence
@@ -292,6 +298,8 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         public Point[] points;
 
         public boolean pickupable;
+
+        public double size;
         public DetectionResultScaledData(DetectionResult dr) {
             RotatedRect r = scaleRotatedRect(dr.rect, 1.0 / SCALE_FACTOR);
             this.x = r.center.x;
@@ -300,6 +308,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             this.confidence = dr.confidence;
             this.points = dr.points;
             this.pickupable = dr.pickupable;
+            this.size = dr.size;
         }
 
         public DetectionResultScaledData(double x, double y, double theta, double confidence) {

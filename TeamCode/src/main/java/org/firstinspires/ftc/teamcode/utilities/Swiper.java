@@ -14,7 +14,10 @@ public class Swiper {
     public static double downPos = 0.75;
 
     public Swiper(HardwareMap hmap) {
+
         this.swiper = hmap.servo.get(CONFIG.swiperServo);
+        up();
+        up = true;
     }
 
     public void up() {

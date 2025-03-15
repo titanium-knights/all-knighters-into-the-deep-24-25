@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+@Config
 public class Slides {
 
     // Preset power values for both directions (based on weight)
@@ -14,7 +16,7 @@ public class Slides {
     // Preset encoder values
     public final int maxHeight = -2200;
     public final int minHeight = 0;
-    public final int BUFFER = 50;
+    public static int BUFFER = 50;
     private final DcMotor slidesMotor;
     private SlideState currentState;
 

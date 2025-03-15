@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static java.lang.Math.abs;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -67,6 +69,8 @@ public class GeneralTeleop {
     private ButtonPressState rotatorButton = ButtonPressState.UNPRESSED;
     private ButtonPressState manualButton = ButtonPressState.UNPRESSED;
 
+    private ButtonPressState left_dpad = ButtonPressState.UNPRESSED;
+
     private ButtonPressState strategyButton = ButtonPressState.UNPRESSED;
     enum ClawPosition {
         HORIZONTAL,
@@ -100,9 +104,9 @@ public class GeneralTeleop {
 
         // non-state based logic
 
-
-        if (strategy == Strategy.SAMPLE) telemetry.addData("Strategy: ", "Sample");
-        if (strategy == Strategy.SPECIMEN) telemetry.addData("Strategy: ", "Specimen");
+//
+//        if (strategy == Strategy.SAMPLE) telemetry.addData("Strategy: ", "Sample");
+//        if (strategy == Strategy.SPECIMEN) telemetry.addData("Strategy: ", "Specimen");
 
         // claw logic
         if (gamepad1.left_bumper && topClawButton == ButtonPressState.UNPRESSED) {
@@ -142,14 +146,23 @@ public class GeneralTeleop {
         }
 
         // drivetrain
-        if (GeneralTeleop.slowMode) {
-            subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
-        } else {
-            if (gamepad2.left_stick_x > 0.3){
-                telemetry.addData("gamepad2: ", gamepad2.left_stick_x);
-            }
+        if (currentState == beforeSamplePickupAutomatedStatev2 && (abs(gamepad2.left_stick_x) > 0.1f || abs(gamepad2.left_stick_y) > 0.1f || abs(gamepad2.right_stick_x) > 0.1f)){
+            switchToState(neutralState);
+            telemetry.addData("switched to neutral", "a");
             subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
+
+        } else if (currentState != beforeSamplePickupAutomatedStatev2){
+            telemetry.addLine("OMGGGGGGG");
+            if (GeneralTeleop.slowMode) {
+                subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
+            } else {
+                if (gamepad2.left_stick_x > 0.3){
+                    telemetry.addData("gamepad2: ", gamepad2.left_stick_x);
+                }
+                subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
+            }
         }
+
 
         // logic to run to states
         if (gamepad1.dpad_left) {
@@ -181,26 +194,26 @@ public class GeneralTeleop {
         // run the current state
         if (currentState == beforeSamplePickupAutomatedStatev2) {
             currentState.runState(gamepad1, gamepad2);
-            telemetry.addData("og angle: ", ((BeforeSamplePickupAutomatedv2)currentState).angleSeen);
-            telemetry.addData("angle: ", ((BeforeSamplePickupAutomatedv2)currentState).angle);
-            telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomatedv2)currentState).rotationAngle);
-            telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomatedv2)currentState).rotationTheta);
-            telemetry.addData("fps: ", subsystemManager.webcam.getFps());
-
-            telemetry.addData("wristRotated: ", ((BeforeSamplePickupAutomatedv2)currentState).wristRotated);
-            telemetry.addData("slidesExtending: ", ((BeforeSamplePickupAutomatedv2)currentState).slidesExtending);
-            telemetry.addData("objectDetected: ", ((BeforeSamplePickupAutomatedv2)currentState).objectDetected);
-            telemetry.addData("objectInFrame: ", ((BeforeSamplePickupAutomatedv2)currentState).objectInFrame);
-            telemetry.addData("slidesInPosition: ", ((BeforeSamplePickupAutomatedv2)currentState).slidesInPosition);
-            telemetry.addData("pictureTaken: ", ((BeforeSamplePickupAutomatedv2)currentState).pictureTaken);
-            telemetry.addData("readyForPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).readyForPickup);
-            telemetry.addData("timeReset: ", ((BeforeSamplePickupAutomatedv2)currentState).timeReset);
-            telemetry.addData("finishedPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).finishedPickup);
-            telemetry.addData("adjusting: ", ((BeforeSamplePickupAutomatedv2)currentState).adjusting);
-            telemetry.addData("pickupable: ", ((BeforeSamplePickupAutomatedv2)currentState).pickupable);
-            telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
-            telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
-            telemetry.update();
+//            telemetry.addData("og angle: ", ((BeforeSamplePickupAutomatedv2)currentState).angleSeen);
+//            telemetry.addData("angle: ", ((BeforeSamplePickupAutomatedv2)currentState).angle);
+//            telemetry.addData("rotation angle: ", ((BeforeSamplePickupAutomatedv2)currentState).rotationAngle);
+//            telemetry.addData("rotation theta: ", ((BeforeSamplePickupAutomatedv2)currentState).rotationTheta);
+//            telemetry.addData("fps: ", subsystemManager.webcam.getFps());
+//
+//            telemetry.addData("wristRotated: ", ((BeforeSamplePickupAutomatedv2)currentState).wristRotated);
+//            telemetry.addData("slidesExtending: ", ((BeforeSamplePickupAutomatedv2)currentState).slidesExtending);
+//            telemetry.addData("objectDetected: ", ((BeforeSamplePickupAutomatedv2)currentState).objectDetected);
+//            telemetry.addData("objectInFrame: ", ((BeforeSamplePickupAutomatedv2)currentState).objectInFrame);
+//            telemetry.addData("slidesInPosition: ", ((BeforeSamplePickupAutomatedv2)currentState).slidesInPosition);
+//            telemetry.addData("pictureTaken: ", ((BeforeSamplePickupAutomatedv2)currentState).pictureTaken);
+//            telemetry.addData("readyForPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).readyForPickup);
+//            telemetry.addData("timeReset: ", ((BeforeSamplePickupAutomatedv2)currentState).timeReset);
+//            telemetry.addData("finishedPickup: ", ((BeforeSamplePickupAutomatedv2)currentState).finishedPickup);
+//            telemetry.addData("adjusting: ", ((BeforeSamplePickupAutomatedv2)currentState).adjusting);
+//            telemetry.addData("pickupable: ", ((BeforeSamplePickupAutomatedv2)currentState).pickupable);
+//            telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
+//            telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
+//            //telemetry.update();
 
 
 //            String pointString = Arrays.stream(((BeforeSamplePickupAutomated)currentState).points).map(p -> "(" + p.x + "," + p.y + ")").collect(Collectors.joining(","));
@@ -231,9 +244,9 @@ public class GeneralTeleop {
         prevGamepad1.copy(gamepad1);
         prevGamepad2.copy(gamepad2);
 
-        telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
-        telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
-        telemetry.update();
+//        telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
+//        telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
+//        //telemetry.update();
     }
 
 

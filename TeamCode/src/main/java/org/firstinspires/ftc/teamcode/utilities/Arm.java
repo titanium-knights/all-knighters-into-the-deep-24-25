@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@Config
 public class Arm {
     private final Servo armServo;
 
     public static double INIT_POSITION = 0.3;
-    public static double RECEIVING_POSITION = 0.1;
+    public static double RECEIVING_POSITION = 0.08;
     public static double SCORE_SAMPLE_POS = 0.65;
     public static double SCORE_SPECIMEN_POS = 0.80;
     public static double LOW_HANG_POSITION = 0.8;
