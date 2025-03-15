@@ -18,10 +18,12 @@ public class BeforeSampleScore extends TeleopState {
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         Teleop.setSlowMode(true);
         TeleopManual.setSlowMode(true);
-        subsystemManager.slides.slideToPosition(SlideState.TOP); // slides move to top
-        subsystemManager.arm.toScoreSamplePos();
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.openClaw();
+        if (!subsystemManager.bottomClaw.isClosed()) {
+            subsystemManager.arm.toScoreSamplePos();
+            subsystemManager.slides.slideToPosition(SlideState.TOP); // slides move to top
+        }
     }
 }

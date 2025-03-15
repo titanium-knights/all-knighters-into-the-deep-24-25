@@ -247,6 +247,10 @@ public class GeneralTeleop {
 //        telemetry.addData("hori slides: ", subsystemManager.horizontalSlides.getEncoder());
 //        telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
 //        //telemetry.update();
+        telemetry.addData("what state are we in? ", currentState.getClass().getSimpleName());
+        telemetry.addData("left stick x: ", gamepad2.left_stick_x);
+        telemetry.addData("left stick y: ", gamepad2.left_stick_y);
+        telemetry.addData("right stick x: ", gamepad2.right_stick_x);
     }
 
 

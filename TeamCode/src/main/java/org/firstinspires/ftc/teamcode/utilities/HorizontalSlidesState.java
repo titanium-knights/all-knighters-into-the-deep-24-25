@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.utilities;
 
 public enum HorizontalSlidesState {
-    IN(50),
+    IN(0),
     TRANSFER(-150),
     OUT(-2400),
     TRANSFER_OUT_OF_SUBMERSIBLE(-800);
