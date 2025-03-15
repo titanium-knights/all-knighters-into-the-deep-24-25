@@ -181,6 +181,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
                 subsystemManager.drive.move(-driveSpeed, 0, 0);
             } else if (xCoord != -1 && minAreaMet){
                 pickupable = true;
+                telemetry.addLine("we've reached the pickupable point");
                 subsystemManager.drive.move(0, 0, 0);
                 angle = drsd.getTheta();
                 pickup(angle, xCoord, yCoord, minAreaMet);
