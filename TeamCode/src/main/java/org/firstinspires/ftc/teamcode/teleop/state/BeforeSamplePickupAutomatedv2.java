@@ -41,7 +41,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     public static double slideSpeed = 0.7;
     public static int servoRotationDelay = 1500;
 
-    public static double slidesWithdrawForAdjust = -0.5;
+    public static double slidesWithdrawForAdjust = -1;
 
     public static double slidesAdvanceForPickUp = 4;
 
@@ -68,7 +68,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     public static int pickUpWindow = 25;
     public static int clawMidpoint = 300;
 
-    public static double adjustmentToClaw;
+    public static double adjustmentToClaw = 3;
 
     public static double driveSpeed = 0.3;
 
