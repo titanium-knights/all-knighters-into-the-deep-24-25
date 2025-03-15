@@ -297,7 +297,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
         public Point[] points;
 
-        public boolean pickupable;
+        public boolean pickupable = false;
 
         public double size;
         public DetectionResultScaledData(DetectionResult dr) {

@@ -135,7 +135,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
 
         if (!objectDetected){
             telemetry.addLine("We have not detected the object");
-            if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 0) { // change this
+            if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 500) { // change this
                 telemetry.addLine("we have seen something!");
                 try {
                     drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
@@ -148,17 +148,19 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
 
                 encoder = subsystemManager.horizontalSlides.getEncoder();
                 encoder = max(encoder - slidesWithdrawForAdjust*INTOENCODER, -subsystemManager.horizontalSlides.maxForward);
+
+                if (yCoord >= 100) {
+                    telemetry.addLine("we have seen something at the right position");
+                    objectDetected = true;
+                    subsystemManager.slides.stop();
+                    subsystemManager.horizontalSlides.slideToPosition((int) encoder);
+                } else{
+                    telemetry.update();
+                    return;
+                }
             }
 
-            if (yCoord >= 100) {
-                telemetry.addLine("we have seen something at the right position");
-                objectDetected = true;
-                subsystemManager.slides.stop();
-                subsystemManager.horizontalSlides.slideToPosition((int) encoder);
-            } else{
-                telemetry.update();
-                return;
-            }
+
 
         } else if (!pickupable) {
 
@@ -169,9 +171,12 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
             }
 
             telemetry.addLine("we are moving horizontally to align");
-            xCoord = drsd.getX();
-            yCoord = drsd.getY();
+            xCoord = drsd.getX() == -1 ? xCoord : drsd.getX();
+            yCoord = drsd.getY() == -1 ? yCoord : drsd.getY();
             minAreaMet = drsd.pickupable;
+
+            telemetry.addData("first condition: ", xCoord != -1 && xCoord < clawMidpoint - pickUpWindow);
+            telemetry.addData("second condition: ", xCoord != -1 && xCoord > clawMidpoint + pickUpWindow);
 
             if (xCoord != -1 && xCoord < clawMidpoint - pickUpWindow){
                 subsystemManager.drive.move(driveSpeed, 0, 0);
@@ -229,9 +234,6 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
         subsystemManager.horizontalSlides.slideToPosition((int) encoder);
         adjusting = true;
         telemetry.update();
-        time.reset();
-        while (time.seconds() < 3){}
-
 
 
         telemetry.addLine("we think we can pick up and now we are adjusting and running the pick up portion");
