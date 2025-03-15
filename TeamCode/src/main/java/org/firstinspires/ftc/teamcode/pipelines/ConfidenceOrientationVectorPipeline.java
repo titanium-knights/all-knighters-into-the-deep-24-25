@@ -175,7 +175,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
 
             // Confidence = ratio of contour area to bounding box area
             double boxArea = rect.size.width * rect.size.height;
-            double confidence = (boxArea > 0) ? (contourArea / boxArea) : 0;
+            double confidence = (boxArea > 0) ? (contourArea / boxArea) * 1 / Math.log(Math.abs(200 - rect.center.x)): 0;
             // Clamp
             confidence = Math.max(0, Math.min(1, confidence));
 

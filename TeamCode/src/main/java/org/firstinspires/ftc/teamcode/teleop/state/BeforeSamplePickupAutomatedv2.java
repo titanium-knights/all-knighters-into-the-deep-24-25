@@ -52,10 +52,17 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     public boolean timeReset = false;
     public boolean finishedPickup = false;
     public boolean adjusting = false;
+    public boolean minAreaMet = false;
+
+    public int yCoordOfFoundThing = -1;
+
+    public final ConfidenceOrientationVectorPipeline.DetectionResultScaledData defaultDRSD = new ConfidenceOrientationVectorPipeline.DetectionResultScaledData(-1, -1, -1, -1);
 
     ElapsedTime time = new ElapsedTime();
 
     double xCoord, yCoord, encoder;
+
+    public boolean inited = false;
     public BeforeSamplePickupAutomatedv2(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -65,10 +72,13 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
         Teleop.setSlowMode(true);
+        if (!inited) {
+            subsystemManager.bottomClaw.neutralClawRotatorPosition();
+            subsystemManager.bottomClaw.openClaw();
+            inited = true;
+        }
         subsystemManager.slides.slideToPosition(SlideState.BOTTOM);
-        subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristDownPosition(); // claw is rotated down
-        subsystemManager.bottomClaw.openClaw();
         subsystemManager.topClaw.open();
         subsystemManager.arm.toGetOutOfWay();
 
@@ -89,9 +99,16 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
     // Just when I thought I was out, they pull me back in.
     public void extendToPickupPosition(Gamepad gamepad1, Gamepad gamepad2) {
         if (finishedPickup) {
+            telemetry.addLine("we finished pickup!");
+            telemetry.update();
             return;
         }
-        ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
+        ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd;
+        try {
+            drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
+        } catch (Exception e) {
+            drsd = defaultDRSD;
+        }
         if (!slidesExtending && !objectDetected && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER){
             telemetry.addLine("we have started moving slides");
             telemetry.update();
@@ -108,11 +125,17 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
         if (!objectDetected){
             telemetry.addLine("We have not detected the object");
             if (Math.abs(subsystemManager.horizontalSlides.getEncoder()) >= 40) { // change this
-                telemetry.addLine("we are looking!");
-                drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
+                telemetry.addLine("we have seen something!");
+                try {
+                    drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
+                } catch (Exception e) {
+                    drsd = defaultDRSD;
+                }
+
                 xCoord = drsd.getX();
                 yCoord = drsd.getY();
-                pickupable = drsd.pickupable;
+                minAreaMet = drsd.pickupable;
+                pickupable = minAreaMet && xCoord >= 200 - 50 && xCoord <= 200 + 50;
                 angleSeen = drsd.getTheta();
 
                 encoder = subsystemManager.horizontalSlides.getEncoder();
@@ -122,6 +145,7 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
             if (yCoord >= 100) {
                 telemetry.addLine("we have seen something at the right position");
                 objectDetected = true;
+                subsystemManager.horizontalSlides.slideToPosition((int) encoder);
             } else{
                 telemetry.update();
                 return;
@@ -129,10 +153,10 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
             telemetry.update();
         } else if (!pickupable && Math.abs(subsystemManager.horizontalSlides.getEncoder()) <= subsystemManager.horizontalSlides.maxForward - (slidesAdvanceForPickUp - slidesWithdrawForAdjust) * INTOENCODER - 100) {
             telemetry.addLine("we are moving horizontally to align");
-            if (xCoord != -1 && xCoord < 2*WINDOW - 50){
+            if (xCoord != -1 && xCoord < 200 - 50){
                 subsystemManager.drive.move(0.5, 0, 0);
                 telemetry.addData("move: ", "positive");
-            } else if (xCoord > 2*WINDOW + 50){
+            } else if (xCoord > 200 + 50){
                 telemetry.addData("move: ", "negative");
                 subsystemManager.drive.move(-0.5, 0, 0);
             } else if (xCoord != -1){
@@ -140,7 +164,11 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
             }
             adjusting = true;
 
-            drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
+            try {
+                drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
+            } catch (Exception e) {
+                drsd = defaultDRSD;
+            }
             pickupable = pickupable || drsd.pickupable;
             xCoord = drsd.getX();
             yCoord = drsd.getY();
@@ -150,7 +178,6 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
             telemetry.update();
         } else if (pickupable) {
             drsd = subsystemManager.webcam.bestDetectionCoordsAngle();
-            angleSeen = drsd.getTheta();
             if (angleSeen == -1) {
                 return;
             }
@@ -204,5 +231,9 @@ public class BeforeSamplePickupAutomatedv2 extends TeleopState {
         pickupable = false;
         encoder = 0;
         finishedPickup = false;
+        inited = false;
+        adjusting = false;
+        minAreaMet = false;
+
     }
 }
