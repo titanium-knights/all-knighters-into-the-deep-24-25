@@ -44,6 +44,10 @@ public class TestingTeleop extends OpMode {
             manager.drive.move(0, 0.3, 0);
         } else if (gamepad1.left_stick_y < -0.1f){
             manager.drive.move(0, 0.1, 0);
+        } else if (gamepad1.a) {
+            manager.swiper.up();
+        } else if (gamepad1.b) {
+            manager.swiper.down();
         }
         ConfidenceOrientationVectorPipeline.DetectionResultScaledData drsd = manager.webcam.bestDetectionCoordsAngle();
         telemetry.addData("x-coord: ", drsd.getX());
