@@ -54,7 +54,7 @@ public class GeneralTeleop {
         SPECIMEN
 
     }
-    private Strategy strategy = Strategy.SAMPLE;
+    public Strategy strategy = Strategy.SAMPLE;
 
 
 
@@ -80,7 +80,7 @@ public class GeneralTeleop {
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         // instantiate all hardware util classes
-        subsystemManager = new SubsystemManager(hardwareMap, color);
+        subsystemManager = new SubsystemManager(hardwareMap, color, strategy);
         // register all teleop states
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupAutomatedStatev2 = new BeforeSamplePickupAutomatedv2(subsystemManager, hardwareMap, telemetry);

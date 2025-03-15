@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.GeneralTeleop;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
@@ -15,6 +16,7 @@ import java.util.List;
 import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.sun.tools.javac.jvm.Gen;
 
 /**
  * Pipeline that:
@@ -88,7 +90,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     }
 
 
-    Teleop.Strategy strategy = Teleop.Strategy.SAMPLE;
+    GeneralTeleop.Strategy strategy = GeneralTeleop.Strategy.SAMPLE;
 
     // Constructor
     public ConfidenceOrientationVectorPipeline() {
@@ -98,7 +100,7 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         this.color = color;
     }
 
-    public void setStrategy(Teleop.Strategy strategy){
+    public void setStrategy(GeneralTeleop.Strategy strategy){
         this.strategy = strategy;
     }
 
@@ -152,10 +154,12 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         }
 
         mask = new Mat();
-        Core.bitwise_or(yellow_mask, color_mask, mask);
-//        else if (strategy.equals(Teleop.Strategy.SPECIMEN)){
-//            mask = color_mask;
-//        }
+        if (strategy.equals(GeneralTeleop.Strategy.SAMPLE)) {
+            Core.bitwise_or(yellow_mask, color_mask, mask);
+
+        } else if (strategy.equals(GeneralTeleop.Strategy.SPECIMEN)){
+            mask = color_mask;
+        }
 
         // 6) Find contours in downscaled space
         List<MatOfPoint> contours = new ArrayList<>();

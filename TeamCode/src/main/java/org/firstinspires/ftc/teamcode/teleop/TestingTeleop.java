@@ -19,7 +19,7 @@ public class TestingTeleop extends OpMode {
 
     @Override
     public void init() {
-        manager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED);
+        manager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, GeneralTeleop.Strategy.SAMPLE);
     }
 
     @Override

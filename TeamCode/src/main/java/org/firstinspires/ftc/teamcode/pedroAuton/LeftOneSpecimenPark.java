@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.pedroAuton.config.LeftOneSpecimenParkConfi
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.FConstants;
 import org.firstinspires.ftc.teamcode.pedroPathing.constants.LConstants;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.teleop.GeneralTeleop;
 import org.firstinspires.ftc.teamcode.utilities.SubsystemManager;
 
 import org.firstinspires.ftc.teamcode.pedroAuton.config.states.InitAuton;
@@ -44,7 +45,7 @@ public class LeftOneSpecimenPark extends OpMode {
         opmodeTimer = new Timer();
 
         // Initialize hardware subsystems.
-        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED);
+        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, GeneralTeleop.Strategy.SAMPLE);
         subsystemManager.arm.toReceivingPos();
         subsystemManager.topClaw.close();
 

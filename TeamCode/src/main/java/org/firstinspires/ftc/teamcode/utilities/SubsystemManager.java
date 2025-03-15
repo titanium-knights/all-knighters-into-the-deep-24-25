@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.utilities;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.teleop.GeneralTeleop;
 
 /**
  * This class is used to encapsulate all utility classes for subsystems.
@@ -22,7 +23,7 @@ public class SubsystemManager {
     public Webcam webcam;
     public Swiper swiper;
 
-    public SubsystemManager(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color) {
+    public SubsystemManager(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, GeneralTeleop.Strategy strategy) {
         // add util class initializations here
         drive = new SimpleMecanumDrive(hmap);
         arm = new Arm(hmap);
@@ -30,7 +31,7 @@ public class SubsystemManager {
         horizontalSlides = new HorizontalSlides(hmap);
         topClaw = new TopClaw(hmap);
         slides = new Slides(hmap);
-        webcam = new Webcam(hmap, color);
+        webcam = new Webcam(hmap, color, strategy);
         swiper = new Swiper(hmap);
     }
 }
