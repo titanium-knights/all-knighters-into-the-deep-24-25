@@ -24,7 +24,8 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
 
     // Poses for the first retrieval motion.
     //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 126, Math.toRadians(155));
-    public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(22, 126, Math.toRadians(155));
+    //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(22, 126, Math.toRadians(155));
+    public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(20, 123, Math.toRadians(155));
     //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 128, Math.toRadians(155));
     //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 127, Math.toRadians(155));
     //public static final Pose RETRIEVE_SPECIMEN_POSE1 = new Pose(21.5, 126.5, Math.toRadians(155));
@@ -33,10 +34,11 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
     //public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(17.5, 128, Math.toRadians(180));
     //public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(17.4, 129, Math.toRadians(170));
     //public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(17.1, 129, Math.toRadians(170));
-    public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(19, 129, Math.toRadians(180));
+    //public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(19, 129, Math.toRadians(180));
+    public static final Pose RETRIEVE_SPECIMEN_POSE2 = new Pose(19, 128, Math.toRadians(180));
 
     // Poses for the third retrieval motion.
-    public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(45.3, 119, Math.toRadians(265));
+    public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(45.3, 119.5, Math.toRadians(265));
     //public static final Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(45, 117, Math.toRadians(265));
 
     // Poses for scoring additional specimen.

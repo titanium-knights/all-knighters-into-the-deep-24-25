@@ -15,9 +15,7 @@ public class SwipeFold extends AutonState {
     public boolean update() {
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN); // slides move to top
         subsystemManager.swiper.up();
-        // subsystemManager.bottomClaw.rightWristInitPosition(); // move claw down so it's not in the way of bucket
-        if (subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.IN && subsystemManager.horizontalSlides.isIdle()
-            && !subsystemManager.swiper.getUpStatus()) {
+        if (subsystemManager.horizontalSlides.getSlidesState() == HorizontalSlidesState.IN && subsystemManager.horizontalSlides.isIdle()) {
             return true;
         } else {
             return false;
