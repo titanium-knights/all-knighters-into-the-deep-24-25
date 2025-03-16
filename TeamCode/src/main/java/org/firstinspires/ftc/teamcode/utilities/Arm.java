@@ -29,6 +29,7 @@ public class Arm {
         armServo.setPosition(INIT_POSITION);
     }
 
+    public void toPreScoreSamplePos() {armServo.setPosition(PRE_SCORE_SAMPLE_POS);}
     public void toScoreSamplePos() {
         armServo.setPosition(SCORE_SAMPLE_POS);
     }
@@ -40,11 +41,17 @@ public class Arm {
     }
     public void raisinPos() {armServo.setPosition(RAISING_SLIDES_POSITION);}
 
-    public boolean inScoredPosition() {
+    public boolean inScoredSamplePosition() {
         return armServo.getPosition() == SCORE_SAMPLE_POS;
     }
-    public boolean inPreScorePosition() {
-        return armServo.getPosition() == RAISING_SLIDES_POSITION;
+    public boolean inScoredSpecimenPosition() {
+        return armServo.getPosition() == SCORE_SPECIMEN_POS;
+    }
+    public boolean inPreScoreSamplePosition() {
+        return armServo.getPosition() == PRE_SCORE_SAMPLE_POS;
+    }
+    public boolean inGetOutOfWayPosition() {
+        return armServo.getPosition() == GET_OUT_OF_WAY_POS;
     }
     public boolean inReceivingPosition() {
         return armServo.getPosition() == RECEIVING_POSITION;

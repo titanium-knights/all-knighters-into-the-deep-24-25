@@ -5,7 +5,9 @@ import static org.firstinspires.ftc.teamcode.teleop.Teleop.SLOW_MODE_MULTIPLIER;
 import static java.lang.Double.min;
 import static java.lang.Math.max;
 
+
 import com.acmerobotics.dashboard.FtcDashboard;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -40,8 +42,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
     public static double slidesWithdrawForAdjust = -0.5;
 
     public static double slidesAdvanceForPickUp = 4;
-
-//    public Point[] points;
+  
     public BeforeSamplePickupAutomated(SubsystemManager subsystemManager, HardwareMap hmap, Telemetry telemetry) {
         super(subsystemManager);
         this.hmap = hmap;
@@ -57,6 +58,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         subsystemManager.bottomClaw.openClaw();
         subsystemManager.topClaw.open();
         subsystemManager.arm.toGetOutOfWay();
+
 
         try {
             Thread.sleep(slideDelay);
@@ -88,7 +90,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
             telemetry.addLine("y coordinate: " + yCoord);
             telemetry.addLine("horizontal slides: " + Math.abs(subsystemManager.horizontalSlides.getEncoder()));
             telemetry.addLine("horizontal slides power: " + subsystemManager.horizontalSlides.getPower());
-            telemetry.addLine("angle detected:" + drsd.getTheta());
+            telemetry.addLine("fps" + subsystemManager.webcam.getFps());
             telemetry.update();
 
             subsystemManager.horizontalSlides.manualForward(slideSpeed);
@@ -164,6 +166,7 @@ public class BeforeSamplePickupAutomated extends TeleopState {
         if (angle < 0) {
             angle += 180;
         }
+        angle = 180 - angle;
         telemetry.addData("angle: ", angle);
 
         rotationAngle = (angle + 90) % 180;

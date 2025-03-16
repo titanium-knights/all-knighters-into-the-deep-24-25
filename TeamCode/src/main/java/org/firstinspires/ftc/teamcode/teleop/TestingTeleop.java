@@ -24,6 +24,8 @@ public class TestingTeleop extends OpMode {
 
     @Override
     public void loop() {
+        if (gamepad1.y) manager.drive.move(0,-0.2,0);
+        else manager.drive.move(0,0,0);
         if (gamepad1.left_bumper) {
             manager.bottomClaw.rightWristHalfUpPosition();
             //manager.bottomClaw.openClaw();

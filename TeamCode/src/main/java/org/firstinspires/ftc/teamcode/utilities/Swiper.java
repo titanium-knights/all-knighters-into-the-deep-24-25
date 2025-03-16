@@ -11,13 +11,11 @@ public class Swiper {
     private boolean up = true;
 
     public static double upPos = .17;
-    public static double downPos = 0.75;
+
+    public static double downPos = 0.775;
 
     public Swiper(HardwareMap hmap) {
-
         this.swiper = hmap.servo.get(CONFIG.swiperServo);
-        up();
-        up = true;
     }
 
     public void up() {
