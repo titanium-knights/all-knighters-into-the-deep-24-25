@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.pipelines;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.teleop.GeneralTeleop;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
@@ -8,10 +9,14 @@ import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 // We use static imports for convenience
 import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
+
+import com.acmerobotics.dashboard.config.Config;
+import com.sun.tools.javac.jvm.Gen;
 
 /**
  * Pipeline that:
@@ -21,24 +26,28 @@ import static org.firstinspires.ftc.teamcode.pipelines.DenoiseUtils.downscale;
  *  4) Finds contours, computes bounding boxes + confidence
  *  5) Sorts by confidence, draws the top 5 bounding boxes on the *original* image scale
  */
+
+
+@Config
 public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
     // You can tweak these
+    public static int minSize = 15000;
     public static final double SCALE_FACTOR = 0.5; // Downscale 50%
     public static final int BLUR_RADIUS = 1;       // Radius=1 => 3x3 kernel
     public static final int SKIP_FRAMES = 3;       // Denoise every 3rd frame
 
     // Define the yellow color range in HSV
-    public static final Scalar LOWER_YELLOW = new Scalar(14, 141, 215);
+    public static final Scalar LOWER_YELLOW = new Scalar(16, 141, 215);
     public static final Scalar UPPER_YELLOW = new Scalar(35, 252, 255);
 
     // Define the blue color range in HSV
-    public static final Scalar LOWER_BLUE = new Scalar(111, 79, 59);
-    public static final Scalar UPPER_BLUE = new Scalar(115, 255, 255);
+    public static final Scalar LOWER_BLUE = new Scalar(100, 136, 0);
+    public static final Scalar UPPER_BLUE = new Scalar(142, 255, 255);
 
-    // Define the red color range in HSV
-    public static final Scalar LOWER_RED_1 = new Scalar(0,119,113);
-    public static final Scalar UPPER_RED_1 = new Scalar(5, 244, 255);
-    public static final Scalar LOWER_RED_2 = new Scalar(173, 118, 0);
+    // Define the red color range in HSV, note need two ranges as red is at both ends
+    public static final Scalar LOWER_RED_1 = new Scalar(0,92,0);
+    public static final Scalar UPPER_RED_1 = new Scalar(14, 255, 255);
+    public static final Scalar LOWER_RED_2 = new Scalar(159, 92, 0);
     public static final Scalar UPPER_RED_2 = new Scalar(179, 255, 255);
 
     // Class to hold the result of each detection: bounding box + confidence
@@ -46,9 +55,18 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         public RotatedRect rect;  // in the *downscaled* coordinate space
         public double confidence;
 
-        public DetectionResult(RotatedRect rect, double confidence) {
+        public Point[] points;
+        public boolean pickupable;
+
+        public double size;
+
+        public DetectionResult(RotatedRect rect, double confidence, Point[] points, boolean pickupable, double size) {
             this.rect = rect;
             this.confidence = confidence;
+            this.points = points;
+            this.pickupable = pickupable;
+            this.size = size;
+//            this.points = points;
         }
     }
 
@@ -71,16 +89,24 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         BLUE
     }
 
-    Color color;
-    Teleop.Strategy strategy;
+
+    GeneralTeleop.Strategy strategy = GeneralTeleop.Strategy.SAMPLE;
 
     // Constructor
-    public ConfidenceOrientationVectorPipeline(Color color, Teleop.Strategy strategy) {
+    public ConfidenceOrientationVectorPipeline() {
+    }
+
+    public void setColor(Color color){
+        this.color = color;
+    }
+
+    public void setStrategy(GeneralTeleop.Strategy strategy){
+        this.strategy = strategy;
     }
 
     Mat canvas, down, processed, hsvImage, yellow_mask, color_mask, red_mask_1, red_mask_2, mask, hierarchy;
 
-
+    Color color;
     @Override
     public Mat processFrame(Mat input) {
         // Increment frame counter
@@ -109,15 +135,31 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         Imgproc.cvtColor(processed, hsvImage, Imgproc.COLOR_RGB2HSV);
 
         // 5a) Threshold for yellow
+
         yellow_mask = new Mat();
         Core.inRange(hsvImage, LOWER_YELLOW, UPPER_YELLOW, yellow_mask);
 
         // 5b) Threshold for specified color
         color_mask = new Mat();
-        Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
+
+        if (color == Color.BLUE){
+            Core.inRange(hsvImage, LOWER_BLUE, UPPER_BLUE, color_mask);
+        } else if (color == Color.RED){
+            red_mask_1 = new Mat();
+            red_mask_2 = new Mat();
+            Core.inRange(hsvImage, LOWER_RED_1, UPPER_RED_1, red_mask_1);
+            Core.inRange(hsvImage, LOWER_RED_2, UPPER_RED_2, red_mask_2);
+            Core.bitwise_or(red_mask_1, red_mask_2, color_mask);
+
+        }
 
         mask = new Mat();
-        Core.bitwise_or(yellow_mask, color_mask, mask);
+        if (strategy.equals(GeneralTeleop.Strategy.SAMPLE)) {
+            Core.bitwise_or(yellow_mask, color_mask, mask);
+
+        } else if (strategy.equals(GeneralTeleop.Strategy.SPECIMEN)){
+            mask = color_mask;
+        }
 
         // 6) Find contours in downscaled space
         List<MatOfPoint> contours = new ArrayList<>();
@@ -128,19 +170,22 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
             return canvas;
         }
 
+
+
         // 7) Compute bounding boxes + confidence in downscaled space
         for (MatOfPoint contour : contours) {
             double contourArea = Imgproc.contourArea(contour);
-            if (contourArea < 30000) {
+            if (contourArea < 1000) {
                 continue;
             }
+            boolean pickupable = contourArea >= minSize;
 
             MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
             RotatedRect rect = Imgproc.minAreaRect(contour2f);
 
             // Confidence = ratio of contour area to bounding box area
             double boxArea = rect.size.width * rect.size.height;
-            double confidence = (boxArea > 0) ? (contourArea / boxArea) : 0;
+            double confidence = (boxArea > 0) ? (contourArea / boxArea) * 1 / Math.log(Math.abs(200 - rect.center.x)): 0;
             // Clamp
             confidence = Math.max(0, Math.min(1, confidence));
 
@@ -161,16 +206,22 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
                 if (points[1].x == points[2].x) {
                     angle = 90;
                 } else {
-                    angle = Math.atan((points[2].y - points[1].y) / (points[2].x - points[1].y))  * 180 / Math.PI;
+                    angle = Math.atan((points[2].y - points[1].y) / (points[2].x - points[1].x))  * 180 / Math.PI;
                 }
             }
 
             rect.angle = angle;
-            detectionResults.add(new DetectionResult(rect, confidence));
+            detectionResults.add(new DetectionResult(rect, confidence, points, pickupable, contourArea));
         }
 
         // 8) Sort descending by confidence
-        Collections.sort(detectionResults, (r1, r2) -> Double.compare(r2.confidence, r1.confidence));
+        detectionResults.sort((a, b) -> {
+            if (a.pickupable != b.pickupable) {
+                return a.pickupable ? -1 : 1;
+            }
+            return Double.compare(b.confidence, a.confidence);
+        });
+
 
         if (detectionResults.isEmpty()) {
             bestDetectionResult = null;
@@ -247,12 +298,21 @@ public class ConfidenceOrientationVectorPipeline extends OpenCvPipeline {
         double x, y; // coordinates of center of rotated rectangle
         double theta; // angle of rotated rectangle
         double confidence; // confidence of detection
+
+        public Point[] points;
+
+        public boolean pickupable = false;
+
+        public double size;
         public DetectionResultScaledData(DetectionResult dr) {
             RotatedRect r = scaleRotatedRect(dr.rect, 1.0 / SCALE_FACTOR);
             this.x = r.center.x;
             this.y = r.center.y;
             this.theta = r.angle;
             this.confidence = dr.confidence;
+            this.points = dr.points;
+            this.pickupable = dr.pickupable;
+            this.size = dr.size;
         }
 
         public DetectionResultScaledData(double x, double y, double theta, double confidence) {
