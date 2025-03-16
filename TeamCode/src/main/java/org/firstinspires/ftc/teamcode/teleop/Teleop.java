@@ -50,7 +50,7 @@ public class Teleop extends OpMode {
         SAMPLE,
         SPECIMEN
     }
-    private Strategy strategy = Strategy.SAMPLE;
+    private GeneralTeleop.Strategy strategy = GeneralTeleop.Strategy.SAMPLE;
 
     enum ButtonPressState {
         PRESSED_GOOD, // the first time we see the button

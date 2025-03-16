@@ -68,7 +68,7 @@ public class TeleopManual extends OpMode {
     public void init() {
         // instantiate all hardware util classes
         // register all teleop states
-        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, Teleop.Strategy.SAMPLE);
+        subsystemManager = new SubsystemManager(hardwareMap, ConfidenceOrientationVectorPipeline.Color.RED, GeneralTeleop.Strategy.SAMPLE);
         neutralState = new Neutral(subsystemManager);
         beforeSamplePickupAutomatedState = new BeforeSamplePickupAutomated(subsystemManager, hardwareMap, telemetry);
         beforeSamplePickupState = new BeforeSamplePickup(subsystemManager);

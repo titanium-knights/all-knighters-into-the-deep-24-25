@@ -14,11 +14,14 @@ public class BeforeSpecimenScore extends TeleopState {
 
     @Override
     public void runState(Gamepad gamepad1, Gamepad gamepad2) {
-        subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE); // slides extend to medium height
-        subsystemManager.arm.toScoreSpecimenPos();
         subsystemManager.horizontalSlides.slideToPosition(HorizontalSlidesState.IN);
         subsystemManager.bottomClaw.neutralClawRotatorPosition();
         subsystemManager.bottomClaw.rightWristUpPosition();
         subsystemManager.bottomClaw.openClaw();
+
+        if (!subsystemManager.bottomClaw.isClosed()) {
+            subsystemManager.slides.slideToPosition(SlideState.MEDIUM_SCORE); // slides extend to medium height
+            subsystemManager.arm.toScoreSpecimenPos();
+        }
     }
 }

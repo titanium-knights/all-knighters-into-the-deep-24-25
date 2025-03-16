@@ -11,7 +11,7 @@ public class TopClaw {
     private boolean open = true;
 
     public static double openPos = 1.0;
-    public static double closePos = 0.65;
+    public static double closePos = 0.6;
 
     public TopClaw(HardwareMap hmap) {
         this.clawOpener = hmap.servo.get(CONFIG.topClawServo);
@@ -34,5 +34,8 @@ public class TopClaw {
     public double getPosition() {
         return clawOpener.getPosition() / TopClaw.servoAngleModifier;
     }
-}
 
+    public void maintainPosition() {
+        clawOpener.setPosition(clawOpener.getPosition());
+    }
+}
