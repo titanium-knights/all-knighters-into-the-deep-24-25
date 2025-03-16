@@ -16,7 +16,7 @@ public class Slides {
     // Preset encoder values
     public final int maxHeight = -2200;
     public final int minHeight = 0;
-    public static int BUFFER = 30;
+    public static int BUFFER = 50;
     private final DcMotor slidesMotor;
     private SlideState currentState;
 
@@ -58,10 +58,13 @@ public class Slides {
     // Exists to switch between target encoder values
     public boolean slideToPosition(SlideState state) {
         currentState = state;
-        if (encoderValueWithinBufferOfTarget(state.getEncoderValue())) {
-            stop();
+        if (encoderValueWithinBufferOfTarget(state.getEncoderValue()) && state == SlideState.BOTTOM) {
+            manualDown(0.1);
             return true;
-        } else {
+        } else if (encoderValueWithinBufferOfTarget(state.getEncoderValue())){
+            stop();
+            return false;
+        }else {
             updateSlidesPowerBasic(state.getEncoderValue());
             return false;
         }

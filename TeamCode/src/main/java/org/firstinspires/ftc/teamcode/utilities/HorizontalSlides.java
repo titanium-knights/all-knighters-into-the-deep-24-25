@@ -11,7 +11,7 @@ public class HorizontalSlides {
     public static double slideForwardPower = 0.7;
     public static double slideBackPower = -0.7;
     private static final double idlePower = 0.0;
-    public final int maxForward = 2200;
+    public final int maxForward = 2300;
     public final int minBack = 0;
     public final int BUFFER = 30;
     private int pos;
@@ -47,9 +47,12 @@ public class HorizontalSlides {
     public boolean slideToPosition(HorizontalSlidesState state) {
         currentState = state;
         int targetPosition = state.getEncoderValue();
-        if (encoderValueWithinBufferOfTarget(targetPosition)) {
-            stop();
+        if (encoderValueWithinBufferOfTarget(targetPosition) && state == HorizontalSlidesState.IN) {
+            manualForward(0.05);
             return true;
+        } else if (encoderValueWithinBufferOfTarget(targetPosition)) {
+            stop();
+            return false;
         } else {
             updateSlidesPower(targetPosition);
             return false;

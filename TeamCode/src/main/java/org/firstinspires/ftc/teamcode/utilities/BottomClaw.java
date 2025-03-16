@@ -17,10 +17,10 @@ public class BottomClaw {
     public static final double NEUTRAL_CLAW_ROTATOR_POSITION = 0.68;
     public static final double PICKUP_CLAW_ROTATOR_POSITION = 0.0;
 
-    public static final double RIGHT_WRIST_UP_POSITION = 0.0;
-    public static final double RIGHT_WRIST_DOWN_POSITION = 0.75;
-    public static final double RIGHT_WRIST_HALFUP_POSITION = 0.7;
-    public static final double RIGHT_WRIST_INIT_POSITION = 0.2;
+    public static double RIGHT_WRIST_UP_POSITION = 0.0;
+    public static double RIGHT_WRIST_DOWN_POSITION = 0.75;
+    public static double RIGHT_WRIST_HALFUP_POSITION = 0.7;
+    public static double RIGHT_WRIST_INIT_POSITION = 0.2;
 
 
     Servo clawOpener;

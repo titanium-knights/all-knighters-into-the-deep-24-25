@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import static java.lang.Math.abs;
 
+import android.widget.Button;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 //import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -36,11 +39,10 @@ public class GeneralTeleop {
     private BeforeSamplePickup beforeSamplePickupState;
     private BeforeSamplePickupTwist90 beforeSamplePickupTwist90State;
     private SampleTransferAutomated sampleTransferAutomatedState;
-    private BeforeSampleScore beforeBucketScoreState;
+    private BeforeSampleScore beforeSampleScoreState;
     private BeforeSpecimenScore beforeSpecimenScoreState;
     private SampleTransfer sampleTransfer;
     private Init initState;
-    private static boolean slowMode = false;
     public static final double SLOW_MODE_MULTIPLIER = 0.5;
 
     private boolean beforePickup = false;
@@ -57,7 +59,6 @@ public class GeneralTeleop {
     public Strategy strategy = Strategy.SAMPLE;
 
 
-
     enum ButtonPressState {
         PRESSED_GOOD, // the first time we see the button
         DEPRESSED, // you haven't let go
@@ -72,11 +73,18 @@ public class GeneralTeleop {
     private ButtonPressState left_dpad = ButtonPressState.UNPRESSED;
 
     private ButtonPressState strategyButton = ButtonPressState.UNPRESSED;
+
+    private ButtonPressState toggleSlowModeButton = ButtonPressState.UNPRESSED;
     enum ClawPosition {
         HORIZONTAL,
         ORTHOGONAL
     }
     private ClawPosition clawPosition = ClawPosition.HORIZONTAL;
+    private boolean constantSlowMode = false;
+    private boolean toggleSlowMode = false;
+
+    private boolean autoRotate = false;
+    private ElapsedTime time = new ElapsedTime();
 
     public void init(HardwareMap hardwareMap, Telemetry telemetry) {
         // instantiate all hardware util classes
@@ -88,7 +96,7 @@ public class GeneralTeleop {
         beforeSamplePickupTwist90State = new BeforeSamplePickupTwist90(subsystemManager);
         sampleTransferAutomatedState = new SampleTransferAutomated(subsystemManager);
         sampleTransfer = new SampleTransfer(subsystemManager);
-        beforeBucketScoreState = new BeforeSampleScore(subsystemManager);
+        beforeSampleScoreState = new BeforeSampleScore(subsystemManager);
         beforeSpecimenScoreState = new BeforeSpecimenScore(subsystemManager);
         initState = new Init(subsystemManager);
 
@@ -104,9 +112,22 @@ public class GeneralTeleop {
 
         // non-state based logic
 
-//
-//        if (strategy == Strategy.SAMPLE) telemetry.addData("Strategy: ", "Sample");
-//        if (strategy == Strategy.SPECIMEN) telemetry.addData("Strategy: ", "Specimen");
+        if (gamepad2.b && strategyButton == ButtonPressState.UNPRESSED){
+            strategyButton = ButtonPressState.PRESSED_GOOD;
+            if (strategy == Strategy.SAMPLE) {
+                strategy = Strategy.SPECIMEN;
+            } else if (strategy == Strategy.SPECIMEN){
+                strategy = Strategy.SAMPLE;
+            }
+            subsystemManager.webcam.setStrategy(strategy);
+        } else if (gamepad2.b && strategyButton == ButtonPressState.PRESSED_GOOD){
+            strategyButton = ButtonPressState.DEPRESSED;
+        } else if (!gamepad2.b){
+            strategyButton = ButtonPressState.UNPRESSED;
+        }
+
+        if (strategy == Strategy.SAMPLE) telemetry.addData("Strategy: ", "Sample");
+        if (strategy == Strategy.SPECIMEN) telemetry.addData("Strategy: ", "Specimen");
 
         // claw logic
         if (gamepad1.left_bumper && topClawButton == ButtonPressState.UNPRESSED) {
@@ -146,14 +167,34 @@ public class GeneralTeleop {
         }
 
         // drivetrain
-        if (currentState == beforeSamplePickupAutomatedStatev2 && (abs(gamepad2.left_stick_x) > 0.1f || abs(gamepad2.left_stick_y) > 0.1f || abs(gamepad2.right_stick_x) > 0.1f)){
-            switchToState(neutralState);
-            telemetry.addData("switched to neutral", "a");
-            subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
+        if (gamepad2.right_trigger > 0.1f){
+            constantSlowMode = true;
+        } else{
+            constantSlowMode = false;
+        }
 
-        } else if (currentState != beforeSamplePickupAutomatedStatev2){
-            telemetry.addLine("OMGGGGGGG");
-            if (GeneralTeleop.slowMode) {
+        if (gamepad2.left_trigger > 0.1f && toggleSlowModeButton == ButtonPressState.UNPRESSED){
+            toggleSlowMode = !toggleSlowMode;
+            toggleSlowModeButton = ButtonPressState.PRESSED_GOOD;
+        } else if (gamepad2.left_trigger > 0.1f && toggleSlowModeButton == ButtonPressState.PRESSED_GOOD){
+            toggleSlowModeButton = ButtonPressState.DEPRESSED;
+        } else if (gamepad2.left_trigger < 0.1f){
+            toggleSlowModeButton = ButtonPressState.UNPRESSED;
+        }
+
+        if (currentState == beforeSamplePickupAutomatedStatev2 && beforeSamplePickupAutomatedStatev2.adjusting){
+            if (abs(gamepad2.left_stick_x) > 0.1f || abs(gamepad2.left_stick_y) > 0.1f || abs(gamepad2.right_stick_x) > 0.1f){
+                if (constantSlowMode || toggleSlowMode) {
+                    subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
+                } else {
+                    if (gamepad2.left_stick_x > 0.3){
+                        telemetry.addData("gamepad2: ", gamepad2.left_stick_x);
+                    }
+                    subsystemManager.drive.move(gamepad2.left_stick_x, gamepad2.left_stick_y, gamepad2.right_stick_x);
+                }
+            }
+        } else {
+            if (constantSlowMode || toggleSlowMode) {
                 subsystemManager.drive.move(gamepad2.left_stick_x * SLOW_MODE_MULTIPLIER, gamepad2.left_stick_y * SLOW_MODE_MULTIPLIER, gamepad2.right_stick_x * SLOW_MODE_MULTIPLIER);
             } else {
                 if (gamepad2.left_stick_x > 0.3){
@@ -164,6 +205,9 @@ public class GeneralTeleop {
         }
 
 
+
+
+
         // logic to run to states
         if (gamepad1.dpad_left) {
             switchToState(neutralState);
@@ -172,6 +216,7 @@ public class GeneralTeleop {
                 switchToState(beforeSamplePickupState);
             } else {
                 switchToState(beforeSamplePickupAutomatedStatev2);
+                time.reset();
             }
         } else if (gamepad1.x) {
 
@@ -180,7 +225,7 @@ public class GeneralTeleop {
         } else if (gamepad1.a) {
             switchToState(sampleTransferAutomatedState);
         } else if (gamepad1.left_trigger > 0.01f) {
-            switchToState(beforeBucketScoreState);
+            switchToState(beforeSampleScoreState);
         } else if (gamepad1.right_trigger > 0.01f) {
 
         } else if (gamepad1.dpad_up) {
@@ -215,24 +260,48 @@ public class GeneralTeleop {
 //            telemetry.addData("rotation pos: ", subsystemManager.bottomClaw.getClawRotatorPosition());
 //            //telemetry.update();
 
+            if (beforeSamplePickupAutomatedStatev2.finishedPickup){
+                double actualOrthogonalRotationTheta = (Math.PI / 2) + ((BeforeSamplePickupAutomatedv2)currentState).rotationTheta;
+                double orthogonalRotationTheta =  actualOrthogonalRotationTheta > 2 * Math.PI ? (actualOrthogonalRotationTheta - 2 * Math.PI < Math.PI / 2 ? actualOrthogonalRotationTheta - Math.PI : actualOrthogonalRotationTheta - 2 * Math.PI) : actualOrthogonalRotationTheta;
+                if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
+                    autoRotate = !autoRotate;
+                    rotatorButton = ButtonPressState.PRESSED_GOOD;
 
+                } else if (gamepad1.b && rotatorButton == ButtonPressState.PRESSED_GOOD) {
+                    rotatorButton = ButtonPressState.DEPRESSED;
+                } else if (!gamepad1.b) {
+                    rotatorButton = ButtonPressState.UNPRESSED;
+                }
+                if (autoRotate && clawPosition == ClawPosition.HORIZONTAL && time.milliseconds() > 500) {
+                    subsystemManager.bottomClaw.rotate(orthogonalRotationTheta);
+                    clawPosition = ClawPosition.ORTHOGONAL;
+                    time.reset();
+                } else if (autoRotate && time.milliseconds() > 500) {
+                    subsystemManager.bottomClaw.rotate(((BeforeSamplePickupAutomatedv2)currentState).rotationTheta);
+                    clawPosition = ClawPosition.HORIZONTAL;
+                    time.reset();
+                }
+            } else{
+                if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
+                    rotatorButton = ButtonPressState.PRESSED_GOOD;
+                    double actualOrthogonalRotationTheta = (Math.PI / 2) + ((BeforeSamplePickupAutomatedv2)currentState).rotationTheta;
+                    double orthogonalRotationTheta =  actualOrthogonalRotationTheta > 2 * Math.PI ? (actualOrthogonalRotationTheta - 2 * Math.PI < Math.PI / 2 ? actualOrthogonalRotationTheta - Math.PI : actualOrthogonalRotationTheta - 2 * Math.PI) : actualOrthogonalRotationTheta;
+                    if (clawPosition == ClawPosition.HORIZONTAL) {
+                        subsystemManager.bottomClaw.rotate(orthogonalRotationTheta);
+                        clawPosition = ClawPosition.ORTHOGONAL;
+                    } else {
+                        subsystemManager.bottomClaw.rotate(((BeforeSamplePickupAutomatedv2)currentState).rotationTheta);
+                        clawPosition = ClawPosition.HORIZONTAL;
+                    }
+                } else if (gamepad1.b && rotatorButton == ButtonPressState.PRESSED_GOOD) {
+                    rotatorButton = ButtonPressState.DEPRESSED;
+                } else if (!gamepad1.b) {
+                    rotatorButton = ButtonPressState.UNPRESSED;
+                }
+            }
 //            String pointString = Arrays.stream(((BeforeSamplePickupAutomated)currentState).points).map(p -> "(" + p.x + "," + p.y + ")").collect(Collectors.joining(","));
 //            telemetry.addData("points: ", pointString);
 
-            if (gamepad1.b && rotatorButton == ButtonPressState.UNPRESSED) {
-                rotatorButton = ButtonPressState.PRESSED_GOOD;
-                if (clawPosition == ClawPosition.HORIZONTAL) {
-                    subsystemManager.bottomClaw.orthogonalClawRotatorPosition();
-                    clawPosition = ClawPosition.ORTHOGONAL;
-                } else {
-                    subsystemManager.bottomClaw.neutralClawRotatorPosition();
-                    clawPosition = ClawPosition.HORIZONTAL;
-                }
-            } else if (gamepad1.b && rotatorButton == ButtonPressState.PRESSED_GOOD) {
-                rotatorButton = ButtonPressState.DEPRESSED;
-            } else if (!gamepad1.b) {
-                rotatorButton = ButtonPressState.UNPRESSED;
-            }
         } else {
             beforePickup = false;
             currentState.runState(gamepad1, gamepad2);
@@ -254,11 +323,6 @@ public class GeneralTeleop {
     }
 
 
-
-    public static void setSlowMode(boolean slowMode) {
-        GeneralTeleop.slowMode = slowMode;
-    }
-
     public void switchToState(TeleopState state) {
         // if the state we're trying to move to has potential dependencies and we are not in one of
         // them, don't move
@@ -266,7 +330,6 @@ public class GeneralTeleop {
                 state.getDependencyStates().length == 0
                         || Arrays.asList(state.getDependencyStates()).contains(GeneralTeleop.currentState)
         ) {
-            GeneralTeleop.slowMode = false;
             currentState.reset();
             currentState = state;
         }

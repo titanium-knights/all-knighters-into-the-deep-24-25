@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 
-@TeleOp(name = "Blue Specimen Teleop Auto", group = "User Control")
-public class BlueSpecimenTeleop extends OpMode {
+@TeleOp(name = "Red Sample Teleop Auto", group = "User Control")
+public class RedTeleop extends OpMode {
     GeneralTeleop teleop;
 
     Telemetry telemetryA;
@@ -17,8 +17,7 @@ public class BlueSpecimenTeleop extends OpMode {
     @Override
     public void init() {
         teleop = new GeneralTeleop();
-        teleop.color = ConfidenceOrientationVectorPipeline.Color.BLUE;
-        teleop.strategy = GeneralTeleop.Strategy.SPECIMEN;
+        teleop.color = ConfidenceOrientationVectorPipeline.Color.RED;
         telemetryA = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         teleop.init(hardwareMap, telemetryA);
     }
