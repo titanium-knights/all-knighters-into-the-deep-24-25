@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.utilities.CONFIG;
 
 public class FConstants {
     static {
-        FollowerConstants.localizers = Localizers.THREE_WHEEL;
+        FollowerConstants.localizers = Localizers.THREE_WHEEL_IMU;
 
         // back of the robot has the vertical slides on it
         FollowerConstants.leftFrontMotorName = CONFIG.BACK_LEFT;

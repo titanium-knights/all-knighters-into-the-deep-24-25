@@ -20,7 +20,7 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
     // Starting pose of the robot.
     //public static  Pose START_POSE = new Pose(9, 82, Math.toRadians(0)); // changed
 //    public static  Pose START_POSE = new Pose(9, 82, Math.toRadians(0));
-    public static  Pose START_POSE = new Pose(9,106, Math.toRadians(180));
+    public static  Pose START_POSE = new Pose(9,106, Math.toRadians(90));
     // Pose for scoring the preloaded specimen (drives the robot closer to the bar).
     public static  Pose SCORE_SPECIMEN_BAR_POSE = new Pose(39, 82, Math.toRadians(0));
 
@@ -44,7 +44,7 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
     //public static  Pose RETRIEVE_SPECIMEN_POSE3 = new Pose(45, 117, Math.toRadians(265));
 
     // Poses for scoring additional specimen.
-    public static  Pose SCORE_BUCKET_POSE = new Pose(19.5, 124, Math.toRadians(130));
+    public static  Pose SCORE_BUCKET_POSE = new Pose(17, 125.5, Math.toRadians(130));
     public static  Pose GET_OUT_OF_SCORE_BUCKET_POSE = new Pose(19, 123, Math.toRadians(130));
 
     // Parking Pose
@@ -74,83 +74,94 @@ public class LeftOneSpecimenParkConfig implements IAutonConfig {
 //            new AutonStepDescriptor("BOTTOM_OPEN"),                            // Open claw to release specimen.
 
             // --- Transition ---
+            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
             new AutonStepDescriptor(START_POSE, RETRIEVE_SPECIMEN_POSE1), // Drive to pickup alignment.
             new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0), // Short pause.
+            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
+            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
+            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
+            new AutonStepDescriptor(WAIT_PLS),
+            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
+            new AutonStepDescriptor(WAIT_PLS),
+            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
+            new AutonStepDescriptor(SCORE_BUCKET_POSE, GET_OUT_OF_SCORE_BUCKET_POSE),
+            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+            new AutonStepDescriptor(GET_OUT_OF_SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE2)
 
             // --- Score Motion 1 ---
-            new AutonStepDescriptor("HORI_OUT_OPEN"),
-            new AutonStepDescriptor("HORI_OUT_CLOSED"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
-            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
-            new AutonStepDescriptor(SCORE_BUCKET_POSE, GET_OUT_OF_SCORE_BUCKET_POSE),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
-            new AutonStepDescriptor(GET_OUT_OF_SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE2),
-
-            // --- Score Motion 2 ---
-            new AutonStepDescriptor("HORI_MIDOUT_OPEN"),
-            new AutonStepDescriptor("HORI_MIDOUT_CLOSED"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
-            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
-            new AutonStepDescriptor(SCORE_BUCKET_POSE, GET_OUT_OF_SCORE_BUCKET_POSE),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
-            new AutonStepDescriptor(GET_OUT_OF_SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE3),
-
-            // --- Score Motion 3 ---
-            new AutonStepDescriptor("HORI_OUT_OPEN_TWIST"),
-            new AutonStepDescriptor("HORI_OUT_CLOSED_TWIST"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3, RETRIEVE_SPECIMEN_POSE1),
-            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
-            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
-            new AutonStepDescriptor(SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE1),
-            new AutonStepDescriptor(
-                    new ArrayList<AutonStepDescriptor>(Arrays.asList(
-                            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, PARK_POSE1),
-                            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN", SCORING_SLIDES_WAIT_SECONDS)
-                    ))
-            ),
-
-            // Park ("Hang")
-            new AutonStepDescriptor(
-                    new ArrayList<AutonStepDescriptor>(Arrays.asList(
-                            new AutonStepDescriptor(PARK_POSE1, PARK_POSE2),
-                            new AutonStepDescriptor("LOW_HANG", SCORING_SLIDES_WAIT_SECONDS)
-                    ))
-            )
+//            new AutonStepDescriptor("HORI_OUT_OPEN"),
+//            new AutonStepDescriptor("HORI_OUT_CLOSED"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
+//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
+//            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
+//            new AutonStepDescriptor(SCORE_BUCKET_POSE, GET_OUT_OF_SCORE_BUCKET_POSE),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+//            new AutonStepDescriptor(GET_OUT_OF_SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE2),
+//
+//            // --- Score Motion 2 ---
+//            new AutonStepDescriptor("HORI_MIDOUT_OPEN"),
+//            new AutonStepDescriptor("HORI_MIDOUT_CLOSED"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
+//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
+//            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
+//            new AutonStepDescriptor(SCORE_BUCKET_POSE, GET_OUT_OF_SCORE_BUCKET_POSE),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+//            new AutonStepDescriptor(GET_OUT_OF_SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE3),
+//
+//            // --- Score Motion 3 ---
+//            new AutonStepDescriptor("HORI_OUT_OPEN_TWIST"),
+//            new AutonStepDescriptor("HORI_OUT_CLOSED_TWIST"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
+//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3, RETRIEVE_SPECIMEN_POSE1),
+//            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"),
+//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, SCORE_BUCKET_POSE),
+//            new AutonStepDescriptor("BUCKET_UP_DUNKING"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("BUCKET_UP_POST_DUNK"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("BUCKET_UP_PRE_DUNK"), // get out of the way
+//            new AutonStepDescriptor(SCORE_BUCKET_POSE, RETRIEVE_SPECIMEN_POSE1),
+//            new AutonStepDescriptor(
+//                    new ArrayList<AutonStepDescriptor>(Arrays.asList(
+//                            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1, PARK_POSE1),
+//                            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN", SCORING_SLIDES_WAIT_SECONDS)
+//                    ))
+//            ),
+//
+//            // Park ("Hang")
+//            new AutonStepDescriptor(
+//                    new ArrayList<AutonStepDescriptor>(Arrays.asList(
+//                            new AutonStepDescriptor(PARK_POSE1, PARK_POSE2),
+//                            new AutonStepDescriptor("LOW_HANG", SCORING_SLIDES_WAIT_SECONDS)
+//                    ))
+//            )
     ));
 
     // ===== IAutonConfig Interface Methods =====
