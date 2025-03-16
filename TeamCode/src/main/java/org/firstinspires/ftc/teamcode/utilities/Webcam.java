@@ -4,30 +4,34 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-//import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
 import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline;
+import org.firstinspires.ftc.teamcode.teleop.GeneralTeleop;
 import org.firstinspires.ftc.teamcode.teleop.Teleop;
+import org.firstinspires.ftc.teamcode.teleop.Teleopv2;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 //import org.firstinspires.ftc.teamcode.pipelines.ConfidenceOrientationVectorPipeline.DetectionResultScaledData;
 
 @Config
 public class Webcam {
     OpenCvWebcam cam;
-    OpenCvPipeline pipeline; // daniel plainview would be proud
+    ConfidenceOrientationVectorPipeline pipeline; // daniel plainview would be proud
     int cameraMonitorViewId;
 
     public static int stream = 0;
 
-    public Webcam(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, Teleop.Strategy strategy) {
+    Teleop.Strategy strategy = Teleop.Strategy.SAMPLE;
+    public Webcam(HardwareMap hmap, ConfidenceOrientationVectorPipeline.Color color, GeneralTeleop.Strategy strategy) {
         this.cameraMonitorViewId = hmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hmap.appContext.getPackageName());
         this.cam = OpenCvCameraFactory.getInstance().createWebcam(hmap.get(WebcamName.class, CONFIG.webcam), cameraMonitorViewId);
-        this.pipeline = new ConfidenceOrientationVectorPipeline(color, strategy);
+        this.pipeline = new ConfidenceOrientationVectorPipeline();
+
+        pipeline.setColor(color);
+        pipeline.setStrategy(strategy);
+
         if (stream == 1) FtcDashboard.getInstance().startCameraStream(cam, 0);
 
         cam.setPipeline(pipeline);
@@ -69,10 +73,15 @@ public class Webcam {
 
     public ConfidenceOrientationVectorPipeline.DetectionResultScaledData bestDetectionCoordsAngle() {
         // casting this cause i mean generalizability is always sweet
-        return ((ConfidenceOrientationVectorPipeline)pipeline).bestDetectionCoordsAngle();
+        return pipeline.bestDetectionCoordsAngle();
     }
 
     public double getFps() {
         return cam.getFps();
     }
+
+
+    public void setColor(ConfidenceOrientationVectorPipeline.Color color){pipeline.setColor(color);}
+    public void setStrategy(GeneralTeleop.Strategy strategy) {pipeline.setStrategy(strategy);}
+
 }
