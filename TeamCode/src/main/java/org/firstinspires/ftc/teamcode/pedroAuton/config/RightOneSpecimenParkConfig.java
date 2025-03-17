@@ -65,6 +65,7 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
      */
     public static final List<AutonStepDescriptor> ROUTINE = new ArrayList<>(Arrays.asList(
             // --- Scoring the preloaded specimen ---
+//            new AutonStepDescriptor(START_POSE, PARK_POSE)
             new AutonStepDescriptor("MEDIUM_CLOSED"),
             new AutonStepDescriptor(START_POSE, SCORE_SPECIMEN_BAR_POSE),
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),
@@ -76,25 +77,25 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor(ALIGN_TO_PREPARE_FOR_RETRIEVAL, RETRIEVE_SPECIMEN_POSE1_1),
             new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE1_1, ENDING_POINT1),
             new AutonStepDescriptor("SWIPEFOLD"),
-
-            // --- Retrieval Motion 2 ---
-            new AutonStepDescriptor(ENDING_POINT1, RETRIEVE_SPECIMEN_POSE2_1),
-            new AutonStepDescriptor("SWIPEDOWN"),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE2_1, ENDING_POINT2),
-            new AutonStepDescriptor("SWIPEFOLD"),
-
-            // --- Retrieval Motion 3 ---
-            new AutonStepDescriptor(ENDING_POINT2, RETRIEVE_SPECIMEN_POSE3_1),
-            new AutonStepDescriptor("SWIPEDOWN"),
-            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3_1, ENDING_POINT3),
-            new AutonStepDescriptor("SWIPEFOLD"),
-
-            // 2ND SPECIMEN
-            // --- Align to get specimen ---
-            // todo: change to ending point 3 if you figure out retrieval motion 3
+////
+////            // --- Retrieval Motion 2 ---
+//            new AutonStepDescriptor(ENDING_POINT1, RETRIEVE_SPECIMEN_POSE2_1),
+//            new AutonStepDescriptor("SWIPEDOWN"),
+//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE2_1, ENDING_POINT2),
+//            new AutonStepDescriptor("SWIPEFOLD"),
+////
+////            // --- Retrieval Motion 3 ---
+//            new AutonStepDescriptor(ENDING_POINT2, RETRIEVE_SPECIMEN_POSE3_1),
+//            new AutonStepDescriptor("SWIPEDOWN"),
+//            new AutonStepDescriptor(RETRIEVE_SPECIMEN_POSE3_1, ENDING_POINT3),
+//            new AutonStepDescriptor("SWIPEFOLD"),
+//
+//            // 2ND SPECIMEN
+//            // --- Align to get specimen ---
+//            // todo: change to ending point 3 if you figure out retrieval motion 3
             new AutonStepDescriptor(ENDING_POINT3, GET_SPECIMEN_POSE_1),        // Move from the sample pushed previously // Turn to have top claw face wall
-
-            // --- Get the specimen from human player ---
+//
+//            // --- Get the specimen from human player ---
             new AutonStepDescriptor("HORI_SPECIN_OPEN"),
             new AutonStepDescriptor(WAIT_PLS),
             new AutonStepDescriptor("HORI_SPECOUT_OPEN"),
@@ -108,71 +109,72 @@ public class RightOneSpecimenParkConfig implements IAutonConfig {
             new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
             new AutonStepDescriptor(WAIT_PLS),
             new AutonStepDescriptor("MEDIUM_CLOSED"),
-
-            // --- Score specimen position ---
+//
+//            // --- Score specimen position ---
             new AutonStepDescriptor(GET_SPECIMEN_POSE_1, ALIGN_TO_SCORE_POSE), // Move closer to the submersible for scoring
             new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, SCORE_SPECIMEN_BAR_POSE_1),
             new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),              // Wait for initial positioning.
             new AutonStepDescriptor("BOTTOM_OPEN"),
-
-            // --- Re-align to get specimen again ---
-            new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE_1, ALIGN_TO_SCORE_POSE),  // Drive to pickup alignment.
-            new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, GET_SPECIMEN_POSE_2),
-            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
-
-            // 3RD SPECIMEN
-            // --- Get the specimen from human player ---
-            new AutonStepDescriptor("HORI_SPECIN_OPEN"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("HORI_SPECOUT_OPEN"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("HORI_SPECOUT_CLOSED"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("MEDIUM_CLOSED"),
-
-            // --- Score specimen position ---
-            new AutonStepDescriptor(GET_SPECIMEN_POSE_2, ALIGN_TO_SCORE_POSE), // Move closer to the submersible for scoring
-            new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, SCORE_SPECIMEN_BAR_POSE_2),
-            new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),              // Wait for initial positioning.
-            new AutonStepDescriptor("BOTTOM_OPEN"),
-
-            // --- Re-align to get specimen again ---
-            new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE_2, ALIGN_TO_SCORE_POSE),  // Drive to pickup alignment.
-            new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, GET_SPECIMEN_POSE_3),
-            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
-
-            // 4TH SPECIMEN
-            // --- Get the specimen from human player ---
-            new AutonStepDescriptor("HORI_SPECIN_OPEN"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("HORI_SPECOUT_OPEN"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("HORI_SPECOUT_CLOSED"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
-            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
-            new AutonStepDescriptor(WAIT_PLS),
-            new AutonStepDescriptor("MEDIUM_CLOSED"),
-
-            // --- Score specimen position ---
-            new AutonStepDescriptor(GET_SPECIMEN_POSE_3, ALIGN_TO_SCORE_POSE), // Move closer to the submersible for scoring
-            new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, SCORE_SPECIMEN_BAR_POSE_3),
-            new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),              // Wait for initial positioning.
-            new AutonStepDescriptor("BOTTOM_OPEN"),
-
-            // --- Park ---
-            // todo: change to score specimen pose 3 if we get 4th specimen working
-            new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE_3, PARK_POSE),  // Drive to pickup alignment.
-            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0)
+//
+            new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE_1, PARK_POSE)
+//            // --- Re-align to get specimen again ---
+//            new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE_1, ALIGN_TO_SCORE_POSE),  // Drive to pickup alignment.
+//            new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, GET_SPECIMEN_POSE_2),
+//            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
+//
+//            // 3RD SPECIMEN
+//            // --- Get the specimen from human player ---
+//            new AutonStepDescriptor("HORI_SPECIN_OPEN"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("HORI_SPECOUT_OPEN"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("HORI_SPECOUT_CLOSED"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("MEDIUM_CLOSED"),
+//
+//            // --- Score specimen position ---
+//            new AutonStepDescriptor(GET_SPECIMEN_POSE_2, ALIGN_TO_SCORE_POSE), // Move closer to the submersible for scoring
+//            new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, SCORE_SPECIMEN_BAR_POSE_2),
+//            new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),              // Wait for initial positioning.
+//            new AutonStepDescriptor("BOTTOM_OPEN"),
+//
+//            // --- Re-align to get specimen again ---
+//            new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE_2, ALIGN_TO_SCORE_POSE),  // Drive to pickup alignment.
+//            new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, GET_SPECIMEN_POSE_3),
+//            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0),
+//
+//            // 4TH SPECIMEN
+//            // --- Get the specimen from human player ---
+//            new AutonStepDescriptor("HORI_SPECIN_OPEN"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("HORI_SPECOUT_OPEN"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("HORI_SPECOUT_CLOSED"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPOPEN"),
+//            new AutonStepDescriptor((double) GRAB_SPECIMEN_WAIT_MS / 1000.0),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMCLOSED_TOPCLOSED"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("HORI_TRANSFER_BOTTOMOPEN_TOPCLOSED"),
+//            new AutonStepDescriptor(WAIT_PLS),
+//            new AutonStepDescriptor("MEDIUM_CLOSED"),
+//
+//            // --- Score specimen position ---
+//            new AutonStepDescriptor(GET_SPECIMEN_POSE_3, ALIGN_TO_SCORE_POSE), // Move closer to the submersible for scoring
+//            new AutonStepDescriptor(ALIGN_TO_SCORE_POSE, SCORE_SPECIMEN_BAR_POSE_3),
+//            new AutonStepDescriptor(SCORING_INITIAL_WAIT_SECONDS),              // Wait for initial positioning.
+//            new AutonStepDescriptor("BOTTOM_OPEN"),
+//
+//            // --- Park ---
+//            // todo: change to score specimen pose 3 if we get 4th specimen working
+//            new AutonStepDescriptor(SCORE_SPECIMEN_BAR_POSE_3, PARK_POSE),  // Drive to pickup alignment.
+//            new AutonStepDescriptor((double) SEGMENT_SLEEP_TIME_MS / 1000.0)
     ));
 
     // ===== IAutonConfig Interface Methods =====
